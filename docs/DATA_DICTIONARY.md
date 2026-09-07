@@ -331,6 +331,7 @@ Rules: PRD §7.
 | `completeness`, `fx` | copied from dataset |
 | `week` | `{ start, end }` — `start = previous_snapshot_date + 1` (or `reference − 6` without snapshot), `end = reference` |
 | `fx_effect_reporting` | see §5.10; `null` without previous snapshot |
+| `unknown_due_reporting` | Σ `outstanding_reporting` of open invoices with `aging_bucket = 'UNKNOWN'` (missing `due_date`). Counted in Total Outstanding, in no bucket; Aging screen shows it so that Σ buckets + unknown = total |
 
 ---
 

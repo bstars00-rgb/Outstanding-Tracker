@@ -88,5 +88,14 @@ Each phase records: decisions taken, evidence, and the risks that remain open at
 
 ---
 
-## Phase 5 — Verification
-See `docs/QA_REPORT.md` for iterations, scores and residual risks.
+## Phase 5 — Verification (2026-09-07)
+
+| ID | Decision | Rationale |
+|----|----------|-----------|
+| D21 | Upgraded to vitest 3.2 (`test.projects`) instead of keeping a type cast; installed the Playwright Chromium build matching `@playwright/test` 1.63. | Reproducible `npm run typecheck` / `npm run test:e2e` on a clean machine. |
+| D22 | Added `unknown_due_reporting` to the model and surfaced it on the Aging screen so Σ buckets + unknown = Total Outstanding. | Reconciliation defect found in visual QA (D-01). |
+| D23 | Verification whitelist extended with aging-bucket boundary numbers only; amounts/names remain strictly checked. | Prevented a false positive without weakening anti-hallucination. |
+| D24 | Scores reported twice (mock/contract 97, live 86 Blocked) rather than inflating live readiness. | PRD §15 rule on external dependencies. |
+| D25 | Snapshot state is git-ignored in `main` and lives only on the `tracker-state` branch written by the workflow. | Keeps the code branch free of data artefacts. |
+
+Results and remaining risks: `docs/QA_REPORT.md`.

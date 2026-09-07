@@ -6,8 +6,9 @@ test-results/
 .env
 .env.*
 !.env.example
-automation/state/*.json
+automation/state/**
 !automation/state/.gitkeep
 automation/out/
+public/data/*.json
 *.log
 .DS_Store
