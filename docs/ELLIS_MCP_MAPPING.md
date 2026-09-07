@@ -162,7 +162,7 @@
 | --- | --- | --- |
 | `as_of` | `new Date().toISOString()` at mapping time | Confirmed |
 | `source` | `'ellis-bookings-derived'` | Confirmed |
-| `reporting_currency` | `cfg.reportingCurrency` (`REPORTING_CURRENCY`, default `USD`) | Confirmed |
+| `reporting_currency` | `cfg.reportingCurrency` (`REPORTING_CURRENCY`, default `JPY`) | Confirmed |
 | `fx` | `cfg.fx` — in `buildDeps()` this is `mockFxTable()` re-labelled `source: 'ILLUSTRATIVE - replace with treasury/ECB feed'`. The Ellis `fxRate` (local → KRW) is **not used** because the reporting currency is not KRW | **Required** (FX feed) |
 | `payments`, `activities` | `[]` | Required |
 
@@ -256,7 +256,8 @@ DATA_SOURCE=ellis
 | `DATA_SOURCE=ellis` | selects the live adapter (default `mock`) | `loadEnv()` throws if `ELLIS_MCP_ENDPOINT` is missing |
 | `ELLIS_MCP_ENDPOINT` | full URL of the MCP server (secret; redacted in logs) | Required — unknown today |
 | `ELLIS_MCP_AUTH` | complete `Authorization` header value, e.g. `Bearer <token>` (secret) | optional; sent verbatim |
-| `REPORTING_CURRENCY` | ISO 4217, default `USD` | |
+| `REPORTING_CURRENCY` | ISO 4217, default `JPY` (company default currency; changed from USD on 2026-09-07) | |
+| `REPORT_LANGUAGE` | `ko` (default) or `en` — wording of engine text and the Teams report | |
 | `DRY_RUN=true` | keep true for the first live runs | default `true` |
 
 ### 6.2 Step-by-step

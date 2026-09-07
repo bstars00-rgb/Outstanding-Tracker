@@ -9,7 +9,7 @@ test.describe('Mobile layout', () => {
   }
 
   test('overview has no horizontal overflow and KPI cards stack', async ({ page }) => {
-    await page.goto('/#/?mode=mock');
+    await page.goto('/#/?mode=mock&lang=en');
     await expect(page.getByTestId('kpi-card-total_outstanding')).toBeVisible();
     await assertNoHorizontalOverflow(page);
     const first = await page.getByTestId('kpi-card-total_outstanding').boundingBox();
@@ -20,7 +20,7 @@ test.describe('Mobile layout', () => {
   });
 
   test('customers page has no horizontal overflow (table scrolls in its container)', async ({ page }) => {
-    await page.goto('/#/customers?mode=mock');
+    await page.goto('/#/customers?mode=mock&lang=en');
     await expect(page.getByTestId('customers-table')).toBeVisible();
     await assertNoHorizontalOverflow(page);
     const scrolls = await page.getByTestId('customers-table').evaluate((t) => {

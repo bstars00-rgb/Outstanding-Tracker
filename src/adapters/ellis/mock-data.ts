@@ -20,7 +20,9 @@ export function mulberry32(seed: number) {
   };
 }
 
+/** Illustrative USD cross rates (1 unit of currency in USD). Reporting-currency rates are derived from these. */
 export const MOCK_FX_USD: Record<string, number> = {
+  USD: 1,
   KRW: 0.00072,
   JPY: 0.0068,
   VND: 0.000039,
@@ -33,19 +35,29 @@ export const MOCK_FX_USD: Record<string, number> = {
   PHP: 0.0175,
 };
 
-/** FX table for a date. Older weeks drift deterministically so the FX effect is visible in WoW comparisons. */
-export function mockFxTable(date: ISODate, referenceDate: ISODate, reporting = 'USD'): FxTable {
+/** Company default reporting currency (Finance: JPY). Override with REPORTING_CURRENCY / MockReceivablesSource(seed, ccy). */
+export const DEFAULT_REPORTING_CURRENCY = 'JPY';
+
+/**
+ * FX table for a date, expressed as "reporting units per 1 unit of currency" (cross rate via USD).
+ * Older weeks drift deterministically so the FX effect is visible in WoW comparisons.
+ */
+export function mockFxTable(date: ISODate, referenceDate: ISODate, reporting = DEFAULT_REPORTING_CURRENCY): FxTable {
   const weeksBack = Math.max(0, Math.round((Date.parse(referenceDate) - Date.parse(date)) / (7 * 86_400_000)));
-  const drift: Record<string, number> = { JPY: -0.004, KRW: 0.002, VND: 0.0005, TWD: -0.001, THB: 0.001 };
+  const drift: Record<string, number> = { JPY: -0.004, KRW: 0.002, VND: 0.0005, TWD: -0.001, THB: 0.001, USD: 0.001 };
+  const usdOf = (ccy: string, wb: number) => (MOCK_FX_USD[ccy] ?? 1) * (1 + (drift[ccy] ?? 0) * wb);
+  const reportingUsd = usdOf(reporting, weeksBack);
   return {
     reporting_currency: reporting,
     as_of: date,
-    rates: Object.entries(MOCK_FX_USD).map(([currency, rate]) => ({
-      currency,
-      rate_to_reporting: round2(rate * (1 + (drift[currency] ?? 0) * weeksBack) * 1e8) / 1e8,
-      rate_date: date,
-      source: 'mock-fx (illustrative rates)',
-    })),
+    rates: Object.keys(MOCK_FX_USD)
+      .filter((currency) => currency !== reporting)
+      .map((currency) => ({
+        currency,
+        rate_to_reporting: Math.round((usdOf(currency, weeksBack) / reportingUsd) * 1e8) / 1e8,
+        rate_date: date,
+        source: 'mock-fx (illustrative rates)',
+      })),
   };
 }
 
@@ -132,10 +144,10 @@ export interface MockDataset extends ReceivablesDataset {
   scenario_index: Record<string, Scenario>;
 }
 
-export function generateMockDataset(referenceDate: ISODate, seed = 20260905): MockDataset {
+export function generateMockDataset(referenceDate: ISODate, seed = 20260905, reporting = DEFAULT_REPORTING_CURRENCY): MockDataset {
   const rnd = mulberry32(seed);
-  const fx = mockFxTable(referenceDate, referenceDate);
-  const rate = (ccy: string) => (ccy === 'USD' ? 1 : MOCK_FX_USD[ccy]);
+  const fx = mockFxTable(referenceDate, referenceDate, reporting);
+  const rate = (ccy: string) => MOCK_FX_USD[ccy] ?? 1;
   /** Convert a USD magnitude to a rounded local-currency amount. */
   const local = (usd: number, ccy: string) => {
     const v = usd / rate(ccy);
@@ -431,7 +443,7 @@ export function generateMockDataset(referenceDate: ISODate, seed = 20260905): Mo
   return {
     as_of: `${referenceDate}T02:00:00.000Z`,
     source: 'mock',
-    reporting_currency: 'USD',
+    reporting_currency: reporting,
     fx,
     customers,
     invoices,

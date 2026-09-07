@@ -64,7 +64,7 @@ describe('mock dataset', () => {
     expect(h).toHaveLength(12);
     expect(h[0].date).toBe('2026-06-20');
     expect(h[11].date).toBe(REF);
-    expect(h[0].snapshot.fx.rates.find((r) => r.currency === 'JPY')!.rate_to_reporting).not.toBe(h[11].snapshot.fx.rates.find((r) => r.currency === 'JPY')!.rate_to_reporting);
+    expect(h[0].snapshot.fx.rates.find((r) => r.currency === 'USD')!.rate_to_reporting).not.toBe(h[11].snapshot.fx.rates.find((r) => r.currency === 'USD')!.rate_to_reporting);
     for (const p of h) expect(p.snapshot.totals.total_outstanding).toBeGreaterThan(0);
   });
 });

@@ -8,3 +8,4 @@ export * from './calc';
 export * from './kpis';
 export * from './actions';
 export * from './history';
+export * from './i18n';

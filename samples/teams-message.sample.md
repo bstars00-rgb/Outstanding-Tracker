@@ -1,34 +1,34 @@
-**[Weekly Outstanding Report] 2026-09-05 (MOCK DATA)**
+**[주간 미수금 보고] 2026-09-05 (MOCK 데이터)**
 
-**1. Executive Summary**
-- Total outstanding: USD 1.58M (+USD 368.5K (+30.4%))
-- Overdue: USD 462.9K (+USD 106.2K (+29.8%))
-- Collected this week: USD 64.5K
-- 30+ days: USD 87.6K · 90+ days: USD 23.0K · Due next 7 days: USD 274.2K
-- 3 customer(s) drove the overdue increase (their combined increase exceeds the net increase because other customers improved): Fuji Peak Travel Inc. (+USD 99,499.64), Nusantara Trips PT (+USD 13,000.00), Bali Breeze Tours (+USD 12,000.00).
-- Collected this week: USD 64,500.23. New overdue this week: USD 166,399.63. 30+ days: USD 87,600.28; 90+ days: USD 23,000.00.
+**1. 경영 요약**
+- 총 미수금: JPY 232.62M (+JPY 53.47M (+29.8%))
+- 연체 미수금: JPY 68.07M (+JPY 15.41M (+29.3%))
+- 이번 주 회수액: JPY 9.49M
+- 30일 이상 연체: JPY 12.88M · 90일 이상 연체: JPY 3.38M · 다음 주 만기 예정: JPY 40.32M
+- 연체 증가는 고객사 3곳에서 발생했습니다(다른 고객사의 개선으로 이들의 증가 합계가 순증가분을 초과): Fuji Peak Travel Inc. (+JPY 14,632,300), Nusantara Trips PT (+JPY 1,911,765), Bali Breeze Tours (+JPY 1,764,706).
+- 이번 주 회수액 JPY 9,485,327, 신규 연체 JPY 24,470,535. 30일 이상 연체 JPY 12,882,391, 90일 이상 연체 JPY 3,382,351.
 
-**2. AI Insights**
-- Fuji Peak Travel Inc. (Kenta Sato): overdue +USD 99,499.64 to USD 99,499.64; oldest item 5 days; risk Watch (38/100). New overdue this week: USD 99,500
-- Nusantara Trips PT (Aisha Rahman): overdue +USD 13,000.00 to USD 13,000.00; oldest item 6 days; risk Watch (40/100). Credit utilization 137%
-- Risk: **Mekong Holidays JSC** (Linh Nguyen) — USD 27,100.00: Risk High (81/100): Oldest overdue invoice: 111 days; Overdue USD 27,100
-- Risk: **Sakura Voyage K.K.** (Kenta Sato) — USD 70,300.44: Risk Medium (57/100): Oldest overdue invoice: 58 days; Overdue USD 70,300
-- Risk: **Formosa Travel Hub** (Wei Chen) — USD 62,000.00: Risk Watch (44/100): Overdue USD 62,000; Oldest overdue invoice: 22 days
-- Opportunity: **Fuji Peak Travel Inc.** — USD 99,499.64: Short overdue (5 days), paid regularly (last payment 2026-07-26)
-- Opportunity: **Lion City Journeys Pte.** — USD 17,500.01: Payment promised for 2026-09-09; oldest item 14 days
-- Forecast next week: USD 286,197.58 (confidence medium)
+**2. AI 인사이트**
+- Fuji Peak Travel Inc. (Kenta Sato): 연체 +JPY 14,632,300 → JPY 14,632,300; 최장 연체 5일; 위험 관찰 (38/100). 이번 주 신규 연체: JPY 14,632,300
+- Nusantara Trips PT (Aisha Rahman): 연체 +JPY 1,911,765 → JPY 1,911,765; 최장 연체 6일; 위험 관찰 (40/100). 신용한도 사용률 137%
+- 위험: **Mekong Holidays JSC** (Linh Nguyen) — JPY 3,985,291: 위험 높음 (81/100): 최장 연체 Invoice: 111일; 연체 JPY 3,985,291
+- 위험: **Sakura Voyage K.K.** (Kenta Sato) — JPY 10,338,300: 위험 중간 (54/100): 최장 연체 Invoice: 58일; 연체 JPY 10,338,300
+- 위험: **Formosa Travel Hub** (Wei Chen) — JPY 9,117,647: 위험 관찰 (41/100): 연체 JPY 9,117,647; 최장 연체 Invoice: 22일
+- 기회: **Fuji Peak Travel Inc.** — JPY 14,632,300: 단기 연체(5일), 정기 결제 이력 있음(최근 입금 2026-07-26)
+- 기회: **Lion City Journeys Pte.** — JPY 2,573,530: 2026-09-09 지급 약속; 최장 연체 14일
+- 다음 주 예상 회수액: JPY 42,087,877 (신뢰도 중간)
 
-**3. Required Actions**
-- **Linh Nguyen** → Mekong Holidays JSC · USD 15,800.00 · Promise of USD 15,800.00 missed (no new date); re-confirm remittance date · by 2026-09-07 12:00
-- **Wei Chen** → Formosa Travel Hub · USD 62,000.00 · Promise of USD 62,000.00 missed (no new date); re-confirm remittance date · by 2026-09-07 12:00
-- **Aisha Rahman** → Nusantara Trips PT · USD 34,200.00 · Credit utilization 136.8%; hold new bookings or obtain Finance exception · by 2026-09-07
-- **Somchai Rattana** → Siam Getaways Ltd. · USD 9,500.00 · Close dispute with Ops/Finance; collect undisputed balance now · by 2026-09-09
-- **Kenta Sato** → Sakura Voyage K.K. · USD 60,500.28 · Formal notice for USD 60,500.28 older than 30 days; agree payment plan · by 2026-09-09
+**3. 필수 조치**
+- **Linh Nguyen** → Mekong Holidays JSC · JPY 2,323,528 · JPY 2,323,528 지급 약속 미이행(새 약속일 없음); 송금일 재확정 · 기한 2026-09-07 12:00
+- **Wei Chen** → Formosa Travel Hub · JPY 9,117,647 · JPY 9,117,647 지급 약속 미이행(새 약속일 없음); 송금일 재확정 · 기한 2026-09-07 12:00
+- **Aisha Rahman** → Nusantara Trips PT · JPY 5,029,413 · 신용한도 사용률 136.8%; 신규 예약 보류 또는 Finance 예외 승인 · 기한 2026-09-07
+- **Somchai Rattana** → Siam Getaways Ltd. · JPY 1,397,059 · Ops·Finance와 분쟁 종결; 분쟁 없는 잔액 즉시 회수 · 기한 2026-09-09
+- **Kenta Sato** → Sakura Voyage K.K. · JPY 8,897,100 · 30일 초과 연체 JPY 8,897,100 공식 통지; 분할 지급 계획 합의 · 기한 2026-09-09
 
-**4. CEO Decision Required**
-- **Credit hold / legal escalation** — Mekong Holidays JSC (USD 27,100.00): Approve credit hold and collection-agency/legal path for Mekong Holidays JSC. _USD 27,100.00 overdue, oldest 111 days, risk High_
-- **Credit limit exception** — Nusantara Trips PT (USD 34,200.00): Decide: temporary limit increase or booking hold for Nusantara Trips PT. _Utilization 136.8% with USD 13,000.00 overdue_
+**4. CEO 의사결정 필요**
+- **신용 중단 / 법무 에스컬레이션** — Mekong Holidays JSC (JPY 3,985,291): Mekong Holidays JSC에 대한 신용 중단 및 추심·법무 절차 승인. _연체 JPY 3,985,291, 최장 111일, 위험 높음_
+- **신용한도 예외** — Nusantara Trips PT (JPY 5,029,413): Nusantara Trips PT: 임시 한도 증액 또는 예약 보류 결정. _사용률 136.8%, 연체 JPY 1,911,765_
 
-**5. Links** [Tracker](https://<org>.github.io/outstanding-tracker/#/) · [Customer Risk](https://<org>.github.io/outstanding-tracker/#/customers) · [Action Board](https://<org>.github.io/outstanding-tracker/#/actions)
+**5. 링크** [트래커 열기](https://bstars00-rgb.github.io/Outstanding-Tracker/#/?lang=ko) · [고객사 Risk](https://bstars00-rgb.github.io/Outstanding-Tracker/#/customers?lang=ko) · [액션 보드](https://bstars00-rgb.github.io/Outstanding-Tracker/#/actions?lang=ko)
 
-_Data as of 2026-09-05 09:00 GMT+7 · Sent 2026-09-05 09:00 GMT+7 · Reporting currency USD · Compared with 2026-08-29 · Data customers:full invoices:partial payments:full activities:partial fx:full · Insight: rule-based · Automated report_
+_데이터 기준시각 2026-09-05 09:00 GMT+7 · 발송 2026-09-05 09:00 GMT+7 · 보고 통화 JPY · 비교 기준일 2026-08-29 · 데이터 완전성 customers:full invoices:partial payments:full activities:partial fx:full · 인사이트: rule-based · 자동 생성 보고서_

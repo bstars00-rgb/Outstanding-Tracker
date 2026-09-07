@@ -98,7 +98,7 @@ const norm = (s: string) => s.trim().toLowerCase();
 function collectNumbers(input: InsightInput): number[] {
   const nums: number[] = [];
   const walk = (v: unknown) => {
-    if (typeof v === 'number' && Number.isFinite(v)) nums.push(v);
+    if (typeof v === 'number' && Number.isFinite(v)) nums.push(v, Math.abs(v)); // negatives (e.g. FX effect) are quoted as magnitudes
     else if (Array.isArray(v)) v.forEach(walk);
     else if (v && typeof v === 'object') Object.values(v as Record<string, unknown>).forEach(walk);
   };

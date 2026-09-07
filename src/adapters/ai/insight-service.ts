@@ -1,3 +1,4 @@
+import type { Lang } from '@core/i18n';
 import type { TrackerModel } from '@core/types';
 import { buildInsightInput } from './insight-input';
 import { generateRuleBasedInsight, RuleBasedInsightProvider } from './mock-provider';
@@ -9,6 +10,8 @@ export interface InsightServiceOptions {
   /** When the primary provider fails, the rule-based provider produces the insight. Default true. */
   fallbackToRules?: boolean;
   log?: (line: string) => void;
+  /** Language for the rule-based fallback wording; defaults to the model's language. */
+  lang?: Lang;
 }
 
 /**
@@ -19,6 +22,7 @@ export async function generateInsight(model: TrackerModel, opts: InsightServiceO
   const input = buildInsightInput(model);
   const log = opts.log ?? (() => {});
   const fallback = opts.fallbackToRules ?? true;
+  const lang: Lang = opts.lang ?? model.lang ?? 'en';
   try {
     const { output, model: usedModel } = await opts.provider.generate(input);
     const verification = verifyInsight(input, output);
@@ -31,7 +35,7 @@ export async function generateInsight(model: TrackerModel, opts: InsightServiceO
     re.notes.push(`Removed unverifiable items: ${removed.join(', ') || 'none'}`);
     if (cleaned.executive_summary.length === 0 && fallback) {
       log('[insight] executive summary emptied by sanitization -> rule-based fallback');
-      const rb = generateRuleBasedInsight(input);
+      const rb = generateRuleBasedInsight(input, lang);
       const v = verifyInsight(input, rb);
       v.notes.push('Fallback: rule-based insight used because model output failed verification');
       return { output: rb, provider: new RuleBasedInsightProvider().name, model: null, generated_at: new Date().toISOString(), verification: v, fallback_used: true, error: 'model output failed verification' };
@@ -41,7 +45,7 @@ export async function generateInsight(model: TrackerModel, opts: InsightServiceO
     const err = (e as Error).message;
     log(`[insight] provider ${opts.provider.name} failed: ${err}`);
     if (!fallback) throw e;
-    const rb = generateRuleBasedInsight(input);
+    const rb = generateRuleBasedInsight(input, lang);
     const v = verifyInsight(input, rb);
     v.notes.push(`Fallback: rule-based insight used because provider failed (${err})`);
     return { output: rb, provider: 'rule-based', model: null, generated_at: new Date().toISOString(), verification: v, fallback_used: true, error: err };

@@ -2,19 +2,26 @@ import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import { formatMoney, formatPct } from '@core/money';
-import { AGING_BUCKET_LABEL, AGING_BUCKETS, type CustomerRisk } from '@core/types';
+import { AGING_BUCKET_LABEL_I18N } from '@core/i18n';
+import { AGING_BUCKETS, type CustomerRisk } from '@core/types';
 import { useReadyTracker } from '@app/data/TrackerContext';
+import { useI18n } from '@app/i18n/useI18n';
 import { KpiCard } from '@app/components/KpiCard';
 import { PageHeader } from '@app/components/PageHeader';
 import { DataTable, type Column } from '@app/components/DataTable';
 import { RiskBadge } from '@app/components/RiskBadge';
 import { Money } from '@app/components/Money';
-import { BUCKET_COLORS, ChartWithTable } from '@app/components/ChartWithTable';
+import { ChartWithTable } from '@app/components/ChartWithTable';
+import { chartProps, useChartColors } from '@app/components/chart-theme';
 import { customerLink } from '@app/lib/links';
 
 export function OverviewPage() {
   const { model, insight } = useReadyTracker();
+  const { lang, t } = useI18n();
+  const colors = useChartColors();
+  const cp = chartProps(colors);
   const ccy = model.reporting_currency;
+  const bucketLabel = AGING_BUCKET_LABEL_I18N[lang];
 
   const topRisk = useMemo(() => [...model.customers].sort((a, b) => b.risk.score - a.risk.score || b.overdue_reporting - a.overdue_reporting).slice(0, 5), [model.customers]);
   const moversUp = useMemo(
@@ -35,43 +42,51 @@ export function OverviewPage() {
   );
 
   const riskColumns: Column<CustomerRisk>[] = [
-    { key: 'name', header: 'Customer', render: (c) => <Link to={customerLink(c.customer_id)}>{c.customer_name}</Link> },
-    { key: 'country', header: 'Country', render: (c) => c.country },
-    { key: 'owner', header: 'Owner', render: (c) => c.account_owner_name || 'Unassigned' },
-    { key: 'overdue', header: 'Overdue', align: 'right', render: (c) => <Money amount={c.overdue_reporting} currency={ccy} /> },
-    { key: 'risk', header: 'Risk', render: (c) => <RiskBadge risk={c.risk} /> },
+    { key: 'name', header: t('col.customer'), render: (c) => <Link to={customerLink(c.customer_id)}>{c.customer_name}</Link> },
+    { key: 'country', header: t('col.country'), render: (c) => c.country },
+    { key: 'owner', header: t('col.owner'), render: (c) => c.account_owner_name || t('common.unassigned') },
+    { key: 'ccy', header: t('col.contractCurrency'), render: (c) => <span className="tnum">{c.contract_currency}</span> },
+    {
+      key: 'overdue',
+      header: t('col.overdue'),
+      align: 'right',
+      render: (c) => <Money amount={c.overdue_reporting} currency={ccy} originals={c.totals_by_currency.map((x) => ({ amount: x.overdue, currency: x.currency }))} />,
+    },
+    { key: 'risk', header: t('col.risk'), render: (c) => <RiskBadge risk={c.risk} /> },
   ];
   const moverColumns: Column<CustomerRisk>[] = [
-    { key: 'name', header: 'Customer', render: (c) => <Link to={customerLink(c.customer_id)}>{c.customer_name}</Link> },
-    { key: 'owner', header: 'Owner', render: (c) => c.account_owner_name || 'Unassigned' },
-    { key: 'change', header: 'WoW overdue change', align: 'right', render: (c) => <Money amount={c.wow_overdue_change_reporting} currency={ccy} signed tone /> },
-    { key: 'overdue', header: 'Overdue now', align: 'right', render: (c) => <Money amount={c.overdue_reporting} currency={ccy} /> },
+    { key: 'name', header: t('col.customer'), render: (c) => <Link to={customerLink(c.customer_id)}>{c.customer_name}</Link> },
+    { key: 'owner', header: t('col.owner'), render: (c) => c.account_owner_name || t('common.unassigned') },
+    { key: 'change', header: t('col.wowOverdueChange'), align: 'right', render: (c) => <Money amount={c.wow_overdue_change_reporting} currency={ccy} signed tone /> },
+    { key: 'overdue', header: t('col.overdueNow'), align: 'right', render: (c) => <Money amount={c.overdue_reporting} currency={ccy} /> },
   ];
 
   const stackData = useMemo(() => {
-    const cur: Record<string, number | string> = { name: `This week (${model.reference_date})` };
-    const prev: Record<string, number | string> = { name: `Last week (${model.previous_snapshot_date ?? 'n/a'})` };
+    const cur: Record<string, number | string> = { name: t('overview.thisWeek', { date: model.reference_date }) };
+    const prev: Record<string, number | string> = { name: t('overview.lastWeek', { date: model.previous_snapshot_date ?? t('common.na') }) };
     for (const b of model.aging_by_bucket) {
       cur[b.bucket] = b.amount;
       prev[b.bucket] = b.previous ?? 0;
     }
     return model.previous_snapshot_date ? [cur, prev] : [cur];
-  }, [model]);
+  }, [model, t]);
 
-  const stackRows = model.aging_by_bucket.map((b) => [AGING_BUCKET_LABEL[b.bucket], formatMoney(b.amount, ccy), formatPct(b.share), b.previous === null ? '—' : formatMoney(b.previous, ccy)]);
+  const stackRows = model.aging_by_bucket.map((b) => [bucketLabel[b.bucket], formatMoney(b.amount, ccy), formatPct(b.share), b.previous === null ? '—' : formatMoney(b.previous, ccy)]);
 
   return (
     <div>
       <PageHeader
-        title="Executive Overview"
-        subtitle={
-          <>
-            Reporting week {model.week.start} to {model.week.end} · compared with {model.previous_snapshot_date ?? 'no prior snapshot'} · {model.customers.length} customers, {model.invoices.length} invoices
-          </>
-        }
+        title={t('overview.title')}
+        subtitle={t('overview.subtitle', {
+          start: model.week.start,
+          end: model.week.end,
+          prev: model.previous_snapshot_date ?? t('footer.noPrior'),
+          customers: model.customers.length,
+          invoices: model.invoices.length,
+        })}
       />
 
-      <section className="section" aria-label="Key performance indicators">
+      <section className="section" aria-label={t('overview.kpiAria')}>
         <div className="kpi-grid">
           {model.kpis.map((k) => (
             <KpiCard key={k.key} kpi={k} currency={ccy} />
@@ -79,8 +94,7 @@ export function OverviewPage() {
         </div>
         {model.fx_effect_reporting !== null && (
           <p className="small muted" style={{ marginTop: 10 }}>
-            FX effect on WoW total change: {formatMoney(model.fx_effect_reporting, ccy, { signed: true })} of the week-over-week movement in total outstanding is attributable to exchange-rate changes
-            (rates as of {model.fx.as_of}).
+            {t('overview.fxEffect', { amount: formatMoney(model.fx_effect_reporting, ccy, { signed: true }), date: model.fx.as_of })}
           </p>
         )}
       </section>
@@ -88,19 +102,19 @@ export function OverviewPage() {
       <div className="grid-2 section">
         <section className="card" aria-labelledby="top-risk-h">
           <h2 className="card-title" id="top-risk-h">
-            Top 5 risk customers
+            {t('overview.topRisk')}
             <Link to="/customers" className="small">
-              All customers →
+              {t('overview.allCustomers')}
             </Link>
           </h2>
-          <DataTable columns={riskColumns} rows={topRisk} rowKey={(c) => c.customer_id} compact emptyMessage="No customers." />
+          <DataTable columns={riskColumns} rows={topRisk} rowKey={(c) => c.customer_id} compact emptyMessage={t('overview.noCustomers')} testId="top-risk-table" />
         </section>
 
         <section className="card" aria-labelledby="exec-h">
           <h2 className="card-title" id="exec-h">
-            Executive summary
+            {t('overview.execSummary')}
             <Link to="/insights" className="small">
-              Full weekly insight →
+              {t('overview.fullInsight')}
             </Link>
           </h2>
           <ul className="bullets">
@@ -109,8 +123,8 @@ export function OverviewPage() {
             ))}
           </ul>
           <p className="small muted" style={{ marginTop: 10 }}>
-            Generated by {insight.provider}
-            {insight.model ? ` (${insight.model})` : ''} · verified {insight.verification.ok ? 'OK' : 'with notes'} · AI interprets computed data only.
+            {t('overview.generatedBy', { provider: insight.provider })}
+            {insight.model ? ` (${insight.model})` : ''} · {insight.verification.ok ? t('overview.verifiedOk') : t('overview.verifiedNotes')} · {t('overview.aiNote')}
           </p>
         </section>
       </div>
@@ -118,35 +132,35 @@ export function OverviewPage() {
       <div className="grid-2 section">
         <section className="card" aria-labelledby="movers-up-h">
           <h2 className="card-title" id="movers-up-h">
-            WoW movers — overdue increased
+            {t('overview.moversUp')}
           </h2>
-          <DataTable columns={moverColumns} rows={moversUp} rowKey={(c) => c.customer_id} compact emptyMessage="No customer's overdue increased this week." />
+          <DataTable columns={moverColumns} rows={moversUp} rowKey={(c) => c.customer_id} compact emptyMessage={t('overview.noMoversUp')} />
         </section>
         <section className="card" aria-labelledby="movers-down-h">
           <h2 className="card-title" id="movers-down-h">
-            WoW movers — overdue decreased
+            {t('overview.moversDown')}
           </h2>
-          <DataTable columns={moverColumns} rows={moversDown} rowKey={(c) => c.customer_id} compact emptyMessage="No customer's overdue decreased this week." />
+          <DataTable columns={moverColumns} rows={moversDown} rowKey={(c) => c.customer_id} compact emptyMessage={t('overview.noMoversDown')} />
         </section>
       </div>
 
       <section className="card section" aria-labelledby="aging-h">
         <h2 className="card-title" id="aging-h">
-          Aging profile
+          {t('overview.agingProfile')}
           <Link to="/aging" className="small">
-            Aging analysis →
+            {t('overview.agingLink')}
           </Link>
         </h2>
-        <ChartWithTable title="Outstanding by aging bucket, this week vs last week" columns={['Bucket', 'Amount', 'Share', 'Previous week']} rows={stackRows} height={stackData.length > 1 ? 180 : 120}>
+        <ChartWithTable title={t('overview.agingChartTitle')} columns={[t('col.bucket'), t('col.amount'), t('col.share'), t('col.prevWeek')]} rows={stackRows} height={stackData.length > 1 ? 180 : 120}>
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={stackData} layout="vertical" margin={{ top: 4, right: 16, bottom: 4, left: 8 }}>
-              <CartesianGrid strokeDasharray="3 3" horizontal={false} />
-              <XAxis type="number" tickFormatter={(v) => formatMoney(Number(v), ccy, { compact: true })} fontSize={11} />
-              <YAxis type="category" dataKey="name" width={150} fontSize={11} />
-              <Tooltip formatter={(v, name) => [formatMoney(Number(v), ccy), AGING_BUCKET_LABEL[name as keyof typeof AGING_BUCKET_LABEL] ?? String(name)]} />
-              <Legend formatter={(v) => AGING_BUCKET_LABEL[v as keyof typeof AGING_BUCKET_LABEL] ?? v} wrapperStyle={{ fontSize: 11 }} />
+              <CartesianGrid strokeDasharray="3 3" horizontal={false} {...cp.grid} />
+              <XAxis type="number" tickFormatter={(v) => formatMoney(Number(v), ccy, { compact: true })} fontSize={11} {...cp.axis} />
+              <YAxis type="category" dataKey="name" width={150} fontSize={11} {...cp.axis} />
+              <Tooltip formatter={(v, name) => [formatMoney(Number(v), ccy), bucketLabel[String(name)] ?? String(name)]} {...cp.tooltip} />
+              <Legend formatter={(v) => bucketLabel[String(v)] ?? v} {...cp.legend} />
               {AGING_BUCKETS.map((b) => (
-                <Bar key={b} dataKey={b} stackId="a" fill={BUCKET_COLORS[b]} />
+                <Bar key={b} dataKey={b} stackId="a" fill={colors.buckets[b]} />
               ))}
             </BarChart>
           </ResponsiveContainer>

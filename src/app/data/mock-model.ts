@@ -1,5 +1,6 @@
 import { buildTrackerModel } from '@core/calc';
 import { validateDataset } from '@core/validate';
+import type { Lang } from '@core/i18n';
 import type { ISODate, ReceivablesDataset, TrackerModel } from '@core/types';
 import { MockReceivablesSource } from '@adapters/ellis/mock-adapter';
 import { generateInsight } from '@adapters/ai/insight-service';
@@ -21,10 +22,12 @@ export function mockSource(): MockReceivablesSource {
 
 /**
  * Build the full tracker model + insight for a reference date from the mock source, exactly the
- * way the UI hook does (shared with unit tests). `empty=true` produces a dataset without invoices.
+ * way the UI hook does (shared with unit tests). `empty=true` produces a dataset without invoices;
+ * `lang` selects the language of the engine-generated wording (labels, evidence, actions, insight).
  */
-export async function buildMockModel(referenceDate: ISODate, opts: { empty?: boolean; source?: MockReceivablesSource } = {}): Promise<MockBuild> {
+export async function buildMockModel(referenceDate: ISODate, opts: { empty?: boolean; source?: MockReceivablesSource; lang?: Lang } = {}): Promise<MockBuild> {
   const source = opts.source ?? mockSource();
+  const lang: Lang = opts.lang ?? 'en';
   const history = await source.history(referenceDate, 12);
   const dates = history.map((h) => h.date);
   const previousSnapshot = history.length >= 2 ? history[history.length - 2].snapshot : null;
@@ -37,7 +40,8 @@ export async function buildMockModel(referenceDate: ISODate, opts: { empty?: boo
     referenceDate,
     previousSnapshot: opts.empty ? null : previousSnapshot,
     validationIssues: validation.issues,
+    lang,
   });
-  const insight = await generateInsight(model, { provider: new RuleBasedInsightProvider() });
+  const insight = await generateInsight(model, { provider: new RuleBasedInsightProvider(lang), lang });
   return { model, insight, dates };
 }

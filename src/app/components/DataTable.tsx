@@ -1,4 +1,5 @@
 import { Fragment, useMemo, useState, type ReactNode } from 'react';
+import { useI18n } from '@app/i18n/useI18n';
 
 export type SortDir = 'asc' | 'desc';
 
@@ -73,13 +74,14 @@ export function DataTable<T>({
   defaultSort,
   onRowClick,
   rowHref,
-  emptyMessage = 'No rows match the current filters.',
+  emptyMessage,
   testId,
   caption,
   compact,
   renderExpanded,
   maxRows,
 }: DataTableProps<T>) {
+  const { t } = useI18n();
   const [internalSort, setInternalSort] = useState<{ key: string | null; dir: SortDir }>({ key: defaultSort?.key ?? null, dir: defaultSort?.dir ?? 'desc' });
   const [expanded, setExpanded] = useState<Set<string>>(new Set());
   const controlled = sortKey !== undefined;
@@ -114,7 +116,7 @@ export function DataTable<T>({
           <tr>
             {renderExpanded && (
               <th style={{ width: 36 }}>
-                <span className="sr-only">Expand</span>
+                <span className="sr-only">{t('common.expand')}</span>
               </th>
             )}
             {columns.map((c) => {
@@ -131,7 +133,7 @@ export function DataTable<T>({
                   scope="col"
                 >
                   {sortable ? (
-                    <button type="button" className="sort" onClick={() => toggleSort(c.key)} aria-label={typeof c.header === 'string' ? `Sort by ${c.header}` : undefined}>
+                    <button type="button" className="sort" onClick={() => toggleSort(c.key)} aria-label={typeof c.header === 'string' ? t('common.sortBy', { col: c.header }) : undefined}>
                       {c.header}
                       <span aria-hidden="true">{isSorted ? (dir === 'asc' ? '▲' : '▼') : '↕'}</span>
                     </button>
@@ -147,7 +149,7 @@ export function DataTable<T>({
           {shown.length === 0 && (
             <tr>
               <td className="empty" colSpan={colCount}>
-                {emptyMessage}
+                {emptyMessage ?? t('common.noRows')}
               </td>
             </tr>
           )}
@@ -177,7 +179,7 @@ export function DataTable<T>({
                         type="button"
                         className="expand-btn"
                         aria-expanded={isOpen}
-                        aria-label={isOpen ? 'Collapse row details' : 'Expand row details'}
+                        aria-label={isOpen ? t('common.collapseRow') : t('common.expandRow')}
                         onClick={(e) => {
                           e.stopPropagation();
                           toggleExpand(id);

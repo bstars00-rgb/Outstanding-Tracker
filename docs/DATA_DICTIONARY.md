@@ -153,7 +153,7 @@ Type aliases: `ISODate` = `YYYY-MM-DD`; `ISODateTime` = ISO 8601 with offset (e.
 | `FxRate.rate_to_reporting` | number > 0 | no | **Reporting-currency units per 1 unit of `currency`** (e.g. KRW→USD = 0.00072) |
 | `FxRate.rate_date` | ISODate | no | Date the rate is valid for — surfaced as `exchange_rate_date` on invoices |
 | `FxRate.source` | string | no | e.g. `mock-fx (illustrative rates)`, `ILLUSTRATIVE - replace with treasury/ECB feed`, `identity` |
-| `FxTable.reporting_currency` | CurrencyCode | no | Default `USD` (`REPORTING_CURRENCY`) |
+| `FxTable.reporting_currency` | CurrencyCode | no | Default `JPY` (`REPORTING_CURRENCY`; company default currency) |
 | `FxTable.as_of` | ISODate | no | Table date; set to the snapshot date by `datasetAsOf()` |
 | `FxTable.rates` | FxRate[] | no | One row per foreign currency |
 
@@ -471,7 +471,7 @@ The remainder of `Total change − fx_effect` is real balance movement (new invo
 | FX effect separated | `TrackerModel.fx_effect_reporting`; surfaced in insight (`fx_effect_reporting`) and rule-based summary |
 | Zero-decimal display | `JPY KRW VND IDR TWD` formatted without decimals; others 2 dp |
 | Compact display | ≥ 1 000 000 → `x.xxM`; ≥ 10 000 → `x.xK` |
-| Live-mode FX | Ellis `fxRate` (local → KRW) is not used; reporting is `USD` by default, so a **Required** rates feed replaces the illustrative table |
+| Live-mode FX | Ellis `fxRate` (local → KRW) is not used; reporting is `JPY` by default (company currency), so a **Required** rates feed (KRW→JPY or direct) replaces the illustrative table |
 
 ---
 

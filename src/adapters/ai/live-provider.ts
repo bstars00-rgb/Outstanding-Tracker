@@ -26,8 +26,12 @@ Rules (strict):
 - Deadlines: use the report date plus 2 days (Monday) for urgent items, plus 4 days for others, in YYYY-MM-DD.
 - Amounts are in the reporting currency given in the input.`;
 
+const KOREAN_ADDENDUM = '\n- Write all prose in natural Korean business language (고객사명, 담당자명, 숫자는 입력값 그대로 유지).';
+
 export interface LiveInsightConfig {
   apiKey?: string;
+  /** Output language for the wording ('en' | 'ko'); numbers/names are copied verbatim either way. */
+  lang?: 'en' | 'ko';
   model?: string;
   maxTokens?: number;
   timeoutMs?: number;
@@ -39,18 +43,20 @@ export class ClaudeInsightProvider implements InsightProvider {
   private readonly client: Anthropic;
   private readonly model: string;
   private readonly maxTokens: number;
+  private readonly lang: 'en' | 'ko';
 
   constructor(cfg: LiveInsightConfig = {}) {
     this.client = new Anthropic({ apiKey: cfg.apiKey, timeout: cfg.timeoutMs ?? 120_000, maxRetries: 2 });
     this.model = cfg.model ?? 'claude-opus-5';
     this.maxTokens = cfg.maxTokens ?? 8_000;
+    this.lang = cfg.lang ?? 'en';
   }
 
   async generate(input: InsightInput): Promise<{ output: InsightOutput; model: string | null }> {
     const response = await this.client.messages.parse({
       model: this.model,
       max_tokens: this.maxTokens,
-      system: [{ type: 'text', text: SYSTEM_PROMPT, cache_control: { type: 'ephemeral' } }],
+      system: [{ type: 'text', text: SYSTEM_PROMPT + (this.lang === 'ko' ? KOREAN_ADDENDUM : ''), cache_control: { type: 'ephemeral' } }],
       thinking: { type: 'adaptive' },
       output_config: { effort: 'medium', format: zodOutputFormat(InsightOutputSchema) },
       messages: [{ role: 'user', content: `Weekly receivables figures (JSON). Produce the insight JSON.\n\n${JSON.stringify(input)}` }],

@@ -50,7 +50,8 @@ concurrency:
 
 env:
   REPORT_TIMEZONE: ${{ vars.REPORT_TIMEZONE || 'Asia/Ho_Chi_Minh' }}
-  REPORTING_CURRENCY: ${{ vars.REPORTING_CURRENCY || 'USD' }}
+  REPORTING_CURRENCY: ${{ vars.REPORTING_CURRENCY || 'JPY' }}
+  REPORT_LANGUAGE: ${{ vars.REPORT_LANGUAGE || 'ko' }}
   TRACKER_BASE_URL: ${{ vars.TRACKER_BASE_URL || format('https://{0}.github.io/{1}/', github.repository_owner, github.event.repository.name) }}
   RECIPIENT_CONFIG: ${{ vars.RECIPIENT_CONFIG }}
   DATA_STORAGE_CONFIG: '{"dir":"automation/state"}'

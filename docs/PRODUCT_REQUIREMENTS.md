@@ -170,7 +170,7 @@ Renders `InsightResult`: header (week ending, compared with, provider), `executi
 
 ## 5. KPI list
 
-Values come from `SnapshotTotals` via `buildKpis()` (`src/core/kpis.ts`). `definition` strings are copied verbatim from the code. Reporting currency is `REPORTING_CURRENCY` (default `USD`).
+Values come from `SnapshotTotals` via `buildKpis()` (`src/core/kpis.ts`). `definition` strings are copied verbatim from the code. Reporting currency is `REPORTING_CURRENCY` (default `JPY`, the company default currency); customer screens additionally show original-currency balances per contract currency.
 
 | Key | Label | Unit | Definition (verbatim) | Status rule |
 | --- | --- | --- | --- | --- |

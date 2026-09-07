@@ -1,4 +1,5 @@
 import type { CSSProperties } from 'react';
+import { useI18n } from '@app/i18n/useI18n';
 
 export function Skeleton({ width = '100%', height = 14, style, className }: { width?: number | string; height?: number | string; style?: CSSProperties; className?: string }) {
   return <div className={`skeleton ${className ?? ''}`} style={{ width, height, ...style }} aria-hidden="true" />;
@@ -33,9 +34,10 @@ export function SkeletonTable({ rows = 8, cols = 6 }: { rows?: number; cols?: nu
 
 /** Full-page skeleton chosen by route. */
 export function PageSkeleton({ variant }: { variant: 'overview' | 'table' | 'board' | 'detail' }) {
+  const { t } = useI18n();
   return (
     <div data-testid="state-loading" role="status" aria-live="polite" aria-busy="true">
-      <span className="sr-only">Loading data…</span>
+      <span className="sr-only">{t('state.loading')}</span>
       <div className="page-header">
         <div style={{ display: 'grid', gap: 8 }}>
           <Skeleton width={260} height={24} />

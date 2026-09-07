@@ -3,8 +3,29 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="color-scheme" content="light" />
+    <meta name="color-scheme" content="light dark" />
     <title>Outstanding Tracker</title>
+    <script>
+      // Apply theme + language before React mounts so there is no flash of the wrong palette.
+      (function () {
+        try {
+          var t = localStorage.getItem('ot.theme');
+          if (t !== 'dark' && t !== 'light') {
+            t = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+          }
+          document.documentElement.setAttribute('data-theme', t);
+          var h = location.hash || '';
+          var i = h.indexOf('?');
+          var l = i >= 0 ? new URLSearchParams(h.slice(i + 1)).get('lang') : null;
+          if (l !== 'ko' && l !== 'en') l = new URLSearchParams(location.search).get('lang');
+          if (l !== 'ko' && l !== 'en') l = localStorage.getItem('ot.lang');
+          if (l !== 'ko' && l !== 'en') l = (navigator.language || 'en').toLowerCase().indexOf('ko') === 0 ? 'ko' : 'en';
+          document.documentElement.setAttribute('lang', l);
+        } catch (e) {
+          document.documentElement.setAttribute('data-theme', 'light');
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

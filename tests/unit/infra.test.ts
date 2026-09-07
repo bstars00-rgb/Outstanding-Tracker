@@ -48,7 +48,8 @@ describe('env loading', () => {
     expect(cfg.DATA_SOURCE).toBe('mock');
     expect(cfg.TEAMS_SENDER).toBe('mock');
     expect(cfg.TARGET_CHANNEL).toBe('test');
-    expect(cfg.REPORTING_CURRENCY).toBe('USD');
+    expect(cfg.REPORTING_CURRENCY).toBe('JPY');
+    expect(cfg.REPORT_LANGUAGE).toBe('ko');
     expect(cfg.REPORT_TIMEZONE).toBe('Asia/Ho_Chi_Minh');
   });
   it('refuses live sends without secrets', () => {

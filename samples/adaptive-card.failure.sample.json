@@ -5,7 +5,7 @@
   "body": [
     {
       "type": "TextBlock",
-      "text": "⚠️ [Weekly Outstanding Report] 2026-09-05 — Data refresh failed",
+      "text": "⚠️ [주간 미수금 보고] 2026-09-05 — 데이터 갱신 실패 (Data refresh failed)",
       "size": "Large",
       "weight": "Bolder",
       "wrap": true,
@@ -13,12 +13,12 @@
     },
     {
       "type": "TextBlock",
-      "text": "The weekly receivables report could not be produced.\n\nReason: Ellis MCP get_hotel_bookings timed out after 2 attempts (Japan, offset 1500)\n\nNo figures are shown because stale data must not be presented as current. The tracker shows the last successful snapshot. Ops has been alerted.",
+      "text": "이번 주 미수금 보고서를 생성할 수 없었습니다.\n\n원인: Ellis MCP get_hotel_bookings timed out after 2 attempts (Japan, offset 1500)\n\n오래된 데이터를 최신 데이터처럼 보여줄 수 없어 수치를 표시하지 않습니다. 트래커에는 마지막으로 성공한 스냅샷이 표시됩니다. 운영팀에 알림을 보냈습니다.",
       "wrap": true
     },
     {
       "type": "TextBlock",
-      "text": "Attempted 2026-09-05 09:00 GMT+7 · Automated message",
+      "text": "시도 시각 2026-09-05 09:00 GMT+7 · 자동 생성 메시지",
       "isSubtle": true,
       "size": "Small",
       "wrap": true
@@ -27,8 +27,8 @@
   "actions": [
     {
       "type": "Action.OpenUrl",
-      "title": "Open Tracker",
-      "url": "https://<org>.github.io/outstanding-tracker/#/"
+      "title": "트래커 열기",
+      "url": "https://bstars00-rgb.github.io/Outstanding-Tracker/#/"
     }
   ]
 }

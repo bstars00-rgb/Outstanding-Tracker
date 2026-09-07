@@ -1,285 +1,285 @@
 {
   "report_date": "2026-09-05",
   "previous_snapshot_date": "2026-08-29",
-  "reporting_currency": "USD",
+  "reporting_currency": "JPY",
   "is_mock": true,
   "kpis": [
     {
       "key": "total_outstanding",
-      "label": "Total Outstanding",
-      "value": 1581798.06,
-      "previous": 1213304.19,
-      "change": 368493.87,
-      "change_pct": 0.303711,
+      "label": "총 미수금",
+      "value": 232617355.74,
+      "previous": 179151934.42,
+      "change": 53465421.32,
+      "change_pct": 0.29843600000000003,
       "unit": "currency"
     },
     {
       "key": "overdue_outstanding",
-      "label": "Overdue Outstanding",
-      "value": 462900.59,
-      "previous": 356683.59,
-      "change": 106217,
-      "change_pct": 0.297791,
+      "label": "연체 미수금",
+      "value": 68073614.33,
+      "previous": 52665900.68,
+      "change": 15407713.65,
+      "change_pct": 0.292556,
       "unit": "currency"
     },
     {
       "key": "overdue_ratio",
-      "label": "Overdue Ratio",
+      "label": "연체 비율",
       "value": 0.292642,
-      "previous": 0.2939770528609153,
+      "previous": 0.2939733854982061,
       "change": 0,
       "change_pct": 0,
       "unit": "ratio"
     },
     {
       "key": "due_within_7_days",
-      "label": "Due Within 7 Days",
-      "value": 274197.58,
-      "previous": 170026.62,
-      "change": 104170.96,
-      "change_pct": 0.6126739999999999,
+      "label": "7일 이내 만기",
+      "value": 40323170.96,
+      "previous": 25104332.5,
+      "change": 15218838.46,
+      "change_pct": 0.606224,
       "unit": "currency"
     },
     {
       "key": "collected_this_week",
-      "label": "Collected This Week",
-      "value": 64500.23,
-      "previous": 225261.15,
-      "change": -160760.92,
-      "change_pct": -0.713665,
+      "label": "이번 주 회수액",
+      "value": 9485326.81,
+      "previous": 33260863.5,
+      "change": -23775536.69,
+      "change_pct": -0.71482,
       "unit": "currency"
     },
     {
       "key": "new_overdue_this_week",
-      "label": "New Overdue This Week",
-      "value": 166399.63,
-      "previous": 74886.04,
-      "change": 91513.59,
-      "change_pct": 1.222038,
+      "label": "이번 주 신규 연체",
+      "value": 24470535.17,
+      "previous": 11058652.45,
+      "change": 13411882.72,
+      "change_pct": 1.212795,
       "unit": "currency"
     },
     {
       "key": "overdue_30_plus",
-      "label": "30+ Days Overdue",
-      "value": 87600.28,
-      "previous": 83269.78,
-      "change": 4330.5,
-      "change_pct": 0.052006,
+      "label": "30일 이상 연체",
+      "value": 12882391.28,
+      "previous": 12294736.73,
+      "change": 587654.55,
+      "change_pct": 0.047797000000000006,
       "unit": "currency"
     },
     {
       "key": "overdue_90_plus",
-      "label": "90+ Days Overdue",
-      "value": 23000,
-      "previous": 15807.9,
-      "change": 7192.1,
-      "change_pct": 0.45496899999999996,
+      "label": "90일 이상 연체",
+      "value": 3382350.57,
+      "previous": 2334028.64,
+      "change": 1048321.93,
+      "change_pct": 0.449147,
       "unit": "currency"
     },
     {
       "key": "broken_promises",
-      "label": "Broken Promises",
-      "value": 77800,
-      "previous": 15807.9,
-      "change": 61992.1,
-      "change_pct": 3.92159,
+      "label": "약속 불이행",
+      "value": 11441174.77,
+      "previous": 2334028.64,
+      "change": 9107146.13,
+      "change_pct": 3.9019,
       "unit": "currency"
     },
     {
       "key": "at_risk_amount",
-      "label": "At-Risk Amount",
-      "value": 226301.18,
-      "previous": 140399.33,
-      "change": 85901.85,
-      "change_pct": 0.611839,
+      "label": "위험 노출 금액",
+      "value": 33279584.02,
+      "previous": 20729880.23,
+      "change": 12549703.79,
+      "change_pct": 0.605392,
       "unit": "currency"
     }
   ],
-  "fx_effect_reporting": 155.2,
+  "fx_effect_reporting": -663898.85,
   "top_overdue_customers": [
     {
       "customer": "Fuji Peak Travel Inc.",
       "country": "Japan",
       "owner": "Kenta Sato",
-      "total": 116499.64,
-      "overdue": 99499.64,
+      "total": 17132300,
+      "overdue": 14632300,
       "overdue_30_plus": 0,
       "max_aging_days": 5,
-      "wow_overdue_change": 99499.64,
+      "wow_overdue_change": 14632300,
       "risk_score": 38,
       "risk_grade": "Watch",
       "risk_reasons": [
-        "Overdue USD 99,500",
-        "New overdue this week: USD 99,500",
-        "Oldest overdue invoice: 5 days"
+        "연체 JPY 14,632,300",
+        "이번 주 신규 연체: JPY 14,632,300",
+        "최장 연체 Invoice: 5일"
       ],
       "promise_date": null,
       "broken_promise_amount": 0,
       "credit_utilization": 0.7766650951094348,
       "disputed": 0,
       "last_payment_date": "2026-07-26",
-      "recommended_action": "Send payment reminder and confirm remittance date"
+      "recommended_action": "지급 리마인더 발송 및 송금일 확인"
     },
     {
       "customer": "Sakura Voyage K.K.",
       "country": "Japan",
       "owner": "Kenta Sato",
-      "total": 82700.24,
-      "overdue": 70300.44,
-      "overdue_30_plus": 60500.28,
+      "total": 12161800,
+      "overdue": 10338300,
+      "overdue_30_plus": 8897100,
       "max_aging_days": 58,
-      "wow_overdue_change": 281.2,
-      "risk_score": 57,
+      "wow_overdue_change": 0,
+      "risk_score": 54,
       "risk_grade": "Medium",
       "risk_reasons": [
-        "Oldest overdue invoice: 58 days",
-        "Overdue USD 70,300",
-        "73% of outstanding is 30+ days overdue"
+        "최장 연체 Invoice: 58일",
+        "연체 JPY 10,338,300",
+        "미수금의 73%가 30일 이상 연체"
       ],
       "promise_date": null,
       "broken_promise_amount": 0,
-      "credit_utilization": 0.6891670586101967,
+      "credit_utilization": 0.6891670586101966,
       "disputed": 0,
       "last_payment_date": "2026-06-27",
-      "recommended_action": "Send formal overdue notice and call decision maker this week; request payment plan"
+      "recommended_action": "이번 주 공식 연체 통지 발송 및 의사결정자 통화; 분할 지급 계획 요청"
     },
     {
       "customer": "Formosa Travel Hub",
       "country": "Taiwan",
       "owner": "Wei Chen",
-      "total": 77000.9,
-      "overdue": 62000,
+      "total": 11323661.77,
+      "overdue": 9117647.06,
       "overdue_30_plus": 0,
       "max_aging_days": 22,
-      "wow_overdue_change": 62,
-      "risk_score": 44,
+      "wow_overdue_change": -27462.8,
+      "risk_score": 41,
       "risk_grade": "Watch",
       "risk_reasons": [
-        "Overdue USD 62,000",
-        "Oldest overdue invoice: 22 days",
-        "Unfulfilled promise USD 62,000"
+        "연체 JPY 9,117,647",
+        "최장 연체 Invoice: 22일",
+        "미이행 약속 금액 JPY 9,117,647"
       ],
       "promise_date": null,
-      "broken_promise_amount": 62000,
-      "credit_utilization": 0.8555731606503169,
+      "broken_promise_amount": 9117647.06,
+      "credit_utilization": 0.8555731610883461,
       "disputed": 0,
       "last_payment_date": null,
-      "recommended_action": "Re-confirm payment date with customer today; escalate to Sales leader if no confirmation within 2 business days"
+      "recommended_action": "오늘 고객사와 지급일 재확정; 영업일 2일 내 확답이 없으면 Sales 리더에게 에스컬레이션"
     },
     {
       "customer": "Siam Getaways Ltd.",
       "country": "Thailand",
       "owner": "Somchai Rattana",
-      "total": 49800,
-      "overdue": 27500,
+      "total": 7323529.42,
+      "overdue": 4044117.66,
       "overdue_30_plus": 0,
       "max_aging_days": 25,
-      "wow_overdue_change": -27.5,
+      "wow_overdue_change": -20301.8,
       "risk_score": 39,
       "risk_grade": "Watch",
       "risk_reasons": [
-        "Overdue USD 27,500",
-        "Oldest overdue invoice: 25 days",
-        "Last collection activity 22 days ago"
+        "연체 JPY 4,044,118",
+        "최장 연체 Invoice: 25일",
+        "마지막 회수 활동 22일 전"
       ],
       "promise_date": null,
       "broken_promise_amount": 0,
-      "credit_utilization": 0.6225,
-      "disputed": 9500,
+      "credit_utilization": 0.6224999997662499,
+      "disputed": 1397058.81,
       "last_payment_date": null,
-      "recommended_action": "Resolve dispute with Operations/Finance; agree undisputed portion to be paid now"
+      "recommended_action": "Ops·Finance와 분쟁 해결; 분쟁 없는 금액은 즉시 지급 합의"
     },
     {
       "customer": "Mekong Holidays JSC",
       "country": "Vietnam",
       "owner": "Linh Nguyen",
-      "total": 27100,
-      "overdue": 27100,
-      "overdue_30_plus": 27100,
+      "total": 3985291.28,
+      "overdue": 3985291.28,
+      "overdue_30_plus": 3985291.28,
       "max_aging_days": 111,
-      "wow_overdue_change": -13.55,
+      "wow_overdue_change": -18011.09,
       "risk_score": 81,
       "risk_grade": "High",
       "risk_reasons": [
-        "Oldest overdue invoice: 111 days",
-        "Overdue USD 27,100",
-        "100% of outstanding is 30+ days overdue"
+        "최장 연체 Invoice: 111일",
+        "연체 JPY 3,985,291",
+        "미수금의 100%가 30일 이상 연체"
       ],
       "promise_date": null,
-      "broken_promise_amount": 15800,
-      "credit_utilization": 1.355,
+      "broken_promise_amount": 2323527.71,
+      "credit_utilization": 1.3550000397970297,
       "disputed": 0,
       "last_payment_date": null,
-      "recommended_action": "Escalate to Finance leader; evaluate credit hold and legal/collection agency path"
+      "recommended_action": "Finance 리더에게 에스컬레이션; 신용 중단 및 법무·추심 경로 검토"
     },
     {
       "customer": "Lion City Journeys Pte.",
       "country": "Singapore",
       "owner": "Aisha Rahman",
-      "total": 25300.01,
-      "overdue": 17500.01,
+      "total": 3720588.96,
+      "overdue": 2573530.14,
       "overdue_30_plus": 0,
       "max_aging_days": 14,
-      "wow_overdue_change": 5500.01,
+      "wow_overdue_change": 801737.09,
       "risk_score": 31,
       "risk_grade": "Watch",
       "risk_reasons": [
-        "Overdue USD 17,500",
-        "Oldest overdue invoice: 14 days",
-        "Overdue +46% vs last week (USD 12,000 -> USD 17,500)"
+        "연체 JPY 2,573,530",
+        "최장 연체 Invoice: 14일",
+        "연체 전주 대비 +45% (JPY 1,771,793 → JPY 2,573,530)"
       ],
       "promise_date": "2026-09-09",
       "broken_promise_amount": 0,
-      "credit_utilization": 0.5060002,
+      "credit_utilization": 0.5060000735433564,
       "disputed": 0,
       "last_payment_date": "2026-09-04",
-      "recommended_action": "Send payment reminder and confirm remittance date"
+      "recommended_action": "지급 리마인더 발송 및 송금일 확인"
     },
     {
       "customer": "Penang Heritage Travel",
       "country": "Malaysia",
       "owner": "Aisha Rahman",
-      "total": 49000,
-      "overdue": 14000,
+      "total": 7205882.6,
+      "overdue": 2058823.74,
       "overdue_30_plus": 0,
       "max_aging_days": 26,
-      "wow_overdue_change": 6000,
+      "wow_overdue_change": 877628.25,
       "risk_score": 40,
       "risk_grade": "Watch",
       "risk_reasons": [
-        "Oldest overdue invoice: 26 days",
-        "Overdue USD 14,000",
-        "Overdue +75% vs last week (USD 8,000 -> USD 14,000)"
+        "최장 연체 Invoice: 26일",
+        "연체 JPY 2,058,824",
+        "연체 전주 대비 +74% (JPY 1,181,195 → JPY 2,058,824)"
       ],
       "promise_date": null,
       "broken_promise_amount": 0,
-      "credit_utilization": 0.5104166666666666,
+      "credit_utilization": 0.5104166797855901,
       "disputed": 0,
       "last_payment_date": "2026-07-25",
-      "recommended_action": "Send payment reminder and confirm remittance date"
+      "recommended_action": "지급 리마인더 발송 및 송금일 확인"
     },
     {
       "customer": "Busan Marine Travel",
       "country": "Korea",
       "owner": "Minji Park",
-      "total": 50000.12,
-      "overdue": 13500,
+      "total": 7352958.76,
+      "overdue": 1985294.06,
       "overdue_30_plus": 0,
       "max_aging_days": 15,
-      "wow_overdue_change": -27,
+      "wow_overdue_change": -11959.69,
       "risk_score": 30,
       "risk_grade": "Watch",
       "risk_reasons": [
-        "Oldest overdue invoice: 15 days",
-        "Overdue USD 13,500",
-        "No collection activity recorded"
+        "최장 연체 Invoice: 15일",
+        "연체 JPY 1,985,294",
+        "기록된 회수 활동 없음"
       ],
       "promise_date": null,
       "broken_promise_amount": 0,
-      "credit_utilization": 0.5000012,
+      "credit_utilization": 0.5000011957800002,
       "disputed": 0,
       "last_payment_date": null,
-      "recommended_action": "Send payment reminder and confirm remittance date"
+      "recommended_action": "지급 리마인더 발송 및 송금일 확인"
     }
   ],
   "new_overdue_customers": [
@@ -287,185 +287,185 @@
       "customer": "Fuji Peak Travel Inc.",
       "country": "Japan",
       "owner": "Kenta Sato",
-      "total": 116499.64,
-      "overdue": 99499.64,
+      "total": 17132300,
+      "overdue": 14632300,
       "overdue_30_plus": 0,
       "max_aging_days": 5,
-      "wow_overdue_change": 99499.64,
+      "wow_overdue_change": 14632300,
       "risk_score": 38,
       "risk_grade": "Watch",
       "risk_reasons": [
-        "Overdue USD 99,500",
-        "New overdue this week: USD 99,500",
-        "Oldest overdue invoice: 5 days"
+        "연체 JPY 14,632,300",
+        "이번 주 신규 연체: JPY 14,632,300",
+        "최장 연체 Invoice: 5일"
       ],
       "promise_date": null,
       "broken_promise_amount": 0,
       "credit_utilization": 0.7766650951094348,
       "disputed": 0,
       "last_payment_date": "2026-07-26",
-      "recommended_action": "Send payment reminder and confirm remittance date"
+      "recommended_action": "지급 리마인더 발송 및 송금일 확인"
     },
     {
       "customer": "Nusantara Trips PT",
       "country": "Indonesia",
       "owner": "Aisha Rahman",
-      "total": 34200,
-      "overdue": 13000,
+      "total": 5029413.31,
+      "overdue": 1911765.49,
       "overdue_30_plus": 0,
       "max_aging_days": 6,
-      "wow_overdue_change": 13000,
+      "wow_overdue_change": 1911765.49,
       "risk_score": 40,
       "risk_grade": "Watch",
       "risk_reasons": [
-        "Overdue USD 13,000",
-        "Credit utilization 137%",
-        "New overdue this week: USD 13,000"
+        "연체 JPY 1,911,765",
+        "신용한도 사용률 137%",
+        "이번 주 신규 연체: JPY 1,911,765"
       ],
       "promise_date": null,
       "broken_promise_amount": 0,
-      "credit_utilization": 1.368,
+      "credit_utilization": 1.36800003640447,
       "disputed": 0,
       "last_payment_date": null,
-      "recommended_action": "Credit limit exceeded: hold new bookings until balance is below limit or Finance approves exception"
+      "recommended_action": "신용한도 초과: 잔액이 한도 아래로 내려가거나 Finance가 예외 승인할 때까지 신규 예약 보류"
     },
     {
       "customer": "Bali Breeze Tours",
       "country": "Indonesia",
       "owner": "Aisha Rahman",
-      "total": 44000,
-      "overdue": 12000,
+      "total": 6470589.73,
+      "overdue": 1764706.13,
       "overdue_30_plus": 0,
       "max_aging_days": 7,
-      "wow_overdue_change": 12000,
+      "wow_overdue_change": 1764706.13,
       "risk_score": 30,
       "risk_grade": "Watch",
       "risk_reasons": [
-        "Overdue USD 12,000",
-        "New overdue this week: USD 12,000",
-        "Oldest overdue invoice: 7 days"
+        "연체 JPY 1,764,706",
+        "이번 주 신규 연체: JPY 1,764,706",
+        "최장 연체 Invoice: 7일"
       ],
       "promise_date": null,
       "broken_promise_amount": 0,
-      "credit_utilization": 0.4888888888888889,
+      "credit_utilization": 0.4888889175160444,
       "disputed": 0,
       "last_payment_date": "2026-07-23",
-      "recommended_action": "Send payment reminder and confirm remittance date"
+      "recommended_action": "지급 리마인더 발송 및 송금일 확인"
     },
     {
       "customer": "Manila Bay Travel Corp.",
       "country": "Philippines",
       "owner": "Aisha Rahman",
-      "total": 15000,
-      "overdue": 9400,
+      "total": 2205882.36,
+      "overdue": 1382352.95,
       "overdue_30_plus": 0,
       "max_aging_days": 4,
-      "wow_overdue_change": 9400,
+      "wow_overdue_change": 1382352.95,
       "risk_score": 26,
       "risk_grade": "Low",
       "risk_reasons": [
-        "Overdue USD 9,400",
-        "New overdue this week: USD 9,400",
-        "Oldest overdue invoice: 4 days"
+        "연체 JPY 1,382,353",
+        "이번 주 신규 연체: JPY 1,382,353",
+        "최장 연체 Invoice: 4일"
       ],
       "promise_date": null,
       "broken_promise_amount": 0,
-      "credit_utilization": 0.375,
+      "credit_utilization": 0.37500000063749994,
       "disputed": 0,
       "last_payment_date": null,
-      "recommended_action": "Send payment reminder and confirm remittance date"
+      "recommended_action": "지급 리마인더 발송 및 송금일 확인"
     },
     {
       "customer": "Seoul Express Holidays",
       "country": "Korea",
       "owner": "Minji Park",
-      "total": 64999.95,
-      "overdue": 6999.98,
+      "total": 9558815.02,
+      "overdue": 1029409.38,
       "overdue_30_plus": 0,
       "max_aging_days": 7,
-      "wow_overdue_change": 6999.98,
+      "wow_overdue_change": 1029409.38,
       "risk_score": 26,
       "risk_grade": "Low",
       "risk_reasons": [
-        "Overdue USD 7,000",
-        "New overdue this week: USD 7,000",
-        "Oldest overdue invoice: 7 days"
+        "연체 JPY 1,029,409",
+        "이번 주 신규 연체: JPY 1,029,409",
+        "최장 연체 Invoice: 7일"
       ],
       "promise_date": null,
       "broken_promise_amount": 0,
-      "credit_utilization": 0.8227843855150343,
+      "credit_utilization": 0.822784267390357,
       "disputed": 0,
       "last_payment_date": "2026-07-27",
-      "recommended_action": "Send payment reminder and confirm remittance date"
+      "recommended_action": "지급 리마인더 발송 및 송금일 확인"
     },
     {
       "customer": "Penang Heritage Travel",
       "country": "Malaysia",
       "owner": "Aisha Rahman",
-      "total": 49000,
-      "overdue": 14000,
+      "total": 7205882.6,
+      "overdue": 2058823.74,
       "overdue_30_plus": 0,
       "max_aging_days": 26,
-      "wow_overdue_change": 6000,
+      "wow_overdue_change": 877628.25,
       "risk_score": 40,
       "risk_grade": "Watch",
       "risk_reasons": [
-        "Oldest overdue invoice: 26 days",
-        "Overdue USD 14,000",
-        "Overdue +75% vs last week (USD 8,000 -> USD 14,000)"
+        "최장 연체 Invoice: 26일",
+        "연체 JPY 2,058,824",
+        "연체 전주 대비 +74% (JPY 1,181,195 → JPY 2,058,824)"
       ],
       "promise_date": null,
       "broken_promise_amount": 0,
-      "credit_utilization": 0.5104166666666666,
+      "credit_utilization": 0.5104166797855901,
       "disputed": 0,
       "last_payment_date": "2026-07-25",
-      "recommended_action": "Send payment reminder and confirm remittance date"
+      "recommended_action": "지급 리마인더 발송 및 송금일 확인"
     },
     {
       "customer": "Lion City Journeys Pte.",
       "country": "Singapore",
       "owner": "Aisha Rahman",
-      "total": 25300.01,
-      "overdue": 17500.01,
+      "total": 3720588.96,
+      "overdue": 2573530.14,
       "overdue_30_plus": 0,
       "max_aging_days": 14,
-      "wow_overdue_change": 5500.01,
+      "wow_overdue_change": 801737.09,
       "risk_score": 31,
       "risk_grade": "Watch",
       "risk_reasons": [
-        "Overdue USD 17,500",
-        "Oldest overdue invoice: 14 days",
-        "Overdue +46% vs last week (USD 12,000 -> USD 17,500)"
+        "연체 JPY 2,573,530",
+        "최장 연체 Invoice: 14일",
+        "연체 전주 대비 +45% (JPY 1,771,793 → JPY 2,573,530)"
       ],
       "promise_date": "2026-09-09",
       "broken_promise_amount": 0,
-      "credit_utilization": 0.5060002,
+      "credit_utilization": 0.5060000735433564,
       "disputed": 0,
       "last_payment_date": "2026-09-04",
-      "recommended_action": "Send payment reminder and confirm remittance date"
+      "recommended_action": "지급 리마인더 발송 및 송금일 확인"
     },
     {
       "customer": "Bangkok Riverside Travel",
       "country": "Thailand",
       "owner": "Somchai Rattana",
-      "total": 31000,
-      "overdue": 4000,
+      "total": 4558823.5,
+      "overdue": 588235.28,
       "overdue_30_plus": 0,
       "max_aging_days": 2,
-      "wow_overdue_change": 4000,
+      "wow_overdue_change": 588235.28,
       "risk_score": 26,
       "risk_grade": "Low",
       "risk_reasons": [
-        "Overdue USD 4,000",
-        "New overdue this week: USD 4,000",
-        "Oldest overdue invoice: 2 days"
+        "연체 JPY 588,235",
+        "이번 주 신규 연체: JPY 588,235",
+        "최장 연체 Invoice: 2일"
       ],
       "promise_date": null,
       "broken_promise_amount": 0,
-      "credit_utilization": 0.49206349206349204,
+      "credit_utilization": 0.49206348848274123,
       "disputed": 0,
       "last_payment_date": "2026-08-01",
-      "recommended_action": "Send payment reminder and confirm remittance date"
+      "recommended_action": "지급 리마인더 발송 및 송금일 확인"
     }
   ],
   "improved_customers": [
@@ -473,112 +473,112 @@
       "customer": "Kimchi & Go Travel",
       "country": "Korea",
       "owner": "Minji Park",
-      "total": 9900,
+      "total": 1455882.31,
       "overdue": 0,
       "overdue_30_plus": 0,
       "max_aging_days": 0,
-      "wow_overdue_change": -44589.03,
+      "wow_overdue_change": -6583544.88,
       "risk_score": 0,
       "risk_grade": "Low",
       "risk_reasons": [],
       "promise_date": null,
       "broken_promise_amount": 0,
-      "credit_utilization": 0.12375001546875193,
+      "credit_utilization": 0.12375001215287655,
       "disputed": 0,
       "last_payment_date": "2026-09-03",
-      "recommended_action": "No action required; monitor upcoming due dates"
+      "recommended_action": "조치 불필요; 다가오는 만기일 모니터링"
     },
     {
       "customer": "Osaka Trip Partners",
       "country": "Japan",
       "owner": "Kenta Sato",
-      "total": 25999.8,
-      "overdue": 8999.8,
+      "total": 3823500,
+      "overdue": 1323500,
       "overdue_30_plus": 0,
       "max_aging_days": 8,
-      "wow_overdue_change": -7932.2,
+      "wow_overdue_change": -1176500,
       "risk_score": 22,
       "risk_grade": "Low",
       "risk_reasons": [
-        "Oldest overdue invoice: 8 days",
-        "Overdue USD 9,000",
-        "No collection activity recorded"
+        "최장 연체 Invoice: 8일",
+        "연체 JPY 1,323,500",
+        "기록된 회수 활동 없음"
       ],
       "promise_date": null,
       "broken_promise_amount": 0,
-      "credit_utilization": 0.3561614486786583,
+      "credit_utilization": 0.35616144867865823,
       "disputed": 0,
       "last_payment_date": "2026-08-31",
-      "recommended_action": "Send payment reminder and confirm remittance date"
+      "recommended_action": "지급 리마인더 발송 및 송금일 확인"
     },
     {
       "customer": "Hanoi Lotus Travel",
       "country": "Vietnam",
       "owner": "Linh Nguyen",
-      "total": 2000,
-      "overdue": 2000,
+      "total": 294117.72,
+      "overdue": 294117.72,
       "overdue_30_plus": 0,
       "max_aging_days": 6,
-      "wow_overdue_change": -6004,
+      "wow_overdue_change": -887668.92,
       "risk_score": 18,
       "risk_grade": "Low",
       "risk_reasons": [
-        "Overdue USD 2,000",
-        "Oldest overdue invoice: 6 days",
-        "No collection activity recorded"
+        "연체 JPY 294,118",
+        "최장 연체 Invoice: 6일",
+        "기록된 회수 활동 없음"
       ],
       "promise_date": null,
       "broken_promise_amount": 0,
-      "credit_utilization": 0.02127659574468085,
+      "credit_utilization": 0.0212766163848044,
       "disputed": 0,
       "last_payment_date": "2026-09-01",
-      "recommended_action": "Send payment reminder and confirm remittance date"
+      "recommended_action": "지급 리마인더 발송 및 송금일 확인"
+    },
+    {
+      "customer": "Formosa Travel Hub",
+      "country": "Taiwan",
+      "owner": "Wei Chen",
+      "total": 11323661.77,
+      "overdue": 9117647.06,
+      "overdue_30_plus": 0,
+      "max_aging_days": 22,
+      "wow_overdue_change": -27462.8,
+      "risk_score": 41,
+      "risk_grade": "Watch",
+      "risk_reasons": [
+        "연체 JPY 9,117,647",
+        "최장 연체 Invoice: 22일",
+        "미이행 약속 금액 JPY 9,117,647"
+      ],
+      "promise_date": null,
+      "broken_promise_amount": 9117647.06,
+      "credit_utilization": 0.8555731610883461,
+      "disputed": 0,
+      "last_payment_date": null,
+      "recommended_action": "오늘 고객사와 지급일 재확정; 영업일 2일 내 확답이 없으면 Sales 리더에게 에스컬레이션"
     },
     {
       "customer": "Siam Getaways Ltd.",
       "country": "Thailand",
       "owner": "Somchai Rattana",
-      "total": 49800,
-      "overdue": 27500,
+      "total": 7323529.42,
+      "overdue": 4044117.66,
       "overdue_30_plus": 0,
       "max_aging_days": 25,
-      "wow_overdue_change": -27.5,
+      "wow_overdue_change": -20301.8,
       "risk_score": 39,
       "risk_grade": "Watch",
       "risk_reasons": [
-        "Overdue USD 27,500",
-        "Oldest overdue invoice: 25 days",
-        "Last collection activity 22 days ago"
+        "연체 JPY 4,044,118",
+        "최장 연체 Invoice: 25일",
+        "마지막 회수 활동 22일 전"
       ],
       "promise_date": null,
       "broken_promise_amount": 0,
-      "credit_utilization": 0.6225,
-      "disputed": 9500,
+      "credit_utilization": 0.6224999997662499,
+      "disputed": 1397058.81,
       "last_payment_date": null,
-      "recommended_action": "Resolve dispute with Operations/Finance; agree undisputed portion to be paid now"
-    },
-    {
-      "customer": "Busan Marine Travel",
-      "country": "Korea",
-      "owner": "Minji Park",
-      "total": 50000.12,
-      "overdue": 13500,
-      "overdue_30_plus": 0,
-      "max_aging_days": 15,
-      "wow_overdue_change": -27,
-      "risk_score": 30,
-      "risk_grade": "Watch",
-      "risk_reasons": [
-        "Oldest overdue invoice: 15 days",
-        "Overdue USD 13,500",
-        "No collection activity recorded"
-      ],
-      "promise_date": null,
-      "broken_promise_amount": 0,
-      "credit_utilization": 0.5000012,
-      "disputed": 0,
-      "last_payment_date": null,
-      "recommended_action": "Send payment reminder and confirm remittance date"
+      "recommended_action": "Ops·Finance와 분쟁 해결; 분쟁 없는 금액은 즉시 지급 합의"
     }
   ],
   "broken_promises": [
@@ -586,47 +586,47 @@
       "customer": "Mekong Holidays JSC",
       "country": "Vietnam",
       "owner": "Linh Nguyen",
-      "total": 27100,
-      "overdue": 27100,
-      "overdue_30_plus": 27100,
+      "total": 3985291.28,
+      "overdue": 3985291.28,
+      "overdue_30_plus": 3985291.28,
       "max_aging_days": 111,
-      "wow_overdue_change": -13.55,
+      "wow_overdue_change": -18011.09,
       "risk_score": 81,
       "risk_grade": "High",
       "risk_reasons": [
-        "Oldest overdue invoice: 111 days",
-        "Overdue USD 27,100",
-        "100% of outstanding is 30+ days overdue"
+        "최장 연체 Invoice: 111일",
+        "연체 JPY 3,985,291",
+        "미수금의 100%가 30일 이상 연체"
       ],
       "promise_date": null,
-      "broken_promise_amount": 15800,
-      "credit_utilization": 1.355,
+      "broken_promise_amount": 2323527.71,
+      "credit_utilization": 1.3550000397970297,
       "disputed": 0,
       "last_payment_date": null,
-      "recommended_action": "Escalate to Finance leader; evaluate credit hold and legal/collection agency path"
+      "recommended_action": "Finance 리더에게 에스컬레이션; 신용 중단 및 법무·추심 경로 검토"
     },
     {
       "customer": "Formosa Travel Hub",
       "country": "Taiwan",
       "owner": "Wei Chen",
-      "total": 77000.9,
-      "overdue": 62000,
+      "total": 11323661.77,
+      "overdue": 9117647.06,
       "overdue_30_plus": 0,
       "max_aging_days": 22,
-      "wow_overdue_change": 62,
-      "risk_score": 44,
+      "wow_overdue_change": -27462.8,
+      "risk_score": 41,
       "risk_grade": "Watch",
       "risk_reasons": [
-        "Overdue USD 62,000",
-        "Oldest overdue invoice: 22 days",
-        "Unfulfilled promise USD 62,000"
+        "연체 JPY 9,117,647",
+        "최장 연체 Invoice: 22일",
+        "미이행 약속 금액 JPY 9,117,647"
       ],
       "promise_date": null,
-      "broken_promise_amount": 62000,
-      "credit_utilization": 0.8555731606503169,
+      "broken_promise_amount": 9117647.06,
+      "credit_utilization": 0.8555731610883461,
       "disputed": 0,
       "last_payment_date": null,
-      "recommended_action": "Re-confirm payment date with customer today; escalate to Sales leader if no confirmation within 2 business days"
+      "recommended_action": "오늘 고객사와 지급일 재확정; 영업일 2일 내 확답이 없으면 Sales 리더에게 에스컬레이션"
     }
   ],
   "credit_limit_exceeded": [
@@ -634,47 +634,47 @@
       "customer": "Mekong Holidays JSC",
       "country": "Vietnam",
       "owner": "Linh Nguyen",
-      "total": 27100,
-      "overdue": 27100,
-      "overdue_30_plus": 27100,
+      "total": 3985291.28,
+      "overdue": 3985291.28,
+      "overdue_30_plus": 3985291.28,
       "max_aging_days": 111,
-      "wow_overdue_change": -13.55,
+      "wow_overdue_change": -18011.09,
       "risk_score": 81,
       "risk_grade": "High",
       "risk_reasons": [
-        "Oldest overdue invoice: 111 days",
-        "Overdue USD 27,100",
-        "100% of outstanding is 30+ days overdue"
+        "최장 연체 Invoice: 111일",
+        "연체 JPY 3,985,291",
+        "미수금의 100%가 30일 이상 연체"
       ],
       "promise_date": null,
-      "broken_promise_amount": 15800,
-      "credit_utilization": 1.355,
+      "broken_promise_amount": 2323527.71,
+      "credit_utilization": 1.3550000397970297,
       "disputed": 0,
       "last_payment_date": null,
-      "recommended_action": "Escalate to Finance leader; evaluate credit hold and legal/collection agency path"
+      "recommended_action": "Finance 리더에게 에스컬레이션; 신용 중단 및 법무·추심 경로 검토"
     },
     {
       "customer": "Nusantara Trips PT",
       "country": "Indonesia",
       "owner": "Aisha Rahman",
-      "total": 34200,
-      "overdue": 13000,
+      "total": 5029413.31,
+      "overdue": 1911765.49,
       "overdue_30_plus": 0,
       "max_aging_days": 6,
-      "wow_overdue_change": 13000,
+      "wow_overdue_change": 1911765.49,
       "risk_score": 40,
       "risk_grade": "Watch",
       "risk_reasons": [
-        "Overdue USD 13,000",
-        "Credit utilization 137%",
-        "New overdue this week: USD 13,000"
+        "연체 JPY 1,911,765",
+        "신용한도 사용률 137%",
+        "이번 주 신규 연체: JPY 1,911,765"
       ],
       "promise_date": null,
       "broken_promise_amount": 0,
-      "credit_utilization": 1.368,
+      "credit_utilization": 1.36800003640447,
       "disputed": 0,
       "last_payment_date": null,
-      "recommended_action": "Credit limit exceeded: hold new bookings until balance is below limit or Finance approves exception"
+      "recommended_action": "신용한도 초과: 잔액이 한도 아래로 내려가거나 Finance가 예외 승인할 때까지 신규 예약 보류"
     }
   ],
   "disputes": [
@@ -682,24 +682,24 @@
       "customer": "Siam Getaways Ltd.",
       "country": "Thailand",
       "owner": "Somchai Rattana",
-      "total": 49800,
-      "overdue": 27500,
+      "total": 7323529.42,
+      "overdue": 4044117.66,
       "overdue_30_plus": 0,
       "max_aging_days": 25,
-      "wow_overdue_change": -27.5,
+      "wow_overdue_change": -20301.8,
       "risk_score": 39,
       "risk_grade": "Watch",
       "risk_reasons": [
-        "Overdue USD 27,500",
-        "Oldest overdue invoice: 25 days",
-        "Last collection activity 22 days ago"
+        "연체 JPY 4,044,118",
+        "최장 연체 Invoice: 25일",
+        "마지막 회수 활동 22일 전"
       ],
       "promise_date": null,
       "broken_promise_amount": 0,
-      "credit_utilization": 0.6225,
-      "disputed": 9500,
+      "credit_utilization": 0.6224999997662499,
+      "disputed": 1397058.81,
       "last_payment_date": null,
-      "recommended_action": "Resolve dispute with Operations/Finance; agree undisputed portion to be paid now"
+      "recommended_action": "Ops·Finance와 분쟁 해결; 분쟁 없는 금액은 즉시 지급 합의"
     }
   ],
   "collection_opportunities": [
@@ -707,172 +707,172 @@
       "customer": "Fuji Peak Travel Inc.",
       "country": "Japan",
       "owner": "Kenta Sato",
-      "total": 116499.64,
-      "overdue": 99499.64,
+      "total": 17132300,
+      "overdue": 14632300,
       "overdue_30_plus": 0,
       "max_aging_days": 5,
-      "wow_overdue_change": 99499.64,
+      "wow_overdue_change": 14632300,
       "risk_score": 38,
       "risk_grade": "Watch",
       "risk_reasons": [
-        "Overdue USD 99,500",
-        "New overdue this week: USD 99,500",
-        "Oldest overdue invoice: 5 days"
+        "연체 JPY 14,632,300",
+        "이번 주 신규 연체: JPY 14,632,300",
+        "최장 연체 Invoice: 5일"
       ],
       "promise_date": null,
       "broken_promise_amount": 0,
       "credit_utilization": 0.7766650951094348,
       "disputed": 0,
       "last_payment_date": "2026-07-26",
-      "recommended_action": "Send payment reminder and confirm remittance date"
+      "recommended_action": "지급 리마인더 발송 및 송금일 확인"
     },
     {
       "customer": "Lion City Journeys Pte.",
       "country": "Singapore",
       "owner": "Aisha Rahman",
-      "total": 25300.01,
-      "overdue": 17500.01,
+      "total": 3720588.96,
+      "overdue": 2573530.14,
       "overdue_30_plus": 0,
       "max_aging_days": 14,
-      "wow_overdue_change": 5500.01,
+      "wow_overdue_change": 801737.09,
       "risk_score": 31,
       "risk_grade": "Watch",
       "risk_reasons": [
-        "Overdue USD 17,500",
-        "Oldest overdue invoice: 14 days",
-        "Overdue +46% vs last week (USD 12,000 -> USD 17,500)"
+        "연체 JPY 2,573,530",
+        "최장 연체 Invoice: 14일",
+        "연체 전주 대비 +45% (JPY 1,771,793 → JPY 2,573,530)"
       ],
       "promise_date": "2026-09-09",
       "broken_promise_amount": 0,
-      "credit_utilization": 0.5060002,
+      "credit_utilization": 0.5060000735433564,
       "disputed": 0,
       "last_payment_date": "2026-09-04",
-      "recommended_action": "Send payment reminder and confirm remittance date"
+      "recommended_action": "지급 리마인더 발송 및 송금일 확인"
     },
     {
       "customer": "Penang Heritage Travel",
       "country": "Malaysia",
       "owner": "Aisha Rahman",
-      "total": 49000,
-      "overdue": 14000,
+      "total": 7205882.6,
+      "overdue": 2058823.74,
       "overdue_30_plus": 0,
       "max_aging_days": 26,
-      "wow_overdue_change": 6000,
+      "wow_overdue_change": 877628.25,
       "risk_score": 40,
       "risk_grade": "Watch",
       "risk_reasons": [
-        "Oldest overdue invoice: 26 days",
-        "Overdue USD 14,000",
-        "Overdue +75% vs last week (USD 8,000 -> USD 14,000)"
+        "최장 연체 Invoice: 26일",
+        "연체 JPY 2,058,824",
+        "연체 전주 대비 +74% (JPY 1,181,195 → JPY 2,058,824)"
       ],
       "promise_date": null,
       "broken_promise_amount": 0,
-      "credit_utilization": 0.5104166666666666,
+      "credit_utilization": 0.5104166797855901,
       "disputed": 0,
       "last_payment_date": "2026-07-25",
-      "recommended_action": "Send payment reminder and confirm remittance date"
-    },
-    {
-      "customer": "Phuket Sunset Tours",
-      "country": "Thailand",
-      "owner": "Somchai Rattana",
-      "total": 23000,
-      "overdue": 12000,
-      "overdue_30_plus": 0,
-      "max_aging_days": 27,
-      "wow_overdue_change": 3992,
-      "risk_score": 38,
-      "risk_grade": "Watch",
-      "risk_reasons": [
-        "Oldest overdue invoice: 27 days",
-        "Overdue USD 12,000",
-        "Overdue +50% vs last week (USD 8,008 -> USD 12,000)"
-      ],
-      "promise_date": null,
-      "broken_promise_amount": 0,
-      "credit_utilization": 0.20909090909090908,
-      "disputed": 0,
-      "last_payment_date": "2026-08-28",
-      "recommended_action": "Send payment reminder and confirm remittance date"
+      "recommended_action": "지급 리마인더 발송 및 송금일 확인"
     },
     {
       "customer": "Bali Breeze Tours",
       "country": "Indonesia",
       "owner": "Aisha Rahman",
-      "total": 44000,
-      "overdue": 12000,
+      "total": 6470589.73,
+      "overdue": 1764706.13,
       "overdue_30_plus": 0,
       "max_aging_days": 7,
-      "wow_overdue_change": 12000,
+      "wow_overdue_change": 1764706.13,
       "risk_score": 30,
       "risk_grade": "Watch",
       "risk_reasons": [
-        "Overdue USD 12,000",
-        "New overdue this week: USD 12,000",
-        "Oldest overdue invoice: 7 days"
+        "연체 JPY 1,764,706",
+        "이번 주 신규 연체: JPY 1,764,706",
+        "최장 연체 Invoice: 7일"
       ],
       "promise_date": null,
       "broken_promise_amount": 0,
-      "credit_utilization": 0.4888888888888889,
+      "credit_utilization": 0.4888889175160444,
       "disputed": 0,
       "last_payment_date": "2026-07-23",
-      "recommended_action": "Send payment reminder and confirm remittance date"
+      "recommended_action": "지급 리마인더 발송 및 송금일 확인"
+    },
+    {
+      "customer": "Phuket Sunset Tours",
+      "country": "Thailand",
+      "owner": "Somchai Rattana",
+      "total": 3382352.94,
+      "overdue": 1764705.89,
+      "overdue_30_plus": 0,
+      "max_aging_days": 27,
+      "wow_overdue_change": 582329.31,
+      "risk_score": 38,
+      "risk_grade": "Watch",
+      "risk_reasons": [
+        "최장 연체 Invoice: 27일",
+        "연체 JPY 1,764,706",
+        "연체 전주 대비 +49% (JPY 1,182,377 → JPY 1,764,706)"
+      ],
+      "promise_date": null,
+      "broken_promise_amount": 0,
+      "credit_utilization": 0.20909090886611573,
+      "disputed": 0,
+      "last_payment_date": "2026-08-28",
+      "recommended_action": "지급 리마인더 발송 및 송금일 확인"
     }
   ],
   "by_owner": [
     {
       "owner": "Kenta Sato",
-      "total": 360199.4,
-      "overdue": 199800.32,
-      "previous_overdue": 107867.68,
+      "total": 52970500,
+      "overdue": 29382400,
+      "previous_overdue": 15926600,
       "customers_overdue": 6,
       "broken_promises": 0
     },
     {
       "owner": "Wei Chen",
-      "total": 195898.6,
-      "overdue": 77000.3,
-      "previous_overdue": 76933.3,
+      "total": 28808617.68,
+      "overdue": 11323573.54,
+      "previous_overdue": 11359157.18,
       "customers_overdue": 4,
       "broken_promises": 1
     },
     {
       "owner": "Aisha Rahman",
-      "total": 193800.01,
-      "overdue": 69900.01,
-      "previous_overdue": 22000,
+      "total": 28500004.67,
+      "overdue": 10279414.47,
+      "previous_overdue": 3248287.75,
       "customers_overdue": 6,
       "broken_promises": 0
     },
     {
       "owner": "Somchai Rattana",
-      "total": 125800,
-      "overdue": 45500,
-      "previous_overdue": 35535.5,
+      "total": 18499999.99,
+      "overdue": 6691176.47,
+      "previous_overdue": 5246796.04,
       "customers_overdue": 4,
       "broken_promises": 0
     },
     {
       "owner": "Minji Park",
-      "total": 636900.05,
-      "overdue": 38499.96,
-      "previous_overdue": 76128.01,
+      "total": 93661769.4,
+      "overdue": 5661758.71,
+      "previous_overdue": 11242028.25,
       "customers_overdue": 4,
       "broken_promises": 0
     },
     {
       "owner": "Linh Nguyen",
-      "total": 55100,
-      "overdue": 29100,
-      "previous_overdue": 35117.55,
+      "total": 8102935.86,
+      "overdue": 4279409,
+      "previous_overdue": 5185089.01,
       "customers_overdue": 2,
       "broken_promises": 1
     },
     {
       "owner": "Unassigned",
-      "total": 14100,
-      "overdue": 3100,
-      "previous_overdue": 3101.55,
+      "total": 2073528.14,
+      "overdue": 455882.14,
+      "previous_overdue": 457942.45,
       "customers_overdue": 1,
       "broken_promises": 0
     }
@@ -880,62 +880,62 @@
   "by_country": [
     {
       "country": "Japan",
-      "total": 360199.4,
-      "overdue": 199800.32,
-      "previous_overdue": 107867.68
+      "total": 52970500,
+      "overdue": 29382400,
+      "previous_overdue": 15926600
     },
     {
       "country": "Taiwan",
-      "total": 141998.6,
-      "overdue": 67000.3,
-      "previous_overdue": 66933.3
+      "total": 20882147.09,
+      "overdue": 9852985.3,
+      "previous_overdue": 9882662.97
     },
     {
       "country": "Thailand",
-      "total": 125800,
-      "overdue": 45500,
-      "previous_overdue": 35535.5
+      "total": 18499999.99,
+      "overdue": 6691176.47,
+      "previous_overdue": 5246796.04
     },
     {
       "country": "Korea",
-      "total": 636900.05,
-      "overdue": 38499.96,
-      "previous_overdue": 76128.01
+      "total": 93661769.4,
+      "overdue": 5661758.71,
+      "previous_overdue": 11242028.25
     },
     {
       "country": "Vietnam",
-      "total": 69200,
-      "overdue": 32200,
-      "previous_overdue": 38219.1
+      "total": 10176464,
+      "overdue": 4735291.14,
+      "previous_overdue": 5643031.46
     },
     {
       "country": "Indonesia",
-      "total": 78200,
-      "overdue": 25000,
+      "total": 11500003.04,
+      "overdue": 3676471.62,
       "previous_overdue": 0
     },
     {
       "country": "Singapore",
-      "total": 35300.01,
-      "overdue": 21500.01,
-      "previous_overdue": 14000
+      "total": 5191177.92,
+      "overdue": 3161766.16,
+      "previous_overdue": 2067092.26
     },
     {
       "country": "Malaysia",
-      "total": 59300,
-      "overdue": 14000,
-      "previous_overdue": 8000
+      "total": 8720588.42,
+      "overdue": 2058823.74,
+      "previous_overdue": 1181195.49
     },
     {
       "country": "Hong Kong",
-      "total": 53900,
-      "overdue": 10000,
-      "previous_overdue": 10000
+      "total": 7926470.59,
+      "overdue": 1470588.24,
+      "previous_overdue": 1476494.21
     },
     {
       "country": "Philippines",
-      "total": 21000,
-      "overdue": 9400,
+      "total": 3088235.29,
+      "overdue": 1382352.95,
       "previous_overdue": 0
     }
   ],
@@ -943,66 +943,66 @@
     {
       "customer": "Fuji Peak Travel Inc.",
       "owner": "Kenta Sato",
-      "amount": 17000,
+      "amount": 2500000,
       "due_date": "2026-09-08"
     },
     {
       "customer": "Da Nang Coastal Tours",
       "owner": "Linh Nguyen",
-      "amount": 15000,
+      "amount": 2205880.86,
       "due_date": "2026-09-07"
     },
     {
       "customer": "Seoul Express Holidays",
       "owner": "Minji Park",
-      "amount": 14999.98,
+      "amount": 2205878.76,
       "due_date": "2026-09-07"
     },
     {
       "customer": "Seoul Express Holidays",
       "owner": "Minji Park",
-      "amount": 14999.98,
+      "amount": 2205878.76,
       "due_date": "2026-09-11"
     },
     {
       "customer": "Incheon Gateway Travel",
       "owner": "Minji Park",
-      "amount": 14000,
+      "amount": 2058823.53,
       "due_date": "2026-09-09"
     },
     {
       "customer": "Hokkaido Snow Travel",
       "owner": "Kenta Sato",
-      "amount": 13999.84,
+      "amount": 2058800,
       "due_date": "2026-09-10"
     },
     {
       "customer": "Bangkok Riverside Travel",
       "owner": "Somchai Rattana",
-      "amount": 13000,
+      "amount": 1911764.69,
       "due_date": "2026-09-12"
     },
     {
       "customer": "Nusantara Trips PT",
       "owner": "Aisha Rahman",
-      "amount": 12500,
+      "amount": 1838235.36,
       "due_date": "2026-09-11"
     },
     {
       "customer": "Sakura Voyage K.K.",
       "owner": "Kenta Sato",
-      "amount": 12399.8,
+      "amount": 1823500,
       "due_date": "2026-09-10"
     },
     {
       "customer": "Bali Breeze Tours",
       "owner": "Aisha Rahman",
-      "amount": 12000,
+      "amount": 1764706.13,
       "due_date": "2026-09-07"
     }
   ],
-  "due_next_week_total": 274197.58,
-  "promised_next_week_total": 12000,
+  "due_next_week_total": 40323170.96,
+  "promised_next_week_total": 1764705.88,
   "recent_activity_count": 0,
   "data_quality": [
     {

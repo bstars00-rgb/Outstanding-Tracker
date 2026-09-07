@@ -24,7 +24,8 @@ verified AI insight and posts a weekly executive report to **Microsoft Teams eve
 Documents: [PRODUCT_REQUIREMENTS](docs/PRODUCT_REQUIREMENTS.md) · [ELLIS_MCP_MAPPING](docs/ELLIS_MCP_MAPPING.md) ·
 [DATA_DICTIONARY](docs/DATA_DICTIONARY.md) · [ARCHITECTURE](docs/ARCHITECTURE.md) · [SECURITY](docs/SECURITY.md) ·
 [AI_INSIGHT_SPEC](docs/AI_INSIGHT_SPEC.md) · [TEAMS_MESSAGE_SPEC](docs/TEAMS_MESSAGE_SPEC.md) ·
-[QA_REPORT](docs/QA_REPORT.md) · [DECISION_LOG](docs/DECISION_LOG.md) · [OPEN_QUESTIONS](docs/OPEN_QUESTIONS.md)
+[QA_REPORT](docs/QA_REPORT.md) · [DECISION_LOG](docs/DECISION_LOG.md) · [OPEN_QUESTIONS](docs/OPEN_QUESTIONS.md) ·
+[ELLIS_MCP_RECEIVABLES_SPEC_FOR_DEV (개발팀 전달용 연동 스펙)](docs/ELLIS_MCP_RECEIVABLES_SPEC_FOR_DEV.md)
 
 ---
 
@@ -42,7 +43,7 @@ Other commands:
 | Command | What it does |
 |---------|--------------|
 | `npm run typecheck` | TypeScript for app + automation |
-| `npm run test` | Vitest unit + integration (80 tests, no network) |
+| `npm run test` | Vitest unit + integration (99 tests, no network) |
 | `npm run test:e2e` | Playwright (desktop + mobile) against `npm run preview` |
 | `npm run build` | Production bundle to `dist/` |
 | `npm run mock:generate` | Prints the mock dataset profile and scenario coverage |
@@ -59,6 +60,15 @@ snapshot history (reference-date selector in the header). Every PRD scenario is 
 
 Screens: `#/` Executive Overview · `#/aging` · `#/customers` (+ `#/customers/:id` with risk-score explanation) ·
 `#/invoices` · `#/actions` · `#/insights`. Query helpers for QA: `?simulate=error`, `?simulate=empty`.
+
+**Language & theme.** The UI and all engine-generated wording (KPI interpretations, risk evidence, actions, AI insight) are
+available in **Korean and English** (`?lang=ko|en`, toggle in the top bar, remembered per browser; default follows the
+browser language). **Dark mode** follows the OS setting and can be toggled (remembered per browser).
+
+**Currencies.** The company default reporting currency is **JPY** (`REPORTING_CURRENCY`). Every customer keeps its own
+contract currency; the Customer Risk table, customer detail and Overview show the JPY equivalent together with the
+original-currency balances per currency (`CustomerRisk.totals_by_currency`). Risk-score amount thresholds are defined in USD
+and scaled to the reporting currency with the FX table, so grades do not depend on the reporting currency.
 
 ## 3. Connecting the Ellis MCP (live mode)
 
@@ -100,7 +110,8 @@ Settings → Secrets and variables → Actions.
 | `DATA_SOURCE` | `mock` | `mock` or `ellis` |
 | `AI_PROVIDER` | `mock` | `mock` or `claude` |
 | `TEAMS_SENDER` | `live` | `live` or `mock` |
-| `REPORTING_CURRENCY` | `USD` | ISO 4217 |
+| `REPORTING_CURRENCY` | `JPY` | ISO 4217 (company default currency: JPY) |
+| `REPORT_LANGUAGE` | `ko` | `ko` or `en` wording of the Teams report |
 | `REPORT_TIMEZONE` | `Asia/Ho_Chi_Minh` | IANA zone for timestamps |
 | `TRACKER_BASE_URL` | `https://bstars00-rgb.github.io/Outstanding-Tracker/` | Links in the card |
 | `RECIPIENT_CONFIG` | see `.env.example` | Channel names / roles (no personal data) |

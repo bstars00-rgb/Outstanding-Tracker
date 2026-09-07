@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { useI18n } from '@app/i18n/useI18n';
 
 export interface SelectOption {
   value: string;
@@ -11,7 +12,7 @@ export function SelectFilter({
   value,
   onChange,
   options,
-  allLabel = 'All',
+  allLabel,
   testId,
 }: {
   id: string;
@@ -19,14 +20,17 @@ export function SelectFilter({
   value: string;
   onChange: (v: string) => void;
   options: (SelectOption | string)[];
+  /** Label of the "no filter" option; `null` removes it. Defaults to the localised "All". */
   allLabel?: string | null;
   testId?: string;
 }) {
+  const { t } = useI18n();
+  const all = allLabel === undefined ? t('common.all') : allLabel;
   return (
     <div className="filter-field">
       <label htmlFor={id}>{label}</label>
       <select id={id} className="select" value={value} onChange={(e) => onChange(e.target.value)} data-testid={testId}>
-        {allLabel !== null && <option value="">{allLabel}</option>}
+        {all !== null && <option value="">{all}</option>}
         {options.map((o) => {
           const opt = typeof o === 'string' ? { value: o, label: o } : o;
           return (
@@ -41,24 +45,26 @@ export function SelectFilter({
 }
 
 export function TextFilter({ id, label, value, onChange, placeholder, testId }: { id: string; label: string; value: string; onChange: (v: string) => void; placeholder?: string; testId?: string }) {
+  const { t } = useI18n();
   return (
     <div className="filter-field">
       <label htmlFor={id}>{label}</label>
-      <input id={id} type="search" className="input" value={value} placeholder={placeholder} onChange={(e) => onChange(e.target.value)} data-testid={testId} />
+      <input id={id} type="search" className="input" value={value} placeholder={placeholder ?? t('common.search')} onChange={(e) => onChange(e.target.value)} data-testid={testId} />
     </div>
   );
 }
 
 export function FilterBar({ children, onReset, summary }: { children: ReactNode; onReset?: () => void; summary?: ReactNode }) {
+  const { t } = useI18n();
   return (
     <div>
-      <div className="filter-bar" role="group" aria-label="Filters">
+      <div className="filter-bar" role="group" aria-label={t('common.filters')}>
         {children}
         {onReset && (
           <div className="filter-field">
             <label aria-hidden="true">&nbsp;</label>
             <button type="button" className="btn" onClick={onReset}>
-              Reset filters
+              {t('common.resetFilters')}
             </button>
           </div>
         )}

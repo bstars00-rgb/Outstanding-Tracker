@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test';
 
 test.describe('Collection Action Board', () => {
   test('shows all nine groups and persists a status change across reloads', async ({ page }) => {
-    await page.goto('/#/actions?mode=mock');
+    await page.goto('/#/actions?mode=mock&lang=en');
     await expect(page.getByTestId('page-title')).toHaveText('Collection Action Board');
     await expect(page.locator('[data-testid^="action-group-"]')).toHaveCount(9);
 
@@ -25,7 +25,7 @@ test.describe('Collection Action Board', () => {
   });
 
   test('filtering by owner shows "All caught up" for empty groups', async ({ page }) => {
-    await page.goto('/#/actions?mode=mock');
+    await page.goto('/#/actions?mode=mock&lang=en');
     await page.getByTestId('actions-owner-filter').selectOption({ index: 1 });
     await expect(page.getByText(/All caught up/).first()).toBeVisible();
   });

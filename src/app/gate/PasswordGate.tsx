@@ -1,4 +1,7 @@
 import { type FormEvent, type ReactNode, useEffect, useState } from 'react';
+import { useI18n } from '@app/i18n/useI18n';
+import { LangToggle } from '@app/components/LangToggle';
+import { ThemeToggle } from '@app/components/ThemeToggle';
 import { parseGateHash, sessionToken, verifyPassword } from './hash';
 
 const SESSION_KEY = 'ot.gate';
@@ -34,6 +37,7 @@ export function lockGate() {
  */
 export function PasswordGate({ children }: { children: ReactNode }) {
   const gate = parseGateHash(GATE_HASH_STRING);
+  const { lang, t } = useI18n();
   const [state, setState] = useState<'checking' | 'locked' | 'open'>(gate ? 'checking' : 'open');
   const [password, setPassword] = useState('');
   const [remember, setRemember] = useState(false);
@@ -77,7 +81,7 @@ export function PasswordGate({ children }: { children: ReactNode }) {
       setState('open');
     } else {
       setAttempts((n) => n + 1);
-      setError('비밀번호가 올바르지 않습니다. / Incorrect password.');
+      setError(lang === 'ko' ? `${t('gate.incorrect')} / Incorrect password.` : `${t('gate.incorrect')} / 비밀번호가 올바르지 않습니다.`);
       setPassword('');
     }
     setBusy(false);
@@ -90,10 +94,9 @@ export function PasswordGate({ children }: { children: ReactNode }) {
           OT
         </div>
         <h1 id="gate-title">Outstanding Tracker</h1>
-        <p className="gate-sub">이 페이지는 비공개입니다. 접속 비밀번호를 입력하세요.</p>
-        <p className="gate-sub muted">This dashboard is private. Enter the access password to continue.</p>
+        <p className="gate-sub">{t('gate.private')}</p>
         <label className="gate-label" htmlFor="gate-password">
-          Password
+          {t('gate.password')}
         </label>
         <input
           id="gate-password"
@@ -108,7 +111,7 @@ export function PasswordGate({ children }: { children: ReactNode }) {
           aria-describedby={error ? 'gate-error' : undefined}
         />
         <label className="gate-remember">
-          <input type="checkbox" checked={remember} onChange={(e) => setRemember(e.target.checked)} /> 이 기기에서 기억 (remember on this device)
+          <input type="checkbox" checked={remember} onChange={(e) => setRemember(e.target.checked)} /> {t('gate.remember')}
         </label>
         {error && (
           <p id="gate-error" className="gate-error" role="alert">
@@ -116,9 +119,13 @@ export function PasswordGate({ children }: { children: ReactNode }) {
           </p>
         )}
         <button type="submit" className="btn primary gate-submit" disabled={busy || password.length === 0}>
-          {busy ? 'Checking…' : 'Enter'}
+          {busy ? t('gate.checking') : t('gate.enter')}
         </button>
-        <p className="gate-foot muted">Client-side access gate for a static prototype. Figures shown are mock data unless labelled otherwise.</p>
+        <p className="gate-foot muted">{t('gate.foot')}</p>
+        <div className="gate-tools">
+          <LangToggle />
+          <ThemeToggle />
+        </div>
       </form>
     </div>
   );

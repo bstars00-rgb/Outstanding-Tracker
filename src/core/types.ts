@@ -240,6 +240,8 @@ export interface CustomerRisk {
   data_quality: DataQualityIssue[];
   credit_status: CreditStatus;
   collection_status: CollectionStatus;
+  /** Open balance in ORIGINAL currencies (a customer may be invoiced in several). */
+  totals_by_currency: { currency: CurrencyCode; total: number; overdue: number; invoice_count: number }[];
 }
 
 export type KpiKey =
@@ -400,4 +402,6 @@ export interface TrackerModel {
   fx_effect_reporting: number | null; // portion of WoW total change attributable to FX rate movement
   /** Open balance whose due date is missing: included in Total Outstanding, excluded from every aging bucket. */
   unknown_due_reporting: number;
+  /** Language of the engine-generated wording in this model ('en' | 'ko'). */
+  lang: 'en' | 'ko';
 }

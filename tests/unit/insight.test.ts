@@ -30,7 +30,7 @@ describe('rule-based insight passes verification', () => {
     expect(out.executive_summary.length).toBeGreaterThanOrEqual(2);
     expect(out.top_risks.length).toBeGreaterThan(0);
     expect(out.owner_actions.length).toBeGreaterThan(0);
-    expect(out.forecast_next_week.currency).toBe('USD');
+    expect(out.forecast_next_week.currency).toBe('JPY');
   });
 });
 

@@ -10,7 +10,7 @@ test.describe('Password gate', () => {
   test.skip(!password, 'E2E_GATE_PASSWORD not set: gate build not under test');
 
   test('blocks the app until the correct password is entered, remembers the session, and can lock again', async ({ page }) => {
-    await page.goto('/#/?mode=mock');
+    await page.goto('/#/?mode=mock&lang=en');
     await expect(page.getByTestId('gate-locked')).toBeVisible();
     await expect(page.getByTestId('mode-badge')).toHaveCount(0);
 

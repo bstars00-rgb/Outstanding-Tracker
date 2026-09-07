@@ -39,7 +39,7 @@
 
 | # | Question / decision | Why it matters | Impact if unanswered | Priority |
 | --- | --- | --- | --- | --- |
-| F1 | Approve the **reporting currency** (default `USD`) and the **FX rate source** (treasury / ECB / Ellis KRW rates) | All `*_reporting` figures and the FX effect | Figures cannot be shown to leadership | P0 |
+| F1 | Confirm the **reporting currency** (default now `JPY`, per management 2026-09-07) and the **FX rate source** (treasury / ECB / Ellis KRW rates) | All `*_reporting` figures and the FX effect | Figures cannot be shown to leadership | P0 |
 | F2 | Confirm **standard payment terms** per customer / default (currently assumed **14 days** after checkout) | Due date, aging, every overdue KPI | Overdue is mis-stated for customers on 7/30/45-day terms | P0 |
 | F3 | Validate the **Risk Score** weights (25/20/15/10/10/10/5/5), amount thresholds (2 k / 10 k / 25 k / 75 k), materiality (100) and grade thresholds (30/50/70/85) | Drives ESCALATE actions and CEO decisions | Escalations may be too aggressive or too lenient | P1 |
 | F4 | Confirm **action deadlines** (Monday 12:00 for urgent, +4 days otherwise) and the recommended-action wording | Owner accountability | Deadlines ignored | P2 |

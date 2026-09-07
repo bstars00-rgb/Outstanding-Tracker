@@ -1,6 +1,6 @@
 import { buildSnapshotHistory, type HistoryPoint } from '@core/history';
 import type { ISODate, ReceivablesDataset, Snapshot } from '@core/types';
-import { generateMockDataset, mockFxTable, weeklyDates } from './mock-data';
+import { DEFAULT_REPORTING_CURRENCY, generateMockDataset, mockFxTable, weeklyDates } from './mock-data';
 import type { ReceivablesSource } from './types';
 
 /**
@@ -12,12 +12,15 @@ export class MockReceivablesSource implements ReceivablesSource {
   readonly kind = 'mock' as const;
   private cache = new Map<string, ReceivablesDataset>();
 
-  constructor(private readonly seed = 20260905) {}
+  constructor(
+    private readonly seed = 20260905,
+    private readonly reportingCurrency: string = DEFAULT_REPORTING_CURRENCY,
+  ) {}
 
   async fetchDataset(referenceDate: ISODate): Promise<ReceivablesDataset> {
     let ds = this.cache.get(referenceDate);
     if (!ds) {
-      ds = generateMockDataset(referenceDate, this.seed);
+      ds = generateMockDataset(referenceDate, this.seed, this.reportingCurrency);
       this.cache.set(referenceDate, ds);
     }
     return ds;

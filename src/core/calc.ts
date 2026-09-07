@@ -4,6 +4,7 @@ import { convert, round2 } from './money';
 import { computeRiskScore, DEFAULT_RISK_CONFIG, type RiskConfig } from './risk';
 import { buildActions } from './actions';
 import { buildKpis } from './kpis';
+import { pick, type Lang } from './i18n';
 import type {
   AgingBucket,
   CalculatedInvoice,
@@ -29,6 +30,8 @@ export interface BuildOptions {
   riskConfig?: RiskConfig;
   /** Data quality issues found by validateDataset(); merged into the model. */
   validationIssues?: DataQualityIssue[];
+  /** Language of engine-generated wording (labels, interpretations, evidence, actions). Numbers are unaffected. */
+  lang?: Lang;
 }
 
 /** Invoices in these states never carry outstanding balance. */
@@ -38,7 +41,13 @@ export function buildTrackerModel(ds: ReceivablesDataset, opts: BuildOptions): T
   const ref = opts.referenceDate;
   const prev = opts.previousSnapshot;
   const riskCfg = opts.riskConfig ?? DEFAULT_RISK_CONFIG;
+  const lang: Lang = opts.lang ?? 'en';
   const issues: DataQualityIssue[] = [...(opts.validationIssues ?? [])];
+  // Risk amount thresholds are configured in USD; scale them to the reporting currency with the FX table.
+  const usdToReporting = ds.reporting_currency === 'USD' ? 1 : (ds.fx.rates.find((r) => r.currency === 'USD')?.rate_to_reporting ?? null);
+  const riskCfgScaled: RiskConfig = usdToReporting
+    ? { amount_thresholds: riskCfg.amount_thresholds.map((t) => t * usdToReporting) as RiskConfig['amount_thresholds'], materiality_amount: riskCfg.materiality_amount * usdToReporting }
+    : riskCfg;
   const week = reportWeek(ref, prev?.snapshot_date ?? null);
   const rc = ds.reporting_currency;
 
@@ -187,7 +196,8 @@ export function buildTrackerModel(ds: ReceivablesDataset, opts: BuildOptions): T
         reporting_currency: rc,
         credit_status: c.credit_status,
       },
-      riskCfg,
+      riskCfgScaled,
+      lang,
     );
     const dq: DataQualityIssue[] = [];
     if (c.credit_limit === null) dq.push({ severity: 'info', code: 'MISSING_CREDIT_LIMIT', entity: 'customer', entity_id: c.customer_id, message: 'No credit limit on file' });
@@ -223,11 +233,12 @@ export function buildTrackerModel(ds: ReceivablesDataset, opts: BuildOptions): T
       wow_overdue_change_reporting: prevOverdue === null ? null : round2(overdue - prevOverdue),
       wow_total_change_reporting: prevTotal === null ? null : round2(total - prevTotal),
       risk,
-      recommended_action: recommendAction({ overdue, over30, over90, maxAging, promiseBroken: promise.broken_amount > 0, disputed, creditExceeded: utilization !== null && utilization > 1, grade: risk.grade, total }),
+      recommended_action: recommendAction({ overdue, over30, over90, maxAging, promiseBroken: promise.broken_amount > 0, disputed, creditExceeded: utilization !== null && utilization > 1, grade: risk.grade, total }, lang),
       bucket_totals: buckets,
       data_quality: dq,
       credit_status: c.credit_status,
       collection_status: c.collection_status,
+      totals_by_currency: totalsByCurrency(cInv),
     });
   }
 
@@ -325,8 +336,8 @@ export function buildTrackerModel(ds: ReceivablesDataset, opts: BuildOptions): T
     })),
   };
 
-  const kpis = buildKpis(totals, prev?.totals ?? null, rc);
-  const actions = buildActions(invoices, customers, ref, rc);
+  const kpis = buildKpis(totals, prev?.totals ?? null, rc, lang);
+  const actions = buildActions(invoices, customers, ref, rc, lang);
   const totalOpen = total || 1;
 
   return {
@@ -352,6 +363,7 @@ export function buildTrackerModel(ds: ReceivablesDataset, opts: BuildOptions): T
     week,
     fx_effect_reporting: fxEffect,
     unknown_due_reporting: sum(open.filter((i) => i.aging_bucket === 'UNKNOWN').map((i) => i.outstanding_reporting)),
+    lang,
   };
 }
 
@@ -381,15 +393,16 @@ function evaluatePromises(acts: CollectionActivity[], pays: Payment[], ref: ISOD
   return { broken_amount: round2(broken), next_date: nextDate, next_amount: nextAmount };
 }
 
-function recommendAction(x: { overdue: number; over30: number; over90: number; maxAging: number; promiseBroken: boolean; disputed: number; creditExceeded: boolean; grade: string; total: number }): string {
-  if (x.over90 > 0) return 'Escalate to Finance leader; evaluate credit hold and legal/collection agency path';
-  if (x.promiseBroken) return 'Re-confirm payment date with customer today; escalate to Sales leader if no confirmation within 2 business days';
-  if (x.creditExceeded) return 'Credit limit exceeded: hold new bookings until balance is below limit or Finance approves exception';
-  if (x.over30 > 0) return 'Send formal overdue notice and call decision maker this week; request payment plan';
-  if (x.disputed > 0) return 'Resolve dispute with Operations/Finance; agree undisputed portion to be paid now';
-  if (x.overdue > 0) return 'Send payment reminder and confirm remittance date';
-  if (x.total > 0) return 'No action required; monitor upcoming due dates';
-  return 'No open balance';
+function recommendAction(x: { overdue: number; over30: number; over90: number; maxAging: number; promiseBroken: boolean; disputed: number; creditExceeded: boolean; grade: string; total: number }, lang: Lang): string {
+  const p = (en: string, ko: string) => pick(lang, en, ko);
+  if (x.over90 > 0) return p('Escalate to Finance leader; evaluate credit hold and legal/collection agency path', 'Finance 리더에게 에스컬레이션; 신용 중단 및 법무·추심 경로 검토');
+  if (x.promiseBroken) return p('Re-confirm payment date with customer today; escalate to Sales leader if no confirmation within 2 business days', '오늘 고객사와 지급일 재확정; 영업일 2일 내 확답이 없으면 Sales 리더에게 에스컬레이션');
+  if (x.creditExceeded) return p('Credit limit exceeded: hold new bookings until balance is below limit or Finance approves exception', '신용한도 초과: 잔액이 한도 아래로 내려가거나 Finance가 예외 승인할 때까지 신규 예약 보류');
+  if (x.over30 > 0) return p('Send formal overdue notice and call decision maker this week; request payment plan', '이번 주 공식 연체 통지 발송 및 의사결정자 통화; 분할 지급 계획 요청');
+  if (x.disputed > 0) return p('Resolve dispute with Operations/Finance; agree undisputed portion to be paid now', 'Ops·Finance와 분쟁 해결; 분쟁 없는 금액은 즉시 지급 합의');
+  if (x.overdue > 0) return p('Send payment reminder and confirm remittance date', '지급 리마인더 발송 및 송금일 확인');
+  if (x.total > 0) return p('No action required; monitor upcoming due dates', '조치 불필요; 다가오는 만기일 모니터링');
+  return p('No open balance', '미결 잔액 없음');
 }
 
 function dimension(open: CalculatedInvoice[], customers: CustomerRisk[], keyOf: (c: CustomerRisk) => string, labelOf: (c: CustomerRisk) => string, prevRows: SnapshotDimensionRow[] | null): DimensionAging[] {
@@ -428,6 +441,18 @@ function dimensionByInvoice(open: CalculatedInvoice[], keyOf: (i: CalculatedInvo
 }
 
 const toDimRow = (d: DimensionAging): SnapshotDimensionRow => ({ key: d.key, label: d.label, total_outstanding: d.total, overdue: d.overdue });
+
+function totalsByCurrency(inv: CalculatedInvoice[]): CustomerRisk['totals_by_currency'] {
+  const m = new Map<string, { currency: string; total: number; overdue: number; invoice_count: number }>();
+  for (const i of inv) {
+    const row = m.get(i.invoice_currency) ?? { currency: i.invoice_currency, total: 0, overdue: 0, invoice_count: 0 };
+    row.total = round2(row.total + i.outstanding_amount);
+    if (i.is_overdue) row.overdue = round2(row.overdue + i.outstanding_amount);
+    row.invoice_count++;
+    m.set(i.invoice_currency, row);
+  }
+  return [...m.values()].sort((a, b) => b.total - a.total);
+}
 
 function groupBy<T>(arr: T[], key: (t: T) => string): Map<string, T[]> {
   const m = new Map<string, T[]>();

@@ -210,7 +210,8 @@ Idempotency key format: `weekly-outstanding:<report_date>:<channel>`; failure re
 | `DRY_RUN` | default **`true`**; `false|0|no|off` disables | |
 | `TARGET_CHANNEL` | `test` (default) \| `leaders` | live + `leaders` + not dry → requires `TEAMS_WEBHOOK_URL`; live + `test` + not dry → requires `TEAMS_TEST_WEBHOOK_URL` |
 | `REPORT_DATE` | `YYYY-MM-DD` or empty (auto: latest Saturday) | |
-| `REPORTING_CURRENCY` | ISO 4217, default `USD` | |
+| `REPORTING_CURRENCY` | ISO 4217, default `JPY` (company default currency; changed from USD on 2026-09-07) | |
+| `REPORT_LANGUAGE` | `ko` (default) or `en` — wording of engine text and the Teams report | |
 | `REPORT_TIMEZONE` | IANA, default `Asia/Ho_Chi_Minh` | |
 | `TRACKER_BASE_URL` | default `http://localhost:4173/` (trailing slash enforced) | used for card links |
 | `DATA_STORAGE_CONFIG` | JSON, default `{"dir":"automation/state"}` | |

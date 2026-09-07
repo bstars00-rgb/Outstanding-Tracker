@@ -11,6 +11,7 @@ export interface PipelineEnv {
   TARGET_CHANNEL: 'test' | 'leaders';
   REPORT_DATE: string | null; // override reference date (YYYY-MM-DD)
   REPORTING_CURRENCY: string;
+  REPORT_LANGUAGE: 'en' | 'ko';
   REPORT_TIMEZONE: string;
   TRACKER_BASE_URL: string;
   DATA_STORAGE_CONFIG: { dir: string };
@@ -40,7 +41,7 @@ export function loadEnv(env: NodeJS.ProcessEnv = process.env): PipelineEnv {
   if (!['test', 'leaders'].includes(target)) throw new Error('TARGET_CHANNEL must be test|leaders');
   const reportDate = opt(env.REPORT_DATE);
   if (reportDate && !/^\d{4}-\d{2}-\d{2}$/.test(reportDate)) throw new Error('REPORT_DATE must be YYYY-MM-DD');
-  const currency = (env.REPORTING_CURRENCY ?? 'USD').toUpperCase();
+  const currency = (env.REPORTING_CURRENCY ?? 'JPY').toUpperCase(); // company default currency: JPY (Finance)
   if (!/^[A-Z]{3}$/.test(currency)) throw new Error('REPORTING_CURRENCY must be ISO 4217');
 
   let recipients: PipelineEnv['RECIPIENT_CONFIG'] = { leaders_channel: 'Leadership - Receivables', test_channel: 'Outstanding Tracker - Test', admin_channel: null, roles: ['CEO', 'Finance Leader', 'GSM Leader', 'Sales Leaders', 'Collection Leader'] };
@@ -68,6 +69,7 @@ export function loadEnv(env: NodeJS.ProcessEnv = process.env): PipelineEnv {
     TARGET_CHANNEL: target as PipelineEnv['TARGET_CHANNEL'],
     REPORT_DATE: reportDate,
     REPORTING_CURRENCY: currency,
+    REPORT_LANGUAGE: (env.REPORT_LANGUAGE ?? 'ko').toLowerCase().startsWith('ko') ? 'ko' : 'en',
     REPORT_TIMEZONE: env.REPORT_TIMEZONE ?? 'Asia/Ho_Chi_Minh',
     TRACKER_BASE_URL: (env.TRACKER_BASE_URL ?? 'http://localhost:4173/').replace(/\/?$/, '/'),
     DATA_STORAGE_CONFIG: storage,
@@ -100,6 +102,7 @@ export function describe(cfg: PipelineEnv): Record<string, unknown> {
     TARGET_CHANNEL: cfg.TARGET_CHANNEL,
     REPORT_DATE: cfg.REPORT_DATE ?? '(auto: latest Saturday)',
     REPORTING_CURRENCY: cfg.REPORTING_CURRENCY,
+    REPORT_LANGUAGE: cfg.REPORT_LANGUAGE,
     REPORT_TIMEZONE: cfg.REPORT_TIMEZONE,
     TRACKER_BASE_URL: cfg.TRACKER_BASE_URL,
     storage_dir: cfg.DATA_STORAGE_CONFIG.dir,

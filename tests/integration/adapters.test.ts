@@ -63,7 +63,7 @@ class FakeMcp implements McpToolClient {
 }
 
 describe('Ellis live adapter (contract tests against the confirmed tool shape)', () => {
-  const cfg = { ...DEFAULT_LIVE_CONFIG, reportingCurrency: 'USD', fx: mockFxTable('2026-09-05', '2026-09-05'), countries: ['Korea', 'Japan'], pageSize: 2 };
+  const cfg = { ...DEFAULT_LIVE_CONFIG, reportingCurrency: 'USD', fx: mockFxTable('2026-09-05', '2026-09-05', 'USD'), countries: ['Korea', 'Japan'], pageSize: 2 };
 
   it('paginates per country with limit/offset until totalCount, dedupes by bookingItemCode and drops guestName', async () => {
     const kr = [record({ bookingItemCode: 'A1' }), record({ bookingItemCode: 'A2' }), record({ bookingItemCode: 'A3' }), record({ bookingItemCode: 'A1', bookingStatus: 'Cancelled', billing: 0 })];

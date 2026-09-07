@@ -1,8 +1,11 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { latestSaturday, todayISO } from '@core/dates';
+import type { Lang } from '@core/i18n';
 import type { ISODate, TrackerModel } from '@core/types';
 import type { InsightResult } from '@adapters/ai/types';
+import { translate } from '@app/i18n/strings';
+import { useI18n } from '@app/i18n/useI18n';
 import { buildMockModel } from './mock-model';
 import { fetchLiveData, persistMode, resolveInitialMode, type DataMode } from './mode';
 
@@ -31,21 +34,23 @@ function delay(ms: number) {
   return new Promise<void>((r) => setTimeout(r, ms));
 }
 
-export function partialNotesFor(model: TrackerModel): string[] {
+const COMPLETENESS_KEYS = ['customers', 'invoices', 'payments', 'activities', 'fx'] as const;
+
+export function partialNotesFor(model: TrackerModel, lang: Lang = 'en'): string[] {
   const notes: string[] = [];
   const c = model.completeness;
-  (['customers', 'invoices', 'payments', 'activities', 'fx'] as const).forEach((k) => {
-    if (c[k] !== 'full') notes.push(`${k}: ${c[k]}`);
+  COMPLETENESS_KEYS.forEach((k) => {
+    if (c[k] !== 'full') notes.push(`${translate(lang, `entity.${k}`)}: ${translate(lang, `level.${c[k]}`)}`);
   });
   const errors = model.data_quality.filter((d) => d.severity === 'error');
-  if (errors.length) notes.push(`${errors.length} data-quality error(s): ${[...new Set(errors.map((e) => e.code))].join(', ')}`);
+  if (errors.length) notes.push(translate(lang, 'partial.dqErrors', { n: errors.length, codes: [...new Set(errors.map((e) => e.code))].join(', ') }));
   notes.push(...c.notes);
   return notes;
 }
 
 export function isPartial(model: TrackerModel): boolean {
   const c = model.completeness;
-  const partial = (['customers', 'invoices', 'payments', 'activities', 'fx'] as const).some((k) => c[k] !== 'full');
+  const partial = COMPLETENESS_KEYS.some((k) => c[k] !== 'full');
   return partial || model.data_quality.some((d) => d.severity === 'error');
 }
 
@@ -60,6 +65,7 @@ export function useTrackerData(): TrackerData {
   const [searchParams, setSearchParams] = useSearchParams();
   const simulate = searchParams.get('simulate');
   const queryMode = searchParams.get('mode');
+  const { lang } = useI18n();
 
   const [mode, setModeState] = useState<DataMode>(() => resolveInitialMode(queryMode));
   const [referenceDate, setReferenceDateState] = useState<ISODate>(() => latestSaturday(todayISO()));
@@ -76,6 +82,9 @@ export function useTrackerData(): TrackerData {
     }
   }, [queryMode]);
 
+  // In mock mode the model is rebuilt in the UI language; live JSON is whatever the pipeline published.
+  const buildLang: Lang | null = mode === 'mock' ? lang : null;
+
   useEffect(() => {
     let cancelled = false;
     setState({ status: 'loading', model: null, insight: null, error: null });
@@ -83,7 +92,7 @@ export function useTrackerData(): TrackerData {
       await delay(simulate === 'slow' ? SLOW_DELAY_MS : LOAD_DELAY_MS);
       if (simulate === 'error') throw new Error('Simulated data source failure (?simulate=error). The data source did not respond.');
       if (mode === 'mock') {
-        const built = await buildMockModel(referenceDate, { empty: simulate === 'empty' });
+        const built = await buildMockModel(referenceDate, { empty: simulate === 'empty', lang: buildLang ?? 'en' });
         if (cancelled) return;
         if (!datesLoaded.current) {
           datesLoaded.current = true;
@@ -104,7 +113,7 @@ export function useTrackerData(): TrackerData {
     return () => {
       cancelled = true;
     };
-  }, [mode, referenceDate, tick, simulate]);
+  }, [mode, referenceDate, tick, simulate, buildLang]);
 
   const setMode = useCallback(
     (m: DataMode) => {
@@ -122,7 +131,7 @@ export function useTrackerData(): TrackerData {
   const setReferenceDate = useCallback((d: ISODate) => setReferenceDateState(d), []);
   const refresh = useCallback(() => setTick((t) => t + 1), []);
 
-  const partialNotes = useMemo(() => (state.model ? partialNotesFor(state.model) : []), [state.model]);
+  const partialNotes = useMemo(() => (state.model ? partialNotesFor(state.model, lang) : []), [state.model, lang]);
 
   return {
     status: state.status,

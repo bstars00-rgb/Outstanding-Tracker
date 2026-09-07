@@ -73,7 +73,7 @@ export async function runPipeline(d: PipelineDeps): Promise<PipelineResult> {
   }
   log.log('[2/13] idempotency check passed');
 
-  const ctx = { trackerBaseUrl: env.TRACKER_BASE_URL, timeZone: env.REPORT_TIMEZONE, sentAt: now.toISOString(), channelLabel: channel };
+  const ctx = { trackerBaseUrl: env.TRACKER_BASE_URL, timeZone: env.REPORT_TIMEZONE, sentAt: now.toISOString(), channelLabel: channel, lang: env.REPORT_LANGUAGE };
 
   const fail = async (reason: string): Promise<PipelineResult> => {
     log.log(`[!] FAILURE: ${reason}`);
@@ -113,12 +113,12 @@ export async function runPipeline(d: PipelineDeps): Promise<PipelineResult> {
     prev = hist.length >= 2 ? hist[hist.length - 2].snapshot : null;
     log.log(`[5/13] seeded ${hist.length - 1} historical mock snapshots into store`);
   }
-  const model = buildTrackerModel(dataset, { referenceDate: reportDate, previousSnapshot: prev, validationIssues: validation.issues });
+  const model = buildTrackerModel(dataset, { referenceDate: reportDate, previousSnapshot: prev, validationIssues: validation.issues, lang: env.REPORT_LANGUAGE });
   log.log(`[6/13] calc ok: total=${model.snapshot.totals.total_outstanding} overdue=${model.snapshot.totals.overdue_outstanding} prev=${prev?.snapshot_date ?? 'none'} fx_effect=${model.fx_effect_reporting}`);
   log.log(`[7/13] risk: ${model.customers.filter((c) => c.risk.grade === 'Critical').length} critical, ${model.customers.filter((c) => c.risk.grade === 'High').length} high`);
 
   // 8-9. insight + verification
-  const insight = await generateInsight(model, { provider: d.insightProvider, log: (l) => log.log(l) });
+  const insight = await generateInsight(model, { provider: d.insightProvider, log: (l) => log.log(l), lang: env.REPORT_LANGUAGE });
   log.log(`[8/13] insight provider=${insight.provider} model=${insight.model ?? '-'} fallback=${insight.fallback_used}`);
   log.log(`[9/13] verification ok=${insight.verification.ok} numbers_checked=${insight.verification.checked_numbers} unverified=${insight.verification.unverified_numbers.length} notes=${insight.verification.notes.join(' | ') || '-'}`);
 
@@ -187,13 +187,13 @@ export function buildDeps(env: PipelineEnv, log: RedactingLogger, now: () => Dat
   const refDate = env.REPORT_DATE ?? latestSaturday(todayInTz(now(), env.REPORT_TIMEZONE));
   const source: ReceivablesSource =
     env.DATA_SOURCE === 'mock'
-      ? new MockReceivablesSource()
+      ? new MockReceivablesSource(20260905, env.REPORTING_CURRENCY)
       : new EllisMcpReceivablesSource(new HttpMcpClient(env.secrets.ELLIS_MCP_ENDPOINT!, env.secrets.ELLIS_MCP_AUTH), {
           reportingCurrency: env.REPORTING_CURRENCY,
           // FX for live mode: until a rates feed is wired (Required item), the illustrative table is used and flagged in completeness notes.
           fx: { ...mockFxTable(refDate, refDate, env.REPORTING_CURRENCY), rates: mockFxTable(refDate, refDate, env.REPORTING_CURRENCY).rates.map((r) => ({ ...r, source: 'ILLUSTRATIVE - replace with treasury/ECB feed' })) },
         });
-  const insightProvider: InsightProvider = env.AI_PROVIDER === 'claude' ? new ClaudeInsightProvider({ apiKey: env.secrets.AI_API_KEY! }) : new RuleBasedInsightProvider();
+  const insightProvider: InsightProvider = env.AI_PROVIDER === 'claude' ? new ClaudeInsightProvider({ apiKey: env.secrets.AI_API_KEY!, lang: env.REPORT_LANGUAGE }) : new RuleBasedInsightProvider(env.REPORT_LANGUAGE);
   const sender: TeamsSender =
     env.TEAMS_SENDER === 'live'
       ? new LiveTeamsSender({ leadersWebhookUrl: env.secrets.TEAMS_WEBHOOK_URL, testWebhookUrl: env.secrets.TEAMS_TEST_WEBHOOK_URL, adminWebhookUrl: env.secrets.TEAMS_ADMIN_WEBHOOK_URL, maxAttempts: 3, baseDelayMs: 2000 }, (l) => log.log(l))

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { formatMoney, formatPct } from '@core/money';
 import type { DimensionAging } from '@core/types';
 import { useReadyTracker } from '@app/data/TrackerContext';
+import { useI18n } from '@app/i18n/useI18n';
 import { PageHeader } from '@app/components/PageHeader';
 import { DataTable, type Column } from '@app/components/DataTable';
 import { Money } from '@app/components/Money';
@@ -12,6 +13,7 @@ import { relChange } from '@app/lib/format';
 
 export function InsightsPage() {
   const { model, insight } = useReadyTracker();
+  const { t, te } = useI18n();
   const ccy = model.reporting_currency;
   const out = insight.output;
 
@@ -24,14 +26,14 @@ export function InsightsPage() {
   const countryAnomalies = useMemo(() => model.aging_by_country.filter((c) => c.previous_overdue !== null && c.previous_overdue > 0 && (c.overdue - c.previous_overdue) / c.previous_overdue > 0.1), [model.aging_by_country]);
 
   const ownerColumns: Column<DimensionAging>[] = [
-    { key: 'owner', header: 'Owner', sortValue: (r) => r.label, render: (r) => r.label },
-    { key: 'total', header: 'Total outstanding', align: 'right', sortValue: (r) => r.total, render: (r) => <Money amount={r.total} currency={ccy} /> },
-    { key: 'overdue', header: 'Overdue', align: 'right', sortValue: (r) => r.overdue, render: (r) => <Money amount={r.overdue} currency={ccy} /> },
-    { key: 'ratio', header: 'Overdue ratio', align: 'right', sortValue: (r) => (r.total ? r.overdue / r.total : 0), render: (r) => formatPct(r.total ? r.overdue / r.total : 0) },
-    { key: 'prev', header: 'Prev. overdue', align: 'right', sortValue: (r) => r.previous_overdue, render: (r) => <Money amount={r.previous_overdue} currency={ccy} /> },
+    { key: 'owner', header: t('col.owner'), sortValue: (r) => r.label, render: (r) => r.label },
+    { key: 'total', header: t('col.totalOutstanding'), align: 'right', sortValue: (r) => r.total, render: (r) => <Money amount={r.total} currency={ccy} /> },
+    { key: 'overdue', header: t('col.overdue'), align: 'right', sortValue: (r) => r.overdue, render: (r) => <Money amount={r.overdue} currency={ccy} /> },
+    { key: 'ratio', header: t('col.overdueRatio'), align: 'right', sortValue: (r) => (r.total ? r.overdue / r.total : 0), render: (r) => formatPct(r.total ? r.overdue / r.total : 0) },
+    { key: 'prev', header: t('col.prevOverdue'), align: 'right', sortValue: (r) => r.previous_overdue, render: (r) => <Money amount={r.previous_overdue} currency={ccy} /> },
     {
       key: 'change',
-      header: 'WoW change',
+      header: t('col.wowChange'),
       align: 'right',
       sortValue: (r) => (r.previous_overdue === null ? null : r.overdue - r.previous_overdue),
       render: (r) =>
@@ -44,7 +46,7 @@ export function InsightsPage() {
           </>
         ),
     },
-    { key: 'over30', header: '30+ days', align: 'right', sortValue: (r) => r.buckets.D31_60 + r.buckets.D61_90 + r.buckets.D90_PLUS, render: (r) => <Money amount={r.buckets.D31_60 + r.buckets.D61_90 + r.buckets.D90_PLUS} currency={ccy} /> },
+    { key: 'over30', header: t('col.over30days'), align: 'right', sortValue: (r) => r.buckets.D31_60 + r.buckets.D61_90 + r.buckets.D90_PLUS, render: (r) => <Money amount={r.buckets.D31_60 + r.buckets.D61_90 + r.buckets.D90_PLUS} currency={ccy} /> },
   ];
 
   const conf = out.forecast_next_week.confidence;
@@ -52,21 +54,25 @@ export function InsightsPage() {
   return (
     <div>
       <PageHeader
-        title="Weekly AI Insight"
+        title={t('insights.title')}
         subtitle={
           <>
-            Week ending {model.reference_date} · compared with {model.previous_snapshot_date ?? 'no prior snapshot'} · provider {insight.provider}
-            {insight.fallback_used ? ' (fallback)' : ''}
+            {t('insights.subtitle', { date: model.reference_date, prev: model.previous_snapshot_date ?? t('footer.noPrior'), provider: insight.provider })}
+            {insight.fallback_used ? t('insights.fallbackSuffix') : ''}
           </>
         }
       />
 
-      {insight.fallback_used && <Banner kind="warning" title="Fallback insight.">{insight.error ?? 'The primary provider failed verification; the rule-based provider produced this insight.'}</Banner>}
+      {insight.fallback_used && (
+        <Banner kind="warning" title={t('insights.fallbackTitle')}>
+          {insight.error ?? t('insights.fallbackBody')}
+        </Banner>
+      )}
 
       <div className="grid-2 section">
         <section className="card" aria-labelledby="ins-exec">
           <h2 className="card-title" id="ins-exec">
-            Executive summary
+            {t('insights.exec')}
           </h2>
           <ul className="bullets">
             {out.executive_summary.map((s, i) => (
@@ -76,10 +82,10 @@ export function InsightsPage() {
         </section>
         <section className="card" aria-labelledby="ins-changes">
           <h2 className="card-title" id="ins-changes">
-            Key changes this week
+            {t('insights.changes')}
           </h2>
           {out.major_changes.length === 0 ? (
-            <p className="muted">No material changes vs last week.</p>
+            <p className="muted">{t('insights.noChanges')}</p>
           ) : (
             <ul className="bullets">
               {out.major_changes.map((s, i) => (
@@ -92,27 +98,27 @@ export function InsightsPage() {
 
       <section className="card section" aria-labelledby="ins-risks">
         <h2 className="card-title" id="ins-risks">
-          Top risks
+          {t('insights.topRisks')}
         </h2>
         <div className="table-scroll">
           <table className="data compact">
             <thead>
               <tr>
-                <th scope="col">Customer</th>
-                <th scope="col">Owner</th>
+                <th scope="col">{t('col.customer')}</th>
+                <th scope="col">{t('col.owner')}</th>
                 <th scope="col" className="num">
-                  Amount
+                  {t('col.amount')}
                 </th>
-                <th scope="col">Reason</th>
-                <th scope="col">Action</th>
-                <th scope="col">Due</th>
+                <th scope="col">{t('col.reason')}</th>
+                <th scope="col">{t('col.action')}</th>
+                <th scope="col">{t('col.due')}</th>
               </tr>
             </thead>
             <tbody>
               {out.top_risks.length === 0 && (
                 <tr>
                   <td className="empty" colSpan={6}>
-                    No top risks flagged.
+                    {t('insights.noTopRisks')}
                   </td>
                 </tr>
               )}
@@ -137,21 +143,21 @@ export function InsightsPage() {
       <div className="grid-2 section">
         <section className="card" aria-labelledby="ins-opp">
           <h2 className="card-title" id="ins-opp">
-            Collection opportunities
+            {t('insights.opportunities')}
           </h2>
           {out.collection_opportunities.length === 0 ? (
-            <p className="muted">No quick-win opportunities identified.</p>
+            <p className="muted">{t('insights.noOpportunities')}</p>
           ) : (
             <div className="table-scroll">
               <table className="data compact">
                 <thead>
                   <tr>
-                    <th scope="col">Customer</th>
-                    <th scope="col">Owner</th>
+                    <th scope="col">{t('col.customer')}</th>
+                    <th scope="col">{t('col.owner')}</th>
                     <th scope="col" className="num">
-                      Amount
+                      {t('col.amount')}
                     </th>
-                    <th scope="col">Why</th>
+                    <th scope="col">{t('col.why')}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -171,12 +177,14 @@ export function InsightsPage() {
 
         <section className="card" aria-labelledby="ins-forecast">
           <h2 className="card-title" id="ins-forecast">
-            Forecast next week
-            <StatusPill tone={conf === 'high' ? 'good' : conf === 'medium' ? 'info' : 'warning'}>confidence {conf}</StatusPill>
+            {t('insights.forecast')}
+            <StatusPill tone={conf === 'high' ? 'good' : conf === 'medium' ? 'info' : 'warning'} title={conf}>
+              {t('insights.confidence', { level: te('confidence', conf) })}
+            </StatusPill>
           </h2>
           <p className="kpi-value">{formatMoney(out.forecast_next_week.expected_collection, out.forecast_next_week.currency)}</p>
           <p className="small muted" style={{ marginBottom: 8 }}>
-            Expected collection
+            {t('insights.expected')}
           </p>
           <ul className="bullets small">
             {out.forecast_next_week.basis.map((b, i) => (
@@ -188,22 +196,22 @@ export function InsightsPage() {
 
       <section className="card section" aria-labelledby="ins-owner">
         <h2 className="card-title" id="ins-owner">
-          Bottlenecks by owner — required actions
+          {t('insights.bottlenecks')}
         </h2>
         {ownerGroups.length === 0 ? (
-          <p className="muted">No owner actions.</p>
+          <p className="muted">{t('insights.noOwnerActions')}</p>
         ) : (
           <div className="table-scroll">
             <table className="data compact">
               <thead>
                 <tr>
-                  <th scope="col">Owner</th>
-                  <th scope="col">Customer</th>
+                  <th scope="col">{t('col.owner')}</th>
+                  <th scope="col">{t('col.customer')}</th>
                   <th scope="col" className="num">
-                    Amount
+                    {t('col.amount')}
                   </th>
-                  <th scope="col">Action</th>
-                  <th scope="col">Deadline</th>
+                  <th scope="col">{t('col.action')}</th>
+                  <th scope="col">{t('col.deadline')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -213,7 +221,7 @@ export function InsightsPage() {
                       <td>
                         {i === 0 ? (
                           <strong>
-                            {owner} <span className="cell-sub">{rows.length} action(s) · {formatMoney(rows.reduce((s, x) => s + x.amount, 0), ccy)}</span>
+                            {owner} <span className="cell-sub">{t('insights.actionsCount', { n: rows.length, amount: formatMoney(rows.reduce((s, x) => s + x.amount, 0), ccy) })}</span>
                           </strong>
                         ) : (
                           ''
@@ -234,22 +242,22 @@ export function InsightsPage() {
 
       <section className="card section" aria-labelledby="ins-ceo">
         <h2 className="card-title" id="ins-ceo">
-          Decisions for leadership
+          {t('insights.decisions')}
         </h2>
         {out.ceo_decisions.length === 0 ? (
-          <p className="muted">No leadership decisions required this week.</p>
+          <p className="muted">{t('insights.noDecisions')}</p>
         ) : (
           <div className="table-scroll">
             <table className="data compact">
               <thead>
                 <tr>
-                  <th scope="col">Topic</th>
-                  <th scope="col">Customer</th>
+                  <th scope="col">{t('col.topic')}</th>
+                  <th scope="col">{t('col.customer')}</th>
                   <th scope="col" className="num">
-                    Amount
+                    {t('col.amount')}
                   </th>
-                  <th scope="col">Recommendation</th>
-                  <th scope="col">Rationale</th>
+                  <th scope="col">{t('col.recommendation')}</th>
+                  <th scope="col">{t('col.rationale')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -271,30 +279,30 @@ export function InsightsPage() {
       <div className="grid-2 section">
         <section className="card" aria-labelledby="ins-byowner">
           <h2 className="card-title" id="ins-byowner">
-            By owner
+            {t('insights.byOwner')}
           </h2>
-          <DataTable columns={ownerColumns} rows={model.aging_by_owner} rowKey={(r) => r.key} defaultSort={{ key: 'overdue', dir: 'desc' }} compact caption="Aging by account owner" />
+          <DataTable columns={ownerColumns} rows={model.aging_by_owner} rowKey={(r) => r.key} defaultSort={{ key: 'overdue', dir: 'desc' }} compact caption={t('insights.byOwnerCaption')} />
         </section>
         <section className="card" aria-labelledby="ins-country">
           <h2 className="card-title" id="ins-country">
-            By country anomalies <span className="muted small">overdue up &gt;10% WoW</span>
+            {t('insights.anomalies')} <span className="muted small">{t('insights.anomaliesHint')}</span>
           </h2>
           {countryAnomalies.length === 0 ? (
-            <p className="muted">No country increased overdue by more than 10% vs last week.</p>
+            <p className="muted">{t('insights.noAnomalies')}</p>
           ) : (
             <div className="table-scroll">
               <table className="data compact">
                 <thead>
                   <tr>
-                    <th scope="col">Country</th>
+                    <th scope="col">{t('col.country')}</th>
                     <th scope="col" className="num">
-                      Overdue
+                      {t('col.overdue')}
                     </th>
                     <th scope="col" className="num">
-                      Previous
+                      {t('col.previous')}
                     </th>
                     <th scope="col" className="num">
-                      Change
+                      {t('col.change')}
                     </th>
                   </tr>
                 </thead>
@@ -319,7 +327,7 @@ export function InsightsPage() {
 
       {out.data_quality_warnings.length > 0 && (
         <section className="section">
-          <Banner kind="warning" title="Data-quality warnings.">
+          <Banner kind="warning" title={t('insights.dqTitle')}>
             <ul>
               {out.data_quality_warnings.map((w, i) => (
                 <li key={i}>{w}</li>
@@ -329,13 +337,18 @@ export function InsightsPage() {
         </section>
       )}
 
-      <footer className="card provenance" aria-label="Insight provenance">
+      <footer className="card provenance" aria-label={t('insights.provenanceAria')}>
         <div>
-          <strong>Provider:</strong> {insight.provider} · <strong>Model:</strong> {insight.model ?? 'n/a (deterministic rules)'} · <strong>Generated at:</strong> {insight.generated_at}
+          <strong>{t('insights.provider')}</strong> {insight.provider} · <strong>{t('insights.model')}</strong> {insight.model ?? t('insights.noModel')} · <strong>{t('insights.generatedAt')}</strong> {insight.generated_at}
         </div>
         <div>
-          <strong>Verification:</strong> {insight.verification.ok ? 'OK' : 'issues found'} · {insight.verification.checked_numbers} numbers checked · {insight.verification.unverified_numbers.length} unverified · {insight.verification.unknown_customers.length} unknown customers ·{' '}
-          {insight.verification.unknown_owners.length} unknown owners
+          <strong>{t('insights.verification')}</strong> {insight.verification.ok ? t('insights.verOk') : t('insights.verIssues')} ·{' '}
+          {t('insights.verStats', {
+            checked: insight.verification.checked_numbers,
+            unverified: insight.verification.unverified_numbers.length,
+            customers: insight.verification.unknown_customers.length,
+            owners: insight.verification.unknown_owners.length,
+          })}
         </div>
         {insight.verification.notes.length > 0 && (
           <ul>
@@ -344,7 +357,7 @@ export function InsightsPage() {
             ))}
           </ul>
         )}
-        <div>AI interprets computed data only; all figures are traceable to the tracker.</div>
+        <div>{t('insights.aiNote')}</div>
       </footer>
     </div>
   );

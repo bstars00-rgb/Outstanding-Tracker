@@ -25,7 +25,7 @@ Each phase records: decisions taken, evidence, and the risks that remain open at
 |----|----------|-----------|
 | D1 | Build on a **pluggable `ReceivablesSource`**: `MockReceivablesSource` (deterministic) and `EllisMcpReceivablesSource` (live). The live adapter implements only the confirmed tool and throws `ToolNotConfirmedError` for everything else. | Honest boundary: no fabricated tools; swap-in without UI changes. |
 | D2 | Provide a **bookings-derived mode** (`source: 'ellis-bookings-derived'`) that approximates receivables from post-paid Confirmed bookings, clearly labelled and with `completeness.payments = 'missing'`. | Lets the pipeline be exercised end-to-end against the real connector before ledger tools exist, without presenting it as actual AR. |
-| D3 | Reporting currency default **USD** (per PRD), configurable via `REPORTING_CURRENCY`. Flag to Finance that Ellis base currency is KRW. | PRD requirement; KRW confirmed as Ellis base → open question Q-FIN-1. |
+| D3 | ~~Reporting currency default USD (per PRD)~~ **Superseded by D27: default is JPY** (company default currency, management 2026-09-07), configurable via `REPORTING_CURRENCY`. Ellis base currency remains KRW (cross-rate). | PRD said USD; management confirmed JPY. |
 | D4 | Stack: React 18 + TypeScript + Vite 6, HashRouter, plain CSS; automation in TypeScript (`tsx`) on GitHub Actions; tests with Vitest + Playwright. | GitHub Pages compatible; single toolchain; no runtime secrets in frontend. |
 | D5 | Frontend, data collection, AI analysis and Teams delivery are **separate layers**; GitHub Pages only serves static assets and (optionally) an aggregated, PII-free `tracker-model.json`. | PRD §2; GitHub Pages cannot call MCP or hold secrets. |
 | D6 | Snapshot history is persisted to an orphan git branch `tracker-state` by the workflow (aggregates only). | Zero extra infrastructure; reproducible WoW comparisons. |
@@ -99,5 +99,9 @@ Each phase records: decisions taken, evidence, and the risks that remain open at
 | D25 | Snapshot state is git-ignored in `main` and lives only on the `tracker-state` branch written by the workflow. | Keeps the code branch free of data artefacts. |
 
 | D26 | Landing page made private with a **client-side password gate** (PBKDF2-SHA256, 150k iterations, salted; only the hash is embedded via `VITE_GATE_HASH`; sessions in session/local storage; Lock button; rotation invalidates sessions). Documented as an access deterrent, not authentication. | User request (2026-09-07). GitHub Pages has no server-side auth on the free plan; true protection of real data still requires a private origin (`SECURITY.md` addendum). |
+
+| D27 | **Company default currency = JPY.** `REPORTING_CURRENCY` default changed to JPY everywhere (env, workflow, mock FX table now cross-rated via USD, risk amount thresholds defined in USD and scaled to the reporting currency with the FX table). Customer screens show original-currency balances (`CustomerRisk.totals_by_currency`) next to the JPY equivalent. | User instruction 2026-09-07: "회사 디폴트 화폐는 엔화". |
+| D28 | **Bilingual engine text (en/ko)**: `buildTrackerModel({lang})`, `computeRiskScore(.., lang)`, `buildActions(.., lang)`, `generateRuleBasedInsight(input, lang)`, Teams card headings/footer, `REPORT_LANGUAGE` (default `ko`). Numbers never change with language. UI language toggle + dark mode delivered in the frontend. | User request 2026-09-07 ("한국어와 다크모드"). |
+| D29 | Developer-facing spec for the receivables MCP tools written: `docs/ELLIS_MCP_RECEIVABLES_SPEC_FOR_DEV.md` (5 read-only tools, common contract, currency rules, acceptance tests). | User request 2026-09-07. |
 
 Results and remaining risks: `docs/QA_REPORT.md`.

@@ -21,7 +21,7 @@ describe('Teams message', () => {
     expect(msg.card.type).toBe('AdaptiveCard');
     expect(msg.card.version).toBe('1.4');
     const texts = JSON.stringify(msg.card.body);
-    for (const s of ['1. Executive Summary', '2. AI Insights', '3. Required Actions', '4. CEO Decision Required', 'Data as of', 'Reporting currency USD', 'Automated report']) expect(texts).toContain(s);
+    for (const s of ['1. Executive Summary', '2. AI Insights', '3. Required Actions', '4. CEO Decision Required', 'Data as of', 'Reporting currency JPY', 'Automated report']) expect(texts).toContain(s);
     expect(msg.card.actions).toHaveLength(3);
     expect(JSON.stringify(msg.card.actions)).toContain('#/customers');
   });
@@ -34,7 +34,7 @@ describe('Teams message', () => {
   it('markdown fallback stays within the mobile length budget and has links', () => {
     expect(msg.markdown_length).toBeLessThanOrEqual(3500);
     expect(msg.markdown).toContain('**1. Executive Summary**');
-    expect(msg.markdown).toContain('[Tracker](https://example.github.io/tracker/#/)');
+    expect(msg.markdown).toContain('[Open Tracker](https://example.github.io/tracker/#/?lang=en)');
   });
   it('contains no invoice numbers or personal data', () => {
     const all = JSON.stringify(msg);

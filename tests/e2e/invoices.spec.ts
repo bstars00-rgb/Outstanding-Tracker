@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test';
 
 test.describe('Invoice Detail', () => {
   test('a bucket link on the aging page filters the invoice table', async ({ page }) => {
-    await page.goto('/#/aging?mode=mock');
+    await page.goto('/#/aging?mode=mock&lang=en');
     await expect(page.getByTestId('page-title')).toHaveText('Aging Analysis');
 
     const countryTable = page.getByTestId('aging-table-country');
@@ -36,7 +36,7 @@ test.describe('Invoice Detail', () => {
   });
 
   test('expanding a row reveals payment history and activities', async ({ page }) => {
-    await page.goto('/#/invoices?mode=mock');
+    await page.goto('/#/invoices?mode=mock&lang=en');
     const table = page.getByTestId('invoices-table');
     await expect(table.locator('tbody tr[data-row-id]').first()).toBeVisible();
     await table.getByRole('button', { name: 'Expand row details' }).first().click();

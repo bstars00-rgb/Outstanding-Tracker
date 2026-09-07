@@ -131,3 +131,12 @@ Next Iteration Priority: re-score after fixes; confirm visual fixes in browser.
 - R-B Live FX table is illustrative until a treasury/ECB feed is wired (flagged in report footer).
 - R-C Bookings-derived live mode cannot show payments; overdue figures in that mode must not be used for decisions (labelled in UI and report).
 - R-D Public Pages must stay on mock or behind access control (`SECURITY.md` §7).
+
+
+## Iteration 3 — Korean UI, dark mode, JPY default, currency display (2026-09-07)
+
+Changes: bilingual engine text (`lang` option through `buildTrackerModel`, risk, actions, rule-based insight, Teams card; `REPORT_LANGUAGE` default `ko`); UI i18n (≈330 strings) + language toggle; dark theme (tokenised palette, chart colours from CSS variables, no-flash script); reporting currency default **JPY** with USD-defined risk thresholds scaled by FX; `CustomerRisk.totals_by_currency` shown on Customers, customer detail, Overview; Aging "By Invoice Currency" tab with FX table; developer spec `docs/ELLIS_MCP_RECEIVABLES_SPEC_FOR_DEV.md`.
+
+Evidence: `npm run typecheck` pass · `npx vitest run` **99/99** (new: `i18n-core.test.ts`, `i18n.test.tsx`, `theme.test.tsx`, extended KpiCard/CustomersPage) · `npm run build` pass, bundle secret scan clean · Playwright **34 passed / 4 skipped (by design)** incl. `i18n-theme.spec.ts` (Korean overview, toggle, dark persistence, currency column/FX table) on desktop + mobile · dark-mode contrast sampled ≥ 5.7:1 by the frontend engineer · language never changes any number (asserted).
+
+Defects found: verification false positive on negative FX effect (magnitude quoted) — fixed (`verify.ts` allows absolute values). Scores unchanged (Planning 96 · QA mock 98 / live 87); live-scope Blocked items unchanged.

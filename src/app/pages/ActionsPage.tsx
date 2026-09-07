@@ -1,8 +1,10 @@
 import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { formatMoney } from '@core/money';
+import { ACTION_GROUP_LABEL_I18N } from '@core/i18n';
 import { ACTION_GROUP_LABEL, type ActionGroup, type ActionItem } from '@core/types';
 import { useReadyTracker } from '@app/data/TrackerContext';
+import { useI18n } from '@app/i18n/useI18n';
 import { PageHeader } from '@app/components/PageHeader';
 import { FilterBar, SelectFilter, distinct } from '@app/components/FilterBar';
 import { StatusPill, severityTone } from '@app/components/StatusPill';
@@ -11,11 +13,7 @@ import { customerLink, invoicesLink } from '@app/lib/links';
 import { fmtDate } from '@app/lib/format';
 
 type Status = ActionItem['status'];
-const STATUSES: { value: Status; label: string }[] = [
-  { value: 'open', label: 'Open' },
-  { value: 'in_progress', label: 'In progress' },
-  { value: 'done', label: 'Done' },
-];
+const STATUSES: Status[] = ['open', 'in_progress', 'done'];
 const GROUPS = Object.keys(ACTION_GROUP_LABEL) as ActionGroup[];
 const STORAGE_PREFIX = 'ot.actions.';
 
@@ -37,6 +35,8 @@ function writeStatus(id: string, status: Status) {
 
 export function ActionsPage() {
   const { model } = useReadyTracker();
+  const { lang, t, te } = useI18n();
+  const groupLabel = ACTION_GROUP_LABEL_I18N[lang];
   const ccy = model.reporting_currency;
   const [owner, setOwner] = useState('');
   const [hideDone, setHideDone] = useState(false);
@@ -56,17 +56,17 @@ export function ActionsPage() {
 
   return (
     <div>
-      <PageHeader title="Collection Action Board" subtitle={<>{openCount} open actions worth {formatMoney(openAmount, ccy)} across {GROUPS.length} groups, generated from the tracker rules for {model.reference_date}.</>} />
+      <PageHeader title={t('actions.title')} subtitle={t('actions.subtitle', { open: openCount, amount: formatMoney(openAmount, ccy), groups: GROUPS.length, date: model.reference_date })} />
 
-      <Banner kind="info">Status changes are stored in this browser only (prototype). They are not written back to Ellis and are not shared with other users.</Banner>
+      <Banner kind="info">{t('actions.banner')}</Banner>
 
       <FilterBar>
-        <SelectFilter id="a-owner" label="Owner" value={owner} onChange={setOwner} options={owners} testId="actions-owner-filter" />
+        <SelectFilter id="a-owner" label={t('filter.owner')} value={owner} onChange={setOwner} options={owners} testId="actions-owner-filter" />
         <div className="filter-field">
-          <label htmlFor="a-hide-done">Done items</label>
+          <label htmlFor="a-hide-done">{t('actions.doneItems')}</label>
           <select id="a-hide-done" className="select" value={hideDone ? 'hide' : 'show'} onChange={(e) => setHideDone(e.target.value === 'hide')}>
-            <option value="show">Show</option>
-            <option value="hide">Hide</option>
+            <option value="show">{t('actions.show')}</option>
+            <option value="hide">{t('actions.hide')}</option>
           </select>
         </div>
       </FilterBar>
@@ -80,15 +80,16 @@ export function ActionsPage() {
           return (
             <section className="card board-group" key={g} data-testid={`action-group-${g}`} aria-labelledby={`grp-${g}`}>
               <div className="board-group-head">
-                <h2 className="card-title" id={`grp-${g}`} style={{ marginBottom: 0 }}>
-                  {ACTION_GROUP_LABEL[g]}
+                <h2 className="card-title" id={`grp-${g}`} style={{ marginBottom: 0 }} title={ACTION_GROUP_LABEL[g]}>
+                  {groupLabel[g] ?? ACTION_GROUP_LABEL[g]}
                 </h2>
                 <span className="small muted tnum">
-                  {open.length} open{all.length !== open.length ? ` / ${all.length}` : ''} · {formatMoney(total, ccy, { compact: true })}
+                  {t('actions.openCount', { open: open.length })}
+                  {all.length !== open.length ? ` / ${all.length}` : ''} · {formatMoney(total, ccy, { compact: true })}
                 </span>
               </div>
               {visible.length === 0 ? (
-                <div className="caught-up">All caught up — nothing in this group{owner ? ` for ${owner}` : ''}.</div>
+                <div className="caught-up">{t('actions.caughtUp', { owner: owner ? t('actions.forOwner', { owner }) : '' })}</div>
               ) : (
                 visible
                   .sort((a, b) => (a.due_date ?? '9999').localeCompare(b.due_date ?? '9999') || b.amount_reporting - a.amount_reporting)
@@ -100,11 +101,13 @@ export function ActionsPage() {
                           <Link to={customerLink(a.customer_id)}>
                             <strong>{a.customer_name}</strong>
                           </Link>
-                          <StatusPill tone={severityTone(a.severity)}>{a.severity}</StatusPill>
+                          <StatusPill tone={severityTone(a.severity)} title={a.severity}>
+                            {te('severity', a.severity)}
+                          </StatusPill>
                         </div>
                         <div className="row small muted">
-                          <span>Owner: {a.owner}</span>
-                          <span className="tnum">Due {fmtDate(a.due_date)}</span>
+                          <span>{t('actions.owner', { owner: a.owner })}</span>
+                          <span className="tnum">{t('actions.due', { date: fmtDate(a.due_date) })}</span>
                         </div>
                         <div className="row">
                           <span className="tnum">
@@ -112,19 +115,26 @@ export function ActionsPage() {
                           </span>
                           {a.invoice_id && (
                             <Link className="small" to={invoicesLink({ customer: a.customer_id, q: model.invoices.find((i) => i.invoice_id === a.invoice_id)?.invoice_number ?? a.invoice_id })}>
-                              Invoice →
+                              {t('actions.invoiceLink')}
                             </Link>
                           )}
                         </div>
                         <p>{a.recommended_action}</p>
                         <div className="row">
                           <label className="small muted" htmlFor={`st-${a.id}`}>
-                            Status
+                            {t('actions.status')}
                           </label>
-                          <select id={`st-${a.id}`} className="select" value={st} onChange={(e) => setStatus(a.id, e.target.value as Status)} data-testid="action-status" aria-label={`Status for ${a.customer_name} (${ACTION_GROUP_LABEL[g]})`}>
+                          <select
+                            id={`st-${a.id}`}
+                            className="select"
+                            value={st}
+                            onChange={(e) => setStatus(a.id, e.target.value as Status)}
+                            data-testid="action-status"
+                            aria-label={t('actions.statusAria', { customer: a.customer_name, group: groupLabel[g] ?? g })}
+                          >
                             {STATUSES.map((s) => (
-                              <option key={s.value} value={s.value}>
-                                {s.label}
+                              <option key={s} value={s}>
+                                {te('actionStatus', s)}
                               </option>
                             ))}
                           </select>

@@ -8,21 +8,21 @@
   "body": [
     {
       "type": "TextBlock",
-      "text": "[Weekly Outstanding Report] 2026-09-05 (MOCK DATA)",
+      "text": "[주간 미수금 보고] 2026-09-05 (MOCK 데이터)",
       "wrap": true,
       "size": "Large",
       "weight": "Bolder"
     },
     {
       "type": "TextBlock",
-      "text": "⚠️ Prototype run on fictional mock data",
+      "text": "⚠️ 가상 Mock 데이터로 생성된 프로토타입 보고서",
       "wrap": true,
       "isSubtle": true,
       "spacing": "None"
     },
     {
       "type": "TextBlock",
-      "text": "1. Executive Summary",
+      "text": "1. 경영 요약",
       "wrap": true,
       "weight": "Bolder",
       "size": "Medium",
@@ -32,52 +32,52 @@
       "type": "FactSet",
       "facts": [
         {
-          "title": "Total outstanding",
-          "value": "USD 1.58M (+USD 368.5K (+30.4%))"
+          "title": "총 미수금",
+          "value": "JPY 232.62M (+JPY 53.47M (+29.8%))"
         },
         {
-          "title": "Overdue",
-          "value": "USD 462.9K (+USD 106.2K (+29.8%))"
+          "title": "연체 미수금",
+          "value": "JPY 68.07M (+JPY 15.41M (+29.3%))"
         },
         {
-          "title": "Collected this week",
-          "value": "USD 64.5K"
+          "title": "이번 주 회수액",
+          "value": "JPY 9.49M"
         },
         {
-          "title": "30+ days overdue",
-          "value": "USD 87.6K (+USD 4,330.50 (+5.2%))"
+          "title": "30일 이상 연체",
+          "value": "JPY 12.88M (+JPY 587.7K (+4.8%))"
         },
         {
-          "title": "90+ days overdue",
-          "value": "USD 23.0K (+USD 7,192.10 (+45.5%))"
+          "title": "90일 이상 연체",
+          "value": "JPY 3.38M (+JPY 1.05M (+44.9%))"
         },
         {
-          "title": "Due next 7 days",
-          "value": "USD 274.2K"
+          "title": "다음 주 만기 예정",
+          "value": "JPY 40.32M"
         }
       ]
     },
     {
       "type": "TextBlock",
-      "text": "• Total outstanding is USD 1,581,798.06, up USD 368,493.87 (+30.4%) vs last week. Overdue is USD 462,900.59 (29.3% of total), up USD 106,217.00 (+29.8%) vs last week.",
+      "text": "• 총 미수금은 JPY 232,617,356로 전주 대비 JPY 53,465,421 증가 (+29.8%)했습니다. 연체 미수금은 JPY 68,073,614(총액의 29.3%)로 전주 대비 JPY 15,407,714 증가 (+29.3%)했습니다.",
       "wrap": true,
       "spacing": "Small"
     },
     {
       "type": "TextBlock",
-      "text": "• 3 customer(s) drove the overdue increase (their combined increase exceeds the net increase because other customers improved): Fuji Peak Travel Inc. (+USD 99,499.64), Nusantara Trips PT (+USD 13,000.00), Bali Breeze Tours (+USD 12,000.00).",
+      "text": "• 연체 증가는 고객사 3곳에서 발생했습니다(다른 고객사의 개선으로 이들의 증가 합계가 순증가분을 초과): Fuji Peak Travel Inc. (+JPY 14,632,300), Nusantara Trips PT (+JPY 1,911,765), Bali Breeze Tours (+JPY 1,764,706).",
       "wrap": true,
       "spacing": "Small"
     },
     {
       "type": "TextBlock",
-      "text": "• Collected this week: USD 64,500.23. New overdue this week: USD 166,399.63. 30+ days: USD 87,600.28; 90+ days: USD 23,000.00.",
+      "text": "• 이번 주 회수액 JPY 9,485,327, 신규 연체 JPY 24,470,535. 30일 이상 연체 JPY 12,882,391, 90일 이상 연체 JPY 3,382,351.",
       "wrap": true,
       "spacing": "Small"
     },
     {
       "type": "TextBlock",
-      "text": "2. AI Insights",
+      "text": "2. AI 인사이트",
       "wrap": true,
       "weight": "Bolder",
       "size": "Medium",
@@ -85,138 +85,100 @@
     },
     {
       "type": "TextBlock",
-      "text": "Key changes",
+      "text": "핵심 변화",
       "wrap": true,
       "weight": "Bolder",
       "spacing": "Small"
     },
     {
       "type": "TextBlock",
-      "text": "• Fuji Peak Travel Inc. (Kenta Sato): overdue +USD 99,499.64 to USD 99,499.64; oldest item 5 days; risk Watch (38/100). New overdue this week: USD 99,500",
+      "text": "• Fuji Peak Travel Inc. (Kenta Sato): 연체 +JPY 14,632,300 → JPY 14,632,300; 최장 연체 5일; 위험 관찰 (38/100). 이번 주 신규 연체: JPY 14,632,300",
       "wrap": true,
       "spacing": "Small"
     },
     {
       "type": "TextBlock",
-      "text": "• Nusantara Trips PT (Aisha Rahman): overdue +USD 13,000.00 to USD 13,000.00; oldest item 6 days; risk Watch (40/100). Credit utilization 137%",
+      "text": "• Nusantara Trips PT (Aisha Rahman): 연체 +JPY 1,911,765 → JPY 1,911,765; 최장 연체 6일; 위험 관찰 (40/100). 신용한도 사용률 137%",
       "wrap": true,
       "spacing": "Small"
     },
     {
       "type": "TextBlock",
-      "text": "• Bali Breeze Tours (Aisha Rahman): overdue +USD 12,000.00 to USD 12,000.00; oldest item 7 days; risk Watch (30/100). New overdue this week: USD 12,000",
+      "text": "• Bali Breeze Tours (Aisha Rahman): 연체 +JPY 1,764,706 → JPY 1,764,706; 최장 연체 7일; 위험 관찰 (30/100). 이번 주 신규 연체: JPY 1,764,706",
       "wrap": true,
       "spacing": "Small"
     },
     {
       "type": "TextBlock",
-      "text": "Top risks",
+      "text": "위험 고객사",
       "wrap": true,
       "weight": "Bolder",
       "spacing": "Small"
     },
     {
       "type": "TextBlock",
-      "text": "• **Mekong Holidays JSC** (Linh Nguyen) — USD 27,100.00: Risk High (81/100): Oldest overdue invoice: 111 days; Overdue USD 27,100",
+      "text": "• **Mekong Holidays JSC** (Linh Nguyen) — JPY 3,985,291: 위험 높음 (81/100): 최장 연체 Invoice: 111일; 연체 JPY 3,985,291",
       "wrap": true,
       "spacing": "Small"
     },
     {
       "type": "TextBlock",
-      "text": "• **Sakura Voyage K.K.** (Kenta Sato) — USD 70,300.44: Risk Medium (57/100): Oldest overdue invoice: 58 days; Overdue USD 70,300",
+      "text": "• **Sakura Voyage K.K.** (Kenta Sato) — JPY 10,338,300: 위험 중간 (54/100): 최장 연체 Invoice: 58일; 연체 JPY 10,338,300",
       "wrap": true,
       "spacing": "Small"
     },
     {
       "type": "TextBlock",
-      "text": "• **Formosa Travel Hub** (Wei Chen) — USD 62,000.00: Risk Watch (44/100): Overdue USD 62,000; Oldest overdue invoice: 22 days",
+      "text": "• **Formosa Travel Hub** (Wei Chen) — JPY 9,117,647: 위험 관찰 (41/100): 연체 JPY 9,117,647; 최장 연체 Invoice: 22일",
       "wrap": true,
       "spacing": "Small"
     },
     {
       "type": "TextBlock",
-      "text": "• **Penang Heritage Travel** (Aisha Rahman) — USD 14,000.00: Risk Watch (40/100): Oldest overdue invoice: 26 days; Overdue USD 14,000",
+      "text": "• **Penang Heritage Travel** (Aisha Rahman) — JPY 2,058,824: 위험 관찰 (40/100): 최장 연체 Invoice: 26일; 연체 JPY 2,058,824",
       "wrap": true,
       "spacing": "Small"
     },
     {
       "type": "TextBlock",
-      "text": "• **Siam Getaways Ltd.** (Somchai Rattana) — USD 27,500.00: Risk Watch (39/100): Overdue USD 27,500; Oldest overdue invoice: 25 days",
+      "text": "• **Siam Getaways Ltd.** (Somchai Rattana) — JPY 4,044,118: 위험 관찰 (39/100): 연체 JPY 4,044,118; 최장 연체 Invoice: 25일",
       "wrap": true,
       "spacing": "Small"
     },
     {
       "type": "TextBlock",
-      "text": "Collection opportunities",
+      "text": "회수 가능성 높은 고객사",
       "wrap": true,
       "weight": "Bolder",
       "spacing": "Small"
     },
     {
       "type": "TextBlock",
-      "text": "• **Fuji Peak Travel Inc.** — USD 99,499.64: Short overdue (5 days), paid regularly (last payment 2026-07-26)",
+      "text": "• **Fuji Peak Travel Inc.** — JPY 14,632,300: 단기 연체(5일), 정기 결제 이력 있음(최근 입금 2026-07-26)",
       "wrap": true,
       "spacing": "Small"
     },
     {
       "type": "TextBlock",
-      "text": "• **Lion City Journeys Pte.** — USD 17,500.01: Payment promised for 2026-09-09; oldest item 14 days",
+      "text": "• **Lion City Journeys Pte.** — JPY 2,573,530: 2026-09-09 지급 약속; 최장 연체 14일",
       "wrap": true,
       "spacing": "Small"
     },
     {
       "type": "TextBlock",
-      "text": "• **Penang Heritage Travel** — USD 14,000.00: Short overdue (26 days), paid regularly (last payment 2026-07-25)",
+      "text": "• **Penang Heritage Travel** — JPY 2,058,824: 단기 연체(26일), 정기 결제 이력 있음(최근 입금 2026-07-25)",
       "wrap": true,
       "spacing": "Small"
     },
     {
       "type": "TextBlock",
-      "text": "Forecast next week: USD 286,197.58 (confidence medium) — Invoices due next week: USD 274,197.58; Payments promised for next week: USD 12,000.00",
+      "text": "다음 주 예상 회수액: JPY 42,087,877 (신뢰도 중간) — 다음 주 만기 Invoice: JPY 40,323,171; 다음 주 지급 약속: JPY 1,764,706",
       "wrap": true,
       "spacing": "Small"
     },
     {
       "type": "TextBlock",
-      "text": "3. Required Actions",
-      "wrap": true,
-      "weight": "Bolder",
-      "size": "Medium",
-      "spacing": "Medium"
-    },
-    {
-      "type": "TextBlock",
-      "text": "• **Linh Nguyen** → Mekong Holidays JSC · USD 15,800.00 · Promise of USD 15,800.00 missed (no new date); re-confirm remittance date · by 2026-09-07 12:00",
-      "wrap": true,
-      "spacing": "Small"
-    },
-    {
-      "type": "TextBlock",
-      "text": "• **Wei Chen** → Formosa Travel Hub · USD 62,000.00 · Promise of USD 62,000.00 missed (no new date); re-confirm remittance date · by 2026-09-07 12:00",
-      "wrap": true,
-      "spacing": "Small"
-    },
-    {
-      "type": "TextBlock",
-      "text": "• **Aisha Rahman** → Nusantara Trips PT · USD 34,200.00 · Credit utilization 136.8%; hold new bookings or obtain Finance exception · by 2026-09-07",
-      "wrap": true,
-      "spacing": "Small"
-    },
-    {
-      "type": "TextBlock",
-      "text": "• **Somchai Rattana** → Siam Getaways Ltd. · USD 9,500.00 · Close dispute with Ops/Finance; collect undisputed balance now · by 2026-09-09",
-      "wrap": true,
-      "spacing": "Small"
-    },
-    {
-      "type": "TextBlock",
-      "text": "• **Kenta Sato** → Sakura Voyage K.K. · USD 60,500.28 · Formal notice for USD 60,500.28 older than 30 days; agree payment plan · by 2026-09-09",
-      "wrap": true,
-      "spacing": "Small"
-    },
-    {
-      "type": "TextBlock",
-      "text": "4. CEO Decision Required",
+      "text": "3. 필수 조치",
       "wrap": true,
       "weight": "Bolder",
       "size": "Medium",
@@ -224,26 +186,64 @@
     },
     {
       "type": "TextBlock",
-      "text": "• **Credit hold / legal escalation** — Mekong Holidays JSC (USD 27,100.00): Approve credit hold and collection-agency/legal path for Mekong Holidays JSC. _USD 27,100.00 overdue, oldest 111 days, risk High_",
+      "text": "• **Linh Nguyen** → Mekong Holidays JSC · JPY 2,323,528 · JPY 2,323,528 지급 약속 미이행(새 약속일 없음); 송금일 재확정 · 기한 2026-09-07 12:00",
       "wrap": true,
       "spacing": "Small"
     },
     {
       "type": "TextBlock",
-      "text": "• **Credit limit exception** — Nusantara Trips PT (USD 34,200.00): Decide: temporary limit increase or booking hold for Nusantara Trips PT. _Utilization 136.8% with USD 13,000.00 overdue_",
+      "text": "• **Wei Chen** → Formosa Travel Hub · JPY 9,117,647 · JPY 9,117,647 지급 약속 미이행(새 약속일 없음); 송금일 재확정 · 기한 2026-09-07 12:00",
       "wrap": true,
       "spacing": "Small"
     },
     {
       "type": "TextBlock",
-      "text": "Data quality",
+      "text": "• **Aisha Rahman** → Nusantara Trips PT · JPY 5,029,413 · 신용한도 사용률 136.8%; 신규 예약 보류 또는 Finance 예외 승인 · 기한 2026-09-07",
+      "wrap": true,
+      "spacing": "Small"
+    },
+    {
+      "type": "TextBlock",
+      "text": "• **Somchai Rattana** → Siam Getaways Ltd. · JPY 1,397,059 · Ops·Finance와 분쟁 종결; 분쟁 없는 잔액 즉시 회수 · 기한 2026-09-09",
+      "wrap": true,
+      "spacing": "Small"
+    },
+    {
+      "type": "TextBlock",
+      "text": "• **Kenta Sato** → Sakura Voyage K.K. · JPY 8,897,100 · 30일 초과 연체 JPY 8,897,100 공식 통지; 분할 지급 계획 합의 · 기한 2026-09-09",
+      "wrap": true,
+      "spacing": "Small"
+    },
+    {
+      "type": "TextBlock",
+      "text": "4. CEO 의사결정 필요",
+      "wrap": true,
+      "weight": "Bolder",
+      "size": "Medium",
+      "spacing": "Medium"
+    },
+    {
+      "type": "TextBlock",
+      "text": "• **신용 중단 / 법무 에스컬레이션** — Mekong Holidays JSC (JPY 3,985,291): Mekong Holidays JSC에 대한 신용 중단 및 추심·법무 절차 승인. _연체 JPY 3,985,291, 최장 111일, 위험 높음_",
+      "wrap": true,
+      "spacing": "Small"
+    },
+    {
+      "type": "TextBlock",
+      "text": "• **신용한도 예외** — Nusantara Trips PT (JPY 5,029,413): Nusantara Trips PT: 임시 한도 증액 또는 예약 보류 결정. _사용률 136.8%, 연체 JPY 1,911,765_",
+      "wrap": true,
+      "spacing": "Small"
+    },
+    {
+      "type": "TextBlock",
+      "text": "데이터 품질",
       "wrap": true,
       "weight": "Bolder",
       "spacing": "Medium"
     },
     {
       "type": "TextBlock",
-      "text": "• MOCK DATA: figures are fictional and for prototype demonstration only.",
+      "text": "• MOCK DATA: 프로토타입 시연용 가상 수치입니다.",
       "wrap": true,
       "spacing": "Small"
     },
@@ -261,7 +261,7 @@
     },
     {
       "type": "TextBlock",
-      "text": "Data as of 2026-09-05 09:00 GMT+7 · Sent 2026-09-05 09:00 GMT+7 · Reporting currency USD · Compared with 2026-08-29 · Data customers:full invoices:partial payments:full activities:partial fx:full · Insight: rule-based · Automated report",
+      "text": "데이터 기준시각 2026-09-05 09:00 GMT+7 · 발송 2026-09-05 09:00 GMT+7 · 보고 통화 JPY · 비교 기준일 2026-08-29 · 데이터 완전성 customers:full invoices:partial payments:full activities:partial fx:full · 인사이트: rule-based · 자동 생성 보고서",
       "wrap": true,
       "isSubtle": true,
       "size": "Small",
@@ -271,18 +271,18 @@
   "actions": [
     {
       "type": "Action.OpenUrl",
-      "title": "Open Tracker",
-      "url": "https://<org>.github.io/outstanding-tracker/#/"
+      "title": "트래커 열기",
+      "url": "https://bstars00-rgb.github.io/Outstanding-Tracker/#/?lang=ko"
     },
     {
       "type": "Action.OpenUrl",
-      "title": "Customer Risk",
-      "url": "https://<org>.github.io/outstanding-tracker/#/customers"
+      "title": "고객사 Risk",
+      "url": "https://bstars00-rgb.github.io/Outstanding-Tracker/#/customers?lang=ko"
     },
     {
       "type": "Action.OpenUrl",
-      "title": "Action Board",
-      "url": "https://<org>.github.io/outstanding-tracker/#/actions"
+      "title": "액션 보드",
+      "url": "https://bstars00-rgb.github.io/Outstanding-Tracker/#/actions?lang=ko"
     }
   ]
 }

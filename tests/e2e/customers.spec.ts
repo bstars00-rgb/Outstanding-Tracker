@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test';
 
 test.describe('Customer Risk', () => {
   test('filters by risk grade High, opens the detail and explains the score', async ({ page }) => {
-    await page.goto('/#/customers?mode=mock');
+    await page.goto('/#/customers?mode=mock&lang=en');
     await expect(page.getByTestId('page-title')).toHaveText('Customer Risk');
     const table = page.getByTestId('customers-table');
     const allRows = table.locator('tbody tr[data-row-id]');
@@ -22,7 +22,7 @@ test.describe('Customer Risk', () => {
   });
 
   test('searching by name narrows the table', async ({ page }) => {
-    await page.goto('/#/customers?mode=mock');
+    await page.goto('/#/customers?mode=mock&lang=en');
     const rows = page.getByTestId('customers-table').locator('tbody tr[data-row-id]');
     await expect(rows.first()).toBeVisible();
     await page.getByLabel('Customer name').fill('Mekong');

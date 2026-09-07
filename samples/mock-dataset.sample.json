@@ -1,68 +1,68 @@
 {
  "as_of": "2026-09-05T02:00:00.000Z",
  "source": "mock",
- "reporting_currency": "USD",
+ "reporting_currency": "JPY",
  "fx": {
-  "reporting_currency": "USD",
+  "reporting_currency": "JPY",
   "as_of": "2026-09-05",
   "rates": [
    {
-    "currency": "KRW",
-    "rate_to_reporting": 0.00072,
+    "currency": "USD",
+    "rate_to_reporting": 147.05882353,
     "rate_date": "2026-09-05",
     "source": "mock-fx (illustrative rates)"
    },
    {
-    "currency": "JPY",
-    "rate_to_reporting": 0.0068,
+    "currency": "KRW",
+    "rate_to_reporting": 0.10588235,
     "rate_date": "2026-09-05",
     "source": "mock-fx (illustrative rates)"
    },
    {
     "currency": "VND",
-    "rate_to_reporting": 0.000039,
+    "rate_to_reporting": 0.00573529,
     "rate_date": "2026-09-05",
     "source": "mock-fx (illustrative rates)"
    },
    {
     "currency": "TWD",
-    "rate_to_reporting": 0.031,
+    "rate_to_reporting": 4.55882353,
     "rate_date": "2026-09-05",
     "source": "mock-fx (illustrative rates)"
    },
    {
     "currency": "THB",
-    "rate_to_reporting": 0.028,
+    "rate_to_reporting": 4.11764706,
     "rate_date": "2026-09-05",
     "source": "mock-fx (illustrative rates)"
    },
    {
     "currency": "HKD",
-    "rate_to_reporting": 0.128,
+    "rate_to_reporting": 18.82352941,
     "rate_date": "2026-09-05",
     "source": "mock-fx (illustrative rates)"
    },
    {
     "currency": "SGD",
-    "rate_to_reporting": 0.75,
+    "rate_to_reporting": 110.29411765,
     "rate_date": "2026-09-05",
     "source": "mock-fx (illustrative rates)"
    },
    {
     "currency": "MYR",
-    "rate_to_reporting": 0.22,
+    "rate_to_reporting": 32.35294118,
     "rate_date": "2026-09-05",
     "source": "mock-fx (illustrative rates)"
    },
    {
     "currency": "IDR",
-    "rate_to_reporting": 0.000061,
+    "rate_to_reporting": 0.00897059,
     "rate_date": "2026-09-05",
     "source": "mock-fx (illustrative rates)"
    },
    {
     "currency": "PHP",
-    "rate_to_reporting": 0.0175,
+    "rate_to_reporting": 2.57352941,
     "rate_date": "2026-09-05",
     "source": "mock-fx (illustrative rates)"
    }
