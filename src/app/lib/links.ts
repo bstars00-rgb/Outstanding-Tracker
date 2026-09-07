@@ -22,3 +22,8 @@ export function invoicesLink(p: InvoiceFilterParams): string {
 export function customerLink(customerId: string): string {
   return `/customers/${encodeURIComponent(customerId)}`;
 }
+
+/** Customer list filtered to a managing entity (`control_company`; `unassigned` for customers without one). */
+export function customersByEntityLink(entityKey: string): string {
+  return `/customers?entity=${encodeURIComponent(entityKey)}`;
+}

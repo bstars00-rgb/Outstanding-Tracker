@@ -66,6 +66,7 @@ Type aliases: `ISODate` = `YYYY-MM-DD`; `ISODateTime` = ISO 8601 with offset (e.
 | `collection_status` | CollectionStatus | no | | Required (live: `NORMAL`) |
 | `risk_grade_manual` | RiskGrade | yes | Finance override from master data; **not** used in the calculated grade | Required |
 | `preferred_contact_channel` | ContactChannel | yes | | Required |
+| `control_company` | string | yes | Managing OhMyHotel entity (ELLIS Seller Invoice `Control`, e.g. "OMH Seoul", "OMH Singapore"); `null` => shown as "Unassigned entity / 법인 미지정" | Ellis (Seller Invoice `Control`; Required on Traders) |
 | `data_source` | string | no | Provenance label | Computed |
 
 ### 2.2 `Invoice`
@@ -105,6 +106,8 @@ Type aliases: `ISODate` = `YYYY-MM-DD`; `ISODateTime` = ISO 8601 with offset (e.
 | `payment_currency` | CurrencyCode | no | | Required |
 | `applied_amount` | number | no | Applied to invoices | Required |
 | `unapplied_amount` | number | no | `applied + unapplied ≠ amount` → `PAYMENT_SPLIT_MISMATCH` (unless `REFUNDED`) | Required |
+| `confirmed_at` | ISODate | yes | ELLIS reflection chain stage 2 (verify): Payment In/Out `paymentConfirmDate` (PM CNFM). `null` => RECORDED only | Ellis-C (Payment In/Out) |
+| `reconciled_at` | ISODate | yes | Stage 3 (reconcile): weekly bank-vs-ELLIS reconciliation sign-off. Tracker-owned | Tracker-owned |
 | `payment_method` | PaymentMethod | no | | Required |
 | `payment_reference` | string | yes | Bank reference; **set to `null` in published model** | Required |
 | `reconciliation_status` | ReconciliationStatus | no | `REFUNDED` excluded from all sums | Required |
@@ -331,6 +334,9 @@ Rules: PRD §7.
 | `completeness`, `fx` | copied from dataset |
 | `week` | `{ start, end }` — `start = previous_snapshot_date + 1` (or `reference − 6` without snapshot), `end = reference` |
 | `fx_effect_reporting` | see §5.10; `null` without previous snapshot |
+| `aging_by_control_company` | `DimensionAging[]` per managing entity (Seoul / Singapore / unassigned); Σ totals = Total Outstanding |
+| `reflection_queue` | `ReflectionItem[]`: every non-refund payment with `stage` RECORDED (no `confirmed_at`) → VERIFIED (`confirmed_at`) → RECONCILED (`reconciled_at`), `next_owner` and `sla_days` from `ReflectionChain` (default Rina (Josh) 1d → Sangho 1d → Jackie 7d), `days_in_stage` = reference − stage date, `overdue_sla` = days > sla |
+| `snapshot.totals.unverified_payment_*` / `unreconciled_payment_*` | count and reporting amount of RECORDED / VERIFIED items (any date) |
 | `unknown_due_reporting` | Σ `outstanding_reporting` of open invoices with `aging_bucket = 'UNKNOWN'` (missing `due_date`). Counted in Total Outstanding, in no bucket; Aging screen shows it so that Σ buckets + unknown = total |
 
 ---

@@ -113,7 +113,7 @@ export async function runPipeline(d: PipelineDeps): Promise<PipelineResult> {
     prev = hist.length >= 2 ? hist[hist.length - 2].snapshot : null;
     log.log(`[5/13] seeded ${hist.length - 1} historical mock snapshots into store`);
   }
-  const model = buildTrackerModel(dataset, { referenceDate: reportDate, previousSnapshot: prev, validationIssues: validation.issues, lang: env.REPORT_LANGUAGE });
+  const model = buildTrackerModel(dataset, { referenceDate: reportDate, previousSnapshot: prev, validationIssues: validation.issues, lang: env.REPORT_LANGUAGE, reflectionChain: env.REFLECTION_CHAIN });
   log.log(`[6/13] calc ok: total=${model.snapshot.totals.total_outstanding} overdue=${model.snapshot.totals.overdue_outstanding} prev=${prev?.snapshot_date ?? 'none'} fx_effect=${model.fx_effect_reporting}`);
   log.log(`[7/13] risk: ${model.customers.filter((c) => c.risk.grade === 'Critical').length} critical, ${model.customers.filter((c) => c.risk.grade === 'High').length} high`);
 

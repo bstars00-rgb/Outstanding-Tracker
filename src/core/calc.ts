@@ -16,13 +16,15 @@ import type {
   ISODate,
   Payment,
   ReceivablesDataset,
+  ReflectionChain,
+  ReflectionItem,
   Snapshot,
   SnapshotCustomerRow,
   SnapshotDimensionRow,
   SnapshotInvoiceState,
   TrackerModel,
 } from './types';
-import { AGING_BUCKETS } from './types';
+import { AGING_BUCKETS, DEFAULT_REFLECTION_CHAIN } from './types';
 
 export interface BuildOptions {
   referenceDate: ISODate;
@@ -32,6 +34,8 @@ export interface BuildOptions {
   validationIssues?: DataQualityIssue[];
   /** Language of engine-generated wording (labels, interpretations, evidence, actions). Numbers are unaffected. */
   lang?: Lang;
+  /** Owners/SLAs of the ELLIS reflection chain (record -> verify -> reconcile). */
+  reflectionChain?: ReflectionChain;
 }
 
 /** Invoices in these states never carry outstanding balance. */
@@ -239,8 +243,12 @@ export function buildTrackerModel(ds: ReceivablesDataset, opts: BuildOptions): T
       credit_status: c.credit_status,
       collection_status: c.collection_status,
       totals_by_currency: totalsByCurrency(cInv),
+      control_company: c.control_company,
     });
   }
+
+  // ---------- 3b. ELLIS reflection chain (record -> verify -> reconcile) ----------
+  const reflection = buildReflectionQueue(ds, customers, ref, opts.reflectionChain ?? DEFAULT_REFLECTION_CHAIN);
 
   // ---------- 4. Totals ----------
   const total = sum(open.map((i) => i.outstanding_reporting));
@@ -274,6 +282,10 @@ export function buildTrackerModel(ds: ReceivablesDataset, opts: BuildOptions): T
     due_within_7_days: round2(dueWithin7),
     broken_promise_amount: round2(brokenAmount),
     broken_promise_count: brokenCustomers.length,
+    unverified_payment_amount: round2(sum(reflection.filter((r) => r.stage === 'RECORDED').map((r) => r.amount_reporting))),
+    unverified_payment_count: reflection.filter((r) => r.stage === 'RECORDED').length,
+    unreconciled_payment_amount: round2(sum(reflection.filter((r) => r.stage === 'VERIFIED').map((r) => r.amount_reporting))),
+    unreconciled_payment_count: reflection.filter((r) => r.stage === 'VERIFIED').length,
     at_risk_amount: round2(atRisk),
     invoice_count: open.length,
     customer_count: customers.filter((c) => c.total_outstanding_reporting > 0).length,
@@ -284,6 +296,7 @@ export function buildTrackerModel(ds: ReceivablesDataset, opts: BuildOptions): T
   const byOwner = dimension(open, customers, (c) => c.account_owner_id || 'unassigned', (c) => c.account_owner_name || 'Unassigned', prev?.owners ?? null);
   const byCustomer = dimension(open, customers, (c) => c.customer_id, (c) => c.customer_name, prev ? prev.customers.map((c) => ({ key: c.customer_id, label: c.customer_name, total_outstanding: c.total_outstanding, overdue: c.overdue })) : null);
   const byCurrency = dimensionByInvoice(open, (i) => i.invoice_currency, prev?.currencies ?? null);
+  const byControl = dimension(open, customers, (c) => c.control_company ?? 'unassigned', (c) => c.control_company ?? (lang === 'ko' ? '법인 미지정' : 'Unassigned entity'), prev?.control_companies ?? null);
 
   // ---------- 6. FX effect ----------
   let fxEffect: number | null = null;
@@ -326,6 +339,7 @@ export function buildTrackerModel(ds: ReceivablesDataset, opts: BuildOptions): T
     owners: byOwner.map(toDimRow),
     countries: byCountry.map(toDimRow),
     currencies: byCurrency.map(toDimRow),
+    control_companies: byControl.map(toDimRow),
     invoice_state: open.map<SnapshotInvoiceState>((i) => ({
       invoice_id: i.invoice_id,
       customer_id: i.customer_id,
@@ -337,7 +351,7 @@ export function buildTrackerModel(ds: ReceivablesDataset, opts: BuildOptions): T
   };
 
   const kpis = buildKpis(totals, prev?.totals ?? null, rc, lang);
-  const actions = buildActions(invoices, customers, ref, rc, lang);
+  const actions = buildActions(invoices, customers, ref, rc, lang, reflection);
   const totalOpen = total || 1;
 
   return {
@@ -355,6 +369,8 @@ export function buildTrackerModel(ds: ReceivablesDataset, opts: BuildOptions): T
     aging_by_owner: byOwner,
     aging_by_customer: byCustomer,
     aging_by_currency: byCurrency,
+    aging_by_control_company: byControl,
+    reflection_queue: reflection,
     actions,
     snapshot,
     data_quality: dedupeIssues(issues),
@@ -441,6 +457,40 @@ function dimensionByInvoice(open: CalculatedInvoice[], keyOf: (i: CalculatedInvo
 }
 
 const toDimRow = (d: DimensionAging): SnapshotDimensionRow => ({ key: d.key, label: d.label, total_outstanding: d.total, overdue: d.overdue });
+
+/**
+ * ELLIS reflection chain. A payment is RECORDED when it exists in Ellis (Payment In/Out), VERIFIED when
+ * `confirmed_at` is set (PM CNFM), RECONCILED when `reconciled_at` is set (weekly bank reconciliation).
+ * Items still waiting for the next stage are queued with the responsible owner and an SLA flag.
+ */
+function buildReflectionQueue(ds: ReceivablesDataset, customers: CustomerRisk[], ref: ISODate, chain: ReflectionChain): ReflectionItem[] {
+  const custMap = new Map(customers.map((c) => [c.customer_id, c]));
+  const out: ReflectionItem[] = [];
+  for (const p of ds.payments) {
+    if (p.reconciliation_status === 'REFUNDED' || p.payment_amount <= 0) continue;
+    const stage: ReflectionItem['stage'] = p.reconciled_at ? 'RECONCILED' : p.confirmed_at ? 'VERIFIED' : 'RECORDED';
+    const since = stage === 'RECORDED' ? p.payment_date : stage === 'VERIFIED' ? p.confirmed_at! : p.reconciled_at!;
+    const next = stage === 'RECORDED' ? chain.verify : stage === 'VERIFIED' ? chain.reconcile : null;
+    const days = Math.max(0, daysBetween(since, ref));
+    const c = custMap.get(p.customer_id);
+    out.push({
+      payment_id: p.payment_id,
+      customer_id: p.customer_id,
+      customer_name: c?.customer_name ?? p.customer_id,
+      control_company: c?.control_company ?? null,
+      payment_date: p.payment_date,
+      amount: p.payment_amount,
+      currency: p.payment_currency,
+      amount_reporting: convert(p.payment_amount, p.payment_currency, ds.fx)?.value ?? 0,
+      stage,
+      next_owner: next?.owner ?? '',
+      days_in_stage: days,
+      sla_days: next?.sla_days ?? 0,
+      overdue_sla: next ? days > next.sla_days : false,
+    });
+  }
+  return out.sort((a, b) => (a.stage === b.stage ? b.days_in_stage - a.days_in_stage : a.stage === 'RECORDED' ? -1 : b.stage === 'RECORDED' ? 1 : a.stage === 'VERIFIED' ? -1 : 1));
+}
 
 function totalsByCurrency(inv: CalculatedInvoice[]): CustomerRisk['totals_by_currency'] {
   const m = new Map<string, { currency: string; total: number; overdue: number; invoice_count: number }>();

@@ -54,6 +54,22 @@
         {
           "title": "다음 주 만기 예정",
           "value": "JPY 40.32M"
+        },
+        {
+          "title": "법인별: OMH Seoul",
+          "value": "JPY 146.63M · 연체 JPY 35.04M"
+        },
+        {
+          "title": "법인별: OMH Singapore",
+          "value": "JPY 83.91M · 연체 JPY 32.57M"
+        },
+        {
+          "title": "법인별: 법인 미지정",
+          "value": "JPY 2.07M · 연체 JPY 455.9K"
+        },
+        {
+          "title": "ELLIS 반영 대기",
+          "value": "미검증 1건(JPY 2.94M) · 미대사 6건(JPY 10.22M)"
         }
       ]
     },

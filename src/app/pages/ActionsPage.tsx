@@ -1,13 +1,16 @@
-import { useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useEffect, useMemo, useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { formatMoney } from '@core/money';
 import { ACTION_GROUP_LABEL_I18N } from '@core/i18n';
-import { ACTION_GROUP_LABEL, type ActionGroup, type ActionItem } from '@core/types';
+import { ACTION_GROUP_LABEL, DEFAULT_REFLECTION_CHAIN, type ActionGroup, type ActionItem, type ReflectionItem } from '@core/types';
 import { useReadyTracker } from '@app/data/TrackerContext';
 import { useI18n } from '@app/i18n/useI18n';
 import { PageHeader } from '@app/components/PageHeader';
 import { FilterBar, SelectFilter, distinct } from '@app/components/FilterBar';
-import { StatusPill, severityTone } from '@app/components/StatusPill';
+import { StatusPill, severityTone, type PillTone } from '@app/components/StatusPill';
+import { DataTable, type Column } from '@app/components/DataTable';
+import { Money } from '@app/components/Money';
+import { IconCheck, IconWarning } from '@app/components/Icons';
 import { Banner } from '@app/components/Banner';
 import { customerLink, invoicesLink } from '@app/lib/links';
 import { fmtDate } from '@app/lib/format';
@@ -16,6 +19,10 @@ type Status = ActionItem['status'];
 const STATUSES: Status[] = ['open', 'in_progress', 'done'];
 const GROUPS = Object.keys(ACTION_GROUP_LABEL) as ActionGroup[];
 const STORAGE_PREFIX = 'ot.actions.';
+
+type Stage = ReflectionItem['stage'];
+const STAGES: Stage[] = ['RECORDED', 'VERIFIED', 'RECONCILED'];
+const STAGE_TONE: Record<Stage, PillTone> = { RECORDED: 'warning', VERIFIED: 'neutral', RECONCILED: 'good' };
 
 function readStatus(id: string, fallback: Status): Status {
   try {
@@ -38,7 +45,9 @@ export function ActionsPage() {
   const { lang, t, te } = useI18n();
   const groupLabel = ACTION_GROUP_LABEL_I18N[lang];
   const ccy = model.reporting_currency;
+  const location = useLocation();
   const [owner, setOwner] = useState('');
+  const [stage, setStage] = useState('');
   const [hideDone, setHideDone] = useState(false);
   const [statuses, setStatuses] = useState<Record<string, Status>>(() => Object.fromEntries(model.actions.map((a) => [a.id, readStatus(a.id, a.status)])));
 
@@ -50,6 +59,53 @@ export function ActionsPage() {
     writeStatus(id, s);
     setStatuses((prev) => ({ ...prev, [id]: s }));
   }
+
+  // #reflection deep link (Overview card): scroll to the chain section once the page has rendered.
+  useEffect(() => {
+    if (location.hash === '#reflection') document.getElementById('reflection')?.scrollIntoView({ block: 'start' });
+  }, [location.hash]);
+
+  const queue = model.reflection_queue;
+  const reflectionRows = useMemo(() => queue.filter((r) => !stage || r.stage === stage), [queue, stage]);
+  const stageCount = (st: Stage) => queue.filter((r) => r.stage === st).length;
+  const overSlaCount = queue.filter((r) => r.overdue_sla).length;
+  const chain = DEFAULT_REFLECTION_CHAIN;
+  const chainStep = (label: string, step: { owner: string; sla_days: number }) => t('reflection.stageOwnerSla', { stage: label, owner: step.owner, days: step.sla_days });
+
+  const reflectionColumns: Column<ReflectionItem>[] = [
+    { key: 'date', header: t('col.paymentDate'), render: (r) => <span className="tnum">{r.payment_date}</span> },
+    { key: 'customer', header: t('col.customer'), render: (r) => <Link to={customerLink(r.customer_id)}>{r.customer_name}</Link> },
+    { key: 'entity', header: t('col.entity'), render: (r) => r.control_company ?? <span className="muted">{t('common.unassignedEntity')}</span> },
+    { key: 'amount', header: t('col.amount'), align: 'right', render: (r) => <Money amount={r.amount_reporting} currency={ccy} original={{ amount: r.amount, currency: r.currency }} /> },
+    {
+      key: 'stage',
+      header: t('col.stage'),
+      render: (r) => (
+        <StatusPill tone={STAGE_TONE[r.stage]} icon={false} title={r.stage} testId="reflection-stage">
+          {te('reflectionStage', r.stage)}
+        </StatusPill>
+      ),
+    },
+    { key: 'owner', header: t('col.nextOwner'), render: (r) => r.next_owner || <span className="muted">—</span> },
+    { key: 'days', header: t('col.daysInStage'), align: 'right', render: (r) => <span className="tnum">{r.days_in_stage}</span> },
+    { key: 'sla', header: t('col.sla'), align: 'right', render: (r) => (r.stage === 'RECONCILED' ? <span className="muted">—</span> : <span className="tnum">{r.sla_days}</span>) },
+    {
+      key: 'over',
+      header: t('col.overSla'),
+      render: (r) =>
+        r.overdue_sla ? (
+          <StatusPill tone="critical" icon={false} testId="reflection-over-sla">
+            <IconWarning width={12} height={12} /> {t('reflection.overSla')}
+          </StatusPill>
+        ) : r.stage === 'RECONCILED' ? (
+          <span className="muted">—</span>
+        ) : (
+          <StatusPill tone="good" icon={false}>
+            <IconCheck width={12} height={12} /> {t('reflection.withinSla')}
+          </StatusPill>
+        ),
+    },
+  ];
 
   const openCount = items.filter((a) => statusOf(a) !== 'done').length;
   const openAmount = items.filter((a) => statusOf(a) !== 'done').reduce((s, a) => s + a.amount_reporting, 0);
@@ -147,6 +203,32 @@ export function ActionsPage() {
           );
         })}
       </div>
+
+      <section className="card section" id="reflection" aria-labelledby="reflection-h" data-testid="reflection-section">
+        <h2 className="card-title" id="reflection-h">
+          {t('reflection.title')}
+        </h2>
+        <p className="chart-desc">
+          {t('reflection.explain', {
+            record: chainStep(t('reflection.stageRecord'), chain.record),
+            verify: chainStep(t('reflection.stageVerify'), chain.verify),
+            reconcile: chainStep(t('reflection.stageReconcile'), chain.reconcile),
+          })}
+        </p>
+        <FilterBar
+          summary={
+            <>
+              {t('reflection.summary', { total: queue.length, recorded: stageCount('RECORDED'), verified: stageCount('VERIFIED'), reconciled: stageCount('RECONCILED') })} ·{' '}
+              <span style={overSlaCount > 0 ? { color: 'var(--critical-text)', fontWeight: 600 } : undefined} data-testid="reflection-over-sla-count">
+                {t('reflection.overSlaCount', { n: overSlaCount })}
+              </span>
+            </>
+          }
+        >
+          <SelectFilter id="r-stage" label={t('filter.stage')} value={stage} onChange={setStage} options={STAGES.map((st) => ({ value: st, label: te('reflectionStage', st) }))} testId="reflection-stage-filter" />
+        </FilterBar>
+        <DataTable columns={reflectionColumns} rows={reflectionRows} rowKey={(r) => r.payment_id} compact caption={t('reflection.caption')} emptyMessage={t('reflection.empty')} testId="reflection-table" />
+      </section>
     </div>
   );
 }

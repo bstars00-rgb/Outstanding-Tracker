@@ -52,6 +52,8 @@ export interface Customer {
   collection_status: CollectionStatus;
   risk_grade_manual: RiskGrade | null; // finance override from master data, distinct from calculated grade
   preferred_contact_channel: ContactChannel | null;
+  /** OhMyHotel entity that manages this customer's receivables (ELLIS Seller Invoice "Control"), e.g. "OMH Seoul", "OMH Singapore". */
+  control_company: string | null;
   data_source: string;
 }
 
@@ -90,6 +92,10 @@ export interface Payment {
   payment_method: PaymentMethod;
   payment_reference: string | null;
   reconciliation_status: ReconciliationStatus;
+  /** ELLIS reflection chain: date the payment was verified in ELLIS (PM CNFM). null => recorded but not yet verified. */
+  confirmed_at: ISODate | null;
+  /** Weekly bank-vs-ELLIS reconciliation sign-off date (tracker-owned). null => not yet reconciled. */
+  reconciled_at: ISODate | null;
   data_source: string;
 }
 
@@ -242,6 +248,7 @@ export interface CustomerRisk {
   collection_status: CollectionStatus;
   /** Open balance in ORIGINAL currencies (a customer may be invoiced in several). */
   totals_by_currency: { currency: CurrencyCode; total: number; overdue: number; invoice_count: number }[];
+  control_company: string | null;
 }
 
 export type KpiKey =
@@ -287,7 +294,8 @@ export type ActionGroup =
   | 'OVERDUE_90'
   | 'DISPUTE'
   | 'CREDIT_LIMIT'
-  | 'ESCALATE';
+  | 'ESCALATE'
+  | 'ELLIS_REFLECTION';
 
 export const ACTION_GROUP_LABEL: Record<ActionGroup, string> = {
   CONTACT_TODAY: 'Contact today',
@@ -299,6 +307,7 @@ export const ACTION_GROUP_LABEL: Record<ActionGroup, string> = {
   DISPUTE: 'Dispute to resolve',
   CREDIT_LIMIT: 'Credit limit exceeded',
   ESCALATE: 'Leader escalation',
+  ELLIS_REFLECTION: 'ELLIS reflection check',
 };
 
 export interface ActionItem {
@@ -315,6 +324,37 @@ export interface ActionItem {
   severity: 'low' | 'medium' | 'high' | 'critical';
 }
 
+/** One payment travelling through the ELLIS reflection chain (record -> verify -> reconcile). */
+export interface ReflectionItem {
+  payment_id: string;
+  customer_id: string;
+  customer_name: string;
+  control_company: string | null;
+  payment_date: ISODate;
+  amount: number;
+  currency: CurrencyCode;
+  amount_reporting: number;
+  stage: 'RECORDED' | 'VERIFIED' | 'RECONCILED';
+  /** Next stage owner (from ReflectionChain config). */
+  next_owner: string;
+  days_in_stage: number;
+  sla_days: number;
+  overdue_sla: boolean;
+}
+
+/** Who owns each stage of the ELLIS reflection chain (configurable; names come from RECIPIENT_CONFIG / UI settings). */
+export interface ReflectionChain {
+  record: { owner: string; sla_days: number };
+  verify: { owner: string; sla_days: number };
+  reconcile: { owner: string; sla_days: number };
+}
+
+export const DEFAULT_REFLECTION_CHAIN: ReflectionChain = {
+  record: { owner: 'Rina (Josh)', sla_days: 1 },
+  verify: { owner: 'Sangho', sla_days: 1 },
+  reconcile: { owner: 'Jackie', sla_days: 7 },
+};
+
 /** Weekly snapshot: the persisted, comparable state of a given reference date. */
 export interface Snapshot {
   snapshot_id: string; // e.g. 2026-09-05
@@ -329,6 +369,7 @@ export interface Snapshot {
   owners: SnapshotDimensionRow[];
   countries: SnapshotDimensionRow[];
   currencies: SnapshotDimensionRow[];
+  control_companies: SnapshotDimensionRow[];
   invoice_state: SnapshotInvoiceState[]; // minimal per-invoice state for new/resolved overdue calc
 }
 
@@ -347,6 +388,12 @@ export interface SnapshotTotals {
   due_within_7_days: number;
   broken_promise_amount: number;
   broken_promise_count: number;
+  /** Payments recorded in ELLIS but not yet verified (confirmed_at null), any date. */
+  unverified_payment_amount: number;
+  unverified_payment_count: number;
+  /** Verified but not yet reconciled against the bank (reconciled_at null), any date. */
+  unreconciled_payment_amount: number;
+  unreconciled_payment_count: number;
   at_risk_amount: number;
   invoice_count: number;
   customer_count: number;
@@ -393,6 +440,10 @@ export interface TrackerModel {
   aging_by_owner: DimensionAging[];
   aging_by_customer: DimensionAging[];
   aging_by_currency: DimensionAging[];
+  /** Receivables per managing entity (Seoul / Singapore ...). */
+  aging_by_control_company: DimensionAging[];
+  /** ELLIS reflection chain queue: payments that still need verification / reconciliation. */
+  reflection_queue: ReflectionItem[];
   actions: ActionItem[];
   snapshot: Snapshot;
   data_quality: DataQualityIssue[];

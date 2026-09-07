@@ -47,6 +47,8 @@ export function buildTeamsMessage(m: TrackerModel, insight: InsightResult, ctx: 
   );
 
   const H = {
+    reflection: p('ELLIS reflection pending', 'ELLIS 반영 대기'),
+    entity: p('By managing entity', '법인별'),
     exec: p('1. Executive Summary', '1. 경영 요약'),
     ai: p('2. AI Insights', '2. AI 인사이트'),
     actions: p('3. Required Actions', '3. 필수 조치'),
@@ -80,6 +82,14 @@ export function buildTeamsMessage(m: TrackerModel, insight: InsightResult, ctx: 
     fullDetail: p('full detail', '전체 내용'),
   };
 
+  // Managing-entity split (Seoul / Singapore ...) and ELLIS reflection-chain status for the CEO.
+  const entityFacts = m.aging_by_control_company.map((d) => ({ title: `${H.entity}: ${d.label}`, value: `${M(d.total)} · ${p('overdue', '연체')} ${M(d.overdue)}` }));
+  const t = m.snapshot.totals;
+  const reflectionValue = p(
+    `${t.unverified_payment_count} unverified (${M(t.unverified_payment_amount)}) · ${t.unreconciled_payment_count} unreconciled (${M(t.unreconciled_payment_amount)})`,
+    `미검증 ${t.unverified_payment_count}건(${M(t.unverified_payment_amount)}) · 미대사 ${t.unreconciled_payment_count}건(${M(t.unreconciled_payment_amount)})`,
+  );
+
   // ---------- Adaptive Card ----------
   const factSet = (facts: { title: string; value: string }[]) => ({ type: 'FactSet', facts });
   const text = (t: string, opts: Record<string, unknown> = {}) => ({ type: 'TextBlock', text: t, wrap: true, ...opts });
@@ -109,6 +119,8 @@ export function buildTeamsMessage(m: TrackerModel, insight: InsightResult, ctx: 
         { title: H.o30, value: `${M(o30.value)} (${delta(o30)})` },
         { title: H.o90, value: `${M(o90.value)} (${delta(o90)})` },
         { title: H.due7, value: M(due7.value) },
+        ...entityFacts,
+        { title: H.reflection, value: reflectionValue },
       ]),
       ...bullets(out.executive_summary.slice(0, 3)),
       text(H.ai, { weight: 'Bolder', size: 'Medium', spacing: 'Medium' }),
@@ -141,12 +153,14 @@ export function buildTeamsMessage(m: TrackerModel, insight: InsightResult, ctx: 
     {
       heading: `**${H.exec}**`,
       priority: 10,
-      min: 4,
+      min: 4 + entityFacts.length + 1,
       bullets: [
         `${H.total}: ${M(total.value)} (${delta(total)})`,
         `${H.overdue}: ${M(overdue.value)} (${delta(overdue)})`,
         `${H.collected}: ${M(collected.value)}`,
         `${H.o30}: ${M(o30.value)} · ${H.o90}: ${M(o90.value)} · ${H.due7}: ${M(due7.value)}`,
+        ...entityFacts.map((f) => `${f.title}: ${f.value}`),
+        `${H.reflection}: ${reflectionValue}`,
         ...out.executive_summary.slice(1, 3), // first sentence repeats the KPI lines
       ],
     },

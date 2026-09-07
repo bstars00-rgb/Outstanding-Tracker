@@ -99,6 +99,8 @@ export interface EllisTrader {
     commission?: number | null;
   } | null;
   pic?: { name: string; position?: string | null; department?: string | null }[]; // contact persons (no email/phone kept)
+  /** Managing OhMyHotel entity (Seller Invoice "Control" column) — to be exposed on Traders (Required). */
+  controlCompName?: string | null;
 }
 
 // ---------- System Control > Common > Exchange Rate ----------
@@ -192,6 +194,8 @@ export function ellisPaymentsToPayments(rows: EllisPayment[], resolveTraderCode?
       payment_method: mapPaymentMethod(r.depositTypeName),
       payment_reference: r.cardApprovalNo ?? r.pgTransactionId ?? null,
       reconciliation_status: isWithdraw ? 'REFUNDED' : r.invoiceSeq !== null ? 'APPLIED' : 'UNAPPLIED',
+      confirmed_at: r.paymentConfirmDate, // PM CNFM = stage 2 (verify) of the reflection chain
+      reconciled_at: null, // stage 3 is tracker-owned (weekly bank reconciliation sign-off)
       data_source: 'ellis:payment-in-out',
     });
   }
@@ -234,6 +238,7 @@ export function tradersToCustomers(rows: EllisTrader[]): Customer[] {
       collection_status: 'NORMAL',
       risk_grade_manual: null,
       preferred_contact_channel: null,
+      control_company: t.controlCompName ?? null,
       data_source: 'ellis:traders',
     }));
 }

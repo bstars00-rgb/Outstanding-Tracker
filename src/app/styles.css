@@ -1205,3 +1205,42 @@ table.compact td {
   gap: 8px;
   margin-top: 8px;
 }
+
+/* ---------- Status tiles (Overview: ELLIS reflection status) ---------- */
+.tile-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+@media (max-width: 600px) {
+  .tile-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+.tile {
+  display: grid;
+  gap: 4px;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-top: 3px solid var(--neutral-border);
+  border-radius: var(--radius);
+  min-width: 0;
+}
+.tile.status-good {
+  border-top-color: var(--kpi-good);
+}
+.tile.status-warning {
+  border-top-color: var(--kpi-warning);
+}
+.tile .l {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+.tile .v {
+  font-size: 18px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}

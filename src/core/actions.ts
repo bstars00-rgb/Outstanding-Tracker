@@ -1,13 +1,13 @@
 import { addDays, daysBetween } from './dates';
 import { pick, type Lang } from './i18n';
-import type { ActionItem, CalculatedInvoice, CustomerRisk, ISODate } from './types';
+import type { ActionItem, CalculatedInvoice, CustomerRisk, ISODate, ReflectionItem } from './types';
 
 /**
  * Collection Action Board: one item per (group, customer[, invoice]).
  * Groups are evaluated in priority order; an invoice appears in its highest-priority group only,
  * while customer-level groups (credit limit, escalation, broken promise) are separate items.
  */
-export function buildActions(invoices: CalculatedInvoice[], customers: CustomerRisk[], ref: ISODate, _ccy: string, lang: Lang = 'en'): ActionItem[] {
+export function buildActions(invoices: CalculatedInvoice[], customers: CustomerRisk[], ref: ISODate, _ccy: string, lang: Lang = 'en', reflection: ReflectionItem[] = []): ActionItem[] {
   const p = (en: string, ko: string) => pick(lang, en, ko);
   const items: ActionItem[] = [];
   const open = invoices.filter((i) => i.outstanding_amount > 0);
@@ -63,6 +63,12 @@ export function buildActions(invoices: CalculatedInvoice[], customers: CustomerR
     if (c.risk.grade === 'Critical' || (c.risk.grade === 'High' && c.promise_broken) || c.overdue_90_plus_reporting > 0) {
       items.push({ id: `ESCALATE:${c.customer_id}`, group: 'ESCALATE', customer_id: c.customer_id, customer_name: c.customer_name, invoice_id: null, owner: c.account_owner_name, due_date: addDays(ref, 2), amount_reporting: c.overdue_reporting, severity: 'critical', status: 'open', recommended_action: p(`Risk ${c.risk.grade} (${c.risk.score}/100): leader review of credit terms and collection strategy`, `위험 ${c.risk.grade} (${c.risk.score}/100): 리더가 신용 조건과 회수 전략 검토`) });
     }
+  }
+
+  // ELLIS reflection chain: payments waiting for verification / reconciliation beyond their SLA.
+  for (const r of reflection.filter((x) => x.stage !== 'RECONCILED' && x.overdue_sla)) {
+    const stageLabel = r.stage === 'RECORDED' ? p('verify in ELLIS (PM CNFM + invoice mapping)', 'ELLIS 검증(PM CNFM·인보이스 매핑)') : p('reconcile against bank statement', '은행 입금 대사·승인');
+    items.push({ id: `ELLIS_REFLECTION:${r.payment_id}`, group: 'ELLIS_REFLECTION', customer_id: r.customer_id, customer_name: r.customer_name, invoice_id: null, owner: r.next_owner, due_date: addDays(r.payment_date, r.sla_days), amount_reporting: r.amount_reporting, severity: r.days_in_stage > r.sla_days * 3 ? 'high' : 'medium', status: 'open', recommended_action: p(`Payment ${r.payment_date} (${r.currency} ${r.amount.toLocaleString('en-US')}) waiting ${r.days_in_stage} day(s): ${stageLabel}`, `${r.payment_date} 입금(${r.currency} ${r.amount.toLocaleString('en-US')}) ${r.days_in_stage}일째 대기: ${stageLabel}`) });
   }
 
   const sevRank = { critical: 0, high: 1, medium: 2, low: 3 };

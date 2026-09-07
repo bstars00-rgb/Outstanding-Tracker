@@ -12,15 +12,17 @@ import { DataTable, type Column } from '@app/components/DataTable';
 import { Money } from '@app/components/Money';
 import { ChartWithTable } from '@app/components/ChartWithTable';
 import { chartProps, useChartColors } from '@app/components/chart-theme';
-import { invoicesLink, type InvoiceFilterParams } from '@app/lib/links';
+import { customersByEntityLink, invoicesLink, type InvoiceFilterParams } from '@app/lib/links';
 import { relChange } from '@app/lib/format';
 
-type DimKey = 'country' | 'owner' | 'customer' | 'currency';
-const DIMS: { key: DimKey; label: StringKey; header: StringKey; param: keyof InvoiceFilterParams; useKey: boolean }[] = [
+type DimKey = 'country' | 'owner' | 'customer' | 'currency' | 'entity';
+/** `param` is the invoice-list filter the dimension drills into; `null` when the invoice list cannot filter by it (entity links to the customer list instead). */
+const DIMS: { key: DimKey; label: StringKey; header: StringKey; param: keyof InvoiceFilterParams | null; useKey: boolean }[] = [
   { key: 'country', label: 'aging.dim.country', header: 'col.country', param: 'country', useKey: false },
   { key: 'owner', label: 'aging.dim.owner', header: 'col.accountOwner', param: 'owner', useKey: false },
   { key: 'customer', label: 'aging.dim.customer', header: 'col.customer', param: 'customer', useKey: true },
   { key: 'currency', label: 'aging.dim.currency', header: 'col.invoiceCurrency', param: 'currency', useKey: true },
+  { key: 'entity', label: 'aging.dim.entity', header: 'col.entity', param: null, useKey: true },
 ];
 
 const SHORT_BUCKET: Record<AgingBucket, string> = {
@@ -81,18 +83,24 @@ export function AgingPage() {
   const dimMeta = DIMS.find((d) => d.key === dim)!;
   const dimLabel = t(dimMeta.label);
   const dimRows: DimensionAging[] = useMemo(() => {
-    const src = dim === 'country' ? model.aging_by_country : dim === 'owner' ? model.aging_by_owner : dim === 'customer' ? model.aging_by_customer : model.aging_by_currency;
+    const src =
+      dim === 'country' ? model.aging_by_country : dim === 'owner' ? model.aging_by_owner : dim === 'customer' ? model.aging_by_customer : dim === 'entity' ? model.aging_by_control_company : model.aging_by_currency;
     return dim === 'customer' ? [...src].sort((a, b) => b.total - a.total).slice(0, 15) : src;
   }, [dim, model]);
 
-  const linkFor = (row: DimensionAging, bucket?: AgingBucket) => invoicesLink({ [dimMeta.param]: dimMeta.useKey ? row.key : row.label, bucket: bucket ?? null });
+  const linkFor = (row: DimensionAging, bucket?: AgingBucket) => (dimMeta.param ? invoicesLink({ [dimMeta.param]: dimMeta.useKey ? row.key : row.label, bucket: bucket ?? null }) : null);
 
   const dimColumns: Column<DimensionAging>[] = [
     {
       key: 'label',
       header: t(dimMeta.header),
       sortValue: (r) => r.label,
-      render: (r) => (dim === 'customer' ? <Link to={`/customers/${encodeURIComponent(r.key)}`}>{r.label}</Link> : <Link to={linkFor(r)}>{r.label}</Link>),
+      render: (r) => {
+        if (dim === 'customer') return <Link to={`/customers/${encodeURIComponent(r.key)}`}>{r.label}</Link>;
+        if (dim === 'entity') return <Link to={customersByEntityLink(r.key)}>{r.label}</Link>;
+        const href = linkFor(r);
+        return href ? <Link to={href}>{r.label}</Link> : r.label;
+      },
     },
     { key: 'total', header: t('col.totalOutstanding'), align: 'right', sortValue: (r) => r.total, render: (r) => <Money amount={r.total} currency={ccy} /> },
     { key: 'overdue', header: t('col.overdue'), align: 'right', sortValue: (r) => r.overdue, render: (r) => <Money amount={r.overdue} currency={ccy} /> },
@@ -110,14 +118,17 @@ export function AgingPage() {
       align: 'right',
       sortValue: (r) => r.buckets[b],
       className: 'link-cell',
-      render: (r) =>
-        r.buckets[b] > 0 ? (
-          <Link to={linkFor(r, b)} title={t('aging.openInvoices', { label: r.label, bucket: bucketLabel[b] })}>
+      render: (r) => {
+        if (r.buckets[b] <= 0) return <span className="muted">—</span>;
+        const href = linkFor(r, b);
+        return href ? (
+          <Link to={href} title={t('aging.openInvoices', { label: r.label, bucket: bucketLabel[b] })}>
             {formatMoney(r.buckets[b], ccy, { compact: true })}
           </Link>
         ) : (
-          <span className="muted">—</span>
-        ),
+          <span className="tnum">{formatMoney(r.buckets[b], ccy, { compact: true })}</span>
+        );
+      },
     })),
   ];
 
@@ -189,6 +200,7 @@ export function AgingPage() {
         </div>
         <div role="tabpanel" id={`panel-${dim}`} aria-labelledby={`tab-${dim}`}>
           {dim === 'currency' && <p className="chart-desc">{t('aging.currencyNote', { ccy })}</p>}
+          {dim === 'entity' && <p className="chart-desc">{t('aging.entityNote')}</p>}
           <DataTable columns={dimColumns} rows={dimRows} rowKey={(r) => r.key} defaultSort={{ key: 'overdue', dir: 'desc' }} compact caption={t('aging.dimCaption', { dim: dimLabel })} testId={`aging-table-${dim}`} />
           {dim === 'currency' && (
             <div style={{ marginTop: 16 }} data-testid="aging-fx-table">

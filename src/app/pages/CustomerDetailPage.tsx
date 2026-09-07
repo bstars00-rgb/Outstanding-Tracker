@@ -102,6 +102,9 @@ export function CustomerDetailPage() {
             <StatusPill tone="neutral" icon={false}>
               {customer.country} · {customer.region}
             </StatusPill>
+            <StatusPill tone="neutral" icon={false} testId="detail-entity">
+              {t('detail.entity', { entity: customer.control_company ?? t('common.unassignedEntity') })}
+            </StatusPill>
             <StatusPill tone="neutral" icon={false}>
               {t('detail.ownerLabel', { owner: customer.account_owner_name || t('common.unassigned') })}
             </StatusPill>

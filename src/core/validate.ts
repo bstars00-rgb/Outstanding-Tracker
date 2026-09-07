@@ -22,6 +22,7 @@ export const CustomerSchema = z.object({
   collection_status: z.enum(['NORMAL', 'REMINDER', 'ESCALATED', 'LEGAL']),
   risk_grade_manual: z.enum(['Low', 'Watch', 'Medium', 'High', 'Critical']).nullable(),
   preferred_contact_channel: z.string().nullable(),
+  control_company: z.string().nullable().optional().default(null),
   data_source: z.string(),
 });
 
@@ -60,6 +61,8 @@ export const PaymentSchema = z.object({
   payment_method: z.enum(['BANK_TRANSFER', 'CARD', 'VCC', 'OFFSET', 'OTHER']),
   payment_reference: z.string().nullable(),
   reconciliation_status: z.enum(['APPLIED', 'PARTIALLY_APPLIED', 'UNAPPLIED', 'REFUNDED']),
+  confirmed_at: isoDate.nullable().optional().default(null),
+  reconciled_at: isoDate.nullable().optional().default(null),
   data_source: z.string(),
 });
 

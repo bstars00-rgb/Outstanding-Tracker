@@ -86,6 +86,7 @@
    "collection_status": "NORMAL",
    "risk_grade_manual": null,
    "preferred_contact_channel": "LINE",
+   "control_company": "OMH Seoul",
    "data_source": "mock"
   },
   {
@@ -105,6 +106,7 @@
    "collection_status": "REMINDER",
    "risk_grade_manual": null,
    "preferred_contact_channel": "ZALO",
+   "control_company": "OMH Seoul",
    "data_source": "mock"
   },
   {
@@ -124,6 +126,7 @@
    "collection_status": "ESCALATED",
    "risk_grade_manual": null,
    "preferred_contact_channel": "EMAIL",
+   "control_company": "OMH Singapore",
    "data_source": "mock"
   },
   {
@@ -143,6 +146,7 @@
    "collection_status": "REMINDER",
    "risk_grade_manual": null,
    "preferred_contact_channel": "KAKAO",
+   "control_company": "OMH Singapore",
    "data_source": "mock"
   },
   {
@@ -162,6 +166,7 @@
    "collection_status": "NORMAL",
    "risk_grade_manual": null,
    "preferred_contact_channel": "PHONE",
+   "control_company": "OMH Singapore",
    "data_source": "mock"
   },
   {
@@ -181,6 +186,7 @@
    "collection_status": "NORMAL",
    "risk_grade_manual": null,
    "preferred_contact_channel": "EMAIL",
+   "control_company": "OMH Singapore",
    "data_source": "mock"
   },
   {
@@ -200,6 +206,7 @@
    "collection_status": "NORMAL",
    "risk_grade_manual": null,
    "preferred_contact_channel": "ZALO",
+   "control_company": "OMH Singapore",
    "data_source": "mock"
   },
   {
@@ -219,6 +226,7 @@
    "collection_status": "NORMAL",
    "risk_grade_manual": null,
    "preferred_contact_channel": "KAKAO",
+   "control_company": "OMH Singapore",
    "data_source": "mock"
   },
   {
@@ -238,6 +246,7 @@
    "collection_status": "NORMAL",
    "risk_grade_manual": null,
    "preferred_contact_channel": "WHATSAPP",
+   "control_company": "OMH Seoul",
    "data_source": "mock"
   },
   {
@@ -257,6 +266,7 @@
    "collection_status": "NORMAL",
    "risk_grade_manual": null,
    "preferred_contact_channel": "WHATSAPP",
+   "control_company": "OMH Seoul",
    "data_source": "mock"
   },
   {
@@ -276,6 +286,7 @@
    "collection_status": "NORMAL",
    "risk_grade_manual": null,
    "preferred_contact_channel": "ZALO",
+   "control_company": null,
    "data_source": "mock"
   },
   {
@@ -295,6 +306,7 @@
    "collection_status": "NORMAL",
    "risk_grade_manual": null,
    "preferred_contact_channel": "PHONE",
+   "control_company": "OMH Singapore",
    "data_source": "mock"
   },
   {
@@ -314,6 +326,7 @@
    "collection_status": "NORMAL",
    "risk_grade_manual": null,
    "preferred_contact_channel": "WHATSAPP",
+   "control_company": "OMH Singapore",
    "data_source": "mock"
   },
   {
@@ -333,6 +346,7 @@
    "collection_status": "NORMAL",
    "risk_grade_manual": null,
    "preferred_contact_channel": "ZALO",
+   "control_company": "OMH Seoul",
    "data_source": "mock"
   },
   {
@@ -352,6 +366,7 @@
    "collection_status": "NORMAL",
    "risk_grade_manual": null,
    "preferred_contact_channel": "WHATSAPP",
+   "control_company": "OMH Seoul",
    "data_source": "mock"
   },
   {
@@ -371,6 +386,7 @@
    "collection_status": "NORMAL",
    "risk_grade_manual": null,
    "preferred_contact_channel": "ZALO",
+   "control_company": "OMH Seoul",
    "data_source": "mock"
   },
   {
@@ -390,6 +406,7 @@
    "collection_status": "NORMAL",
    "risk_grade_manual": null,
    "preferred_contact_channel": "LINE",
+   "control_company": "OMH Seoul",
    "data_source": "mock"
   },
   {
@@ -409,6 +426,7 @@
    "collection_status": "NORMAL",
    "risk_grade_manual": null,
    "preferred_contact_channel": "PHONE",
+   "control_company": "OMH Seoul",
    "data_source": "mock"
   },
   {
@@ -428,6 +446,7 @@
    "collection_status": "NORMAL",
    "risk_grade_manual": null,
    "preferred_contact_channel": "PHONE",
+   "control_company": "OMH Seoul",
    "data_source": "mock"
   },
   {
@@ -447,6 +466,7 @@
    "collection_status": "NORMAL",
    "risk_grade_manual": null,
    "preferred_contact_channel": "TEAMS",
+   "control_company": "OMH Seoul",
    "data_source": "mock"
   },
   {
@@ -466,6 +486,7 @@
    "collection_status": "NORMAL",
    "risk_grade_manual": null,
    "preferred_contact_channel": "LINE",
+   "control_company": "OMH Singapore",
    "data_source": "mock"
   },
   {
@@ -485,6 +506,7 @@
    "collection_status": "NORMAL",
    "risk_grade_manual": null,
    "preferred_contact_channel": "EMAIL",
+   "control_company": "OMH Singapore",
    "data_source": "mock"
   },
   {
@@ -504,6 +526,7 @@
    "collection_status": "NORMAL",
    "risk_grade_manual": null,
    "preferred_contact_channel": "WHATSAPP",
+   "control_company": "OMH Singapore",
    "data_source": "mock"
   },
   {
@@ -523,6 +546,7 @@
    "collection_status": "NORMAL",
    "risk_grade_manual": null,
    "preferred_contact_channel": "WHATSAPP",
+   "control_company": "OMH Singapore",
    "data_source": "mock"
   },
   {
@@ -542,6 +566,7 @@
    "collection_status": "NORMAL",
    "risk_grade_manual": null,
    "preferred_contact_channel": "TEAMS",
+   "control_company": "OMH Singapore",
    "data_source": "mock"
   },
   {
@@ -561,6 +586,7 @@
    "collection_status": "NORMAL",
    "risk_grade_manual": null,
    "preferred_contact_channel": "EMAIL",
+   "control_company": "OMH Singapore",
    "data_source": "mock"
   },
   {
@@ -580,6 +606,7 @@
    "collection_status": "NORMAL",
    "risk_grade_manual": null,
    "preferred_contact_channel": "WHATSAPP",
+   "control_company": "OMH Singapore",
    "data_source": "mock"
   },
   {
@@ -599,6 +626,7 @@
    "collection_status": "NORMAL",
    "risk_grade_manual": null,
    "preferred_contact_channel": "TEAMS",
+   "control_company": "OMH Singapore",
    "data_source": "mock"
   },
   {
@@ -618,6 +646,7 @@
    "collection_status": "NORMAL",
    "risk_grade_manual": null,
    "preferred_contact_channel": "PHONE",
+   "control_company": "OMH Singapore",
    "data_source": "mock"
   },
   {
@@ -637,6 +666,7 @@
    "collection_status": "NORMAL",
    "risk_grade_manual": null,
    "preferred_contact_channel": "WHATSAPP",
+   "control_company": "OMH Singapore",
    "data_source": "mock"
   },
   {
@@ -656,6 +686,7 @@
    "collection_status": "NORMAL",
    "risk_grade_manual": null,
    "preferred_contact_channel": "EMAIL",
+   "control_company": "OMH Singapore",
    "data_source": "mock"
   },
   {
@@ -675,6 +706,7 @@
    "collection_status": "NORMAL",
    "risk_grade_manual": null,
    "preferred_contact_channel": "KAKAO",
+   "control_company": "OMH Singapore",
    "data_source": "mock"
   },
   {
@@ -694,6 +726,7 @@
    "collection_status": "NORMAL",
    "risk_grade_manual": null,
    "preferred_contact_channel": "LINE",
+   "control_company": "OMH Seoul",
    "data_source": "mock"
   },
   {
@@ -713,6 +746,7 @@
    "collection_status": "NORMAL",
    "risk_grade_manual": null,
    "preferred_contact_channel": "EMAIL",
+   "control_company": "OMH Seoul",
    "data_source": "mock"
   }
  ],
@@ -4735,6 +4769,8 @@
    "payment_method": "BANK_TRANSFER",
    "payment_reference": "TT-005001",
    "reconciliation_status": "APPLIED",
+   "confirmed_at": "2026-08-27",
+   "reconciled_at": "2026-09-02",
    "data_source": "mock"
   },
   {
@@ -4749,6 +4785,8 @@
    "payment_method": "BANK_TRANSFER",
    "payment_reference": "TT-005002",
    "reconciliation_status": "APPLIED",
+   "confirmed_at": "2026-08-21",
+   "reconciled_at": "2026-08-27",
    "data_source": "mock"
   },
   {
@@ -4763,6 +4801,8 @@
    "payment_method": "BANK_TRANSFER",
    "payment_reference": "TT-005003",
    "reconciliation_status": "APPLIED",
+   "confirmed_at": "2026-08-24",
+   "reconciled_at": "2026-08-30",
    "data_source": "mock"
   },
   {
@@ -4777,6 +4817,8 @@
    "payment_method": "BANK_TRANSFER",
    "payment_reference": "TT-005004",
    "reconciliation_status": "APPLIED",
+   "confirmed_at": "2026-08-05",
+   "reconciled_at": "2026-08-11",
    "data_source": "mock"
   },
   {
@@ -4791,6 +4833,8 @@
    "payment_method": "BANK_TRANSFER",
    "payment_reference": "TT-005005",
    "reconciliation_status": "APPLIED",
+   "confirmed_at": "2026-06-28",
+   "reconciled_at": "2026-07-04",
    "data_source": "mock"
   },
   {
@@ -4805,6 +4849,8 @@
    "payment_method": "BANK_TRANSFER",
    "payment_reference": "TT-005006",
    "reconciliation_status": "APPLIED",
+   "confirmed_at": "2026-08-27",
+   "reconciled_at": null,
    "data_source": "mock"
   },
   {
@@ -4819,6 +4865,8 @@
    "payment_method": "BANK_TRANSFER",
    "payment_reference": "TT-005007",
    "reconciliation_status": "APPLIED",
+   "confirmed_at": null,
+   "reconciled_at": null,
    "data_source": "mock"
   },
   {
@@ -4833,6 +4881,8 @@
    "payment_method": "BANK_TRANSFER",
    "payment_reference": "TT-005008",
    "reconciliation_status": "APPLIED",
+   "confirmed_at": "2026-09-05",
+   "reconciled_at": null,
    "data_source": "mock"
   },
   {
@@ -4847,6 +4897,8 @@
    "payment_method": "BANK_TRANSFER",
    "payment_reference": "TT-005009",
    "reconciliation_status": "APPLIED",
+   "confirmed_at": "2026-09-02",
+   "reconciled_at": null,
    "data_source": "mock"
   },
   {
@@ -4861,6 +4913,8 @@
    "payment_method": "BANK_TRANSFER",
    "payment_reference": "TT-005010",
    "reconciliation_status": "APPLIED",
+   "confirmed_at": "2026-09-04",
+   "reconciled_at": null,
    "data_source": "mock"
   },
   {
@@ -4875,6 +4929,8 @@
    "payment_method": "BANK_TRANSFER",
    "payment_reference": "TT-005011",
    "reconciliation_status": "APPLIED",
+   "confirmed_at": "2026-07-27",
+   "reconciled_at": "2026-08-02",
    "data_source": "mock"
   },
   {
@@ -4889,6 +4945,8 @@
    "payment_method": "BANK_TRANSFER",
    "payment_reference": "TT-005012",
    "reconciliation_status": "PARTIALLY_APPLIED",
+   "confirmed_at": "2026-08-17",
+   "reconciled_at": "2026-08-23",
    "data_source": "mock"
   },
   {
@@ -4903,6 +4961,8 @@
    "payment_method": "BANK_TRANSFER",
    "payment_reference": "REFUND-0031",
    "reconciliation_status": "REFUNDED",
+   "confirmed_at": "2026-08-22",
+   "reconciled_at": "2026-08-28",
    "data_source": "mock"
   },
   {
@@ -4917,6 +4977,8 @@
    "payment_method": "BANK_TRANSFER",
    "payment_reference": "TT-005014",
    "reconciliation_status": "APPLIED",
+   "confirmed_at": "2026-08-12",
+   "reconciled_at": "2026-08-18",
    "data_source": "mock"
   },
   {
@@ -4931,6 +4993,8 @@
    "payment_method": "BANK_TRANSFER",
    "payment_reference": "TT-005015",
    "reconciliation_status": "APPLIED",
+   "confirmed_at": "2026-07-19",
+   "reconciled_at": "2026-07-25",
    "data_source": "mock"
   },
   {
@@ -4945,6 +5009,8 @@
    "payment_method": "BANK_TRANSFER",
    "payment_reference": "TT-005016",
    "reconciliation_status": "APPLIED",
+   "confirmed_at": "2026-07-28",
+   "reconciled_at": "2026-08-03",
    "data_source": "mock"
   },
   {
@@ -4959,6 +5025,8 @@
    "payment_method": "BANK_TRANSFER",
    "payment_reference": "TT-005017",
    "reconciliation_status": "APPLIED",
+   "confirmed_at": "2026-07-31",
+   "reconciled_at": "2026-08-06",
    "data_source": "mock"
   },
   {
@@ -4973,6 +5041,8 @@
    "payment_method": "BANK_TRANSFER",
    "payment_reference": "TT-005018",
    "reconciliation_status": "APPLIED",
+   "confirmed_at": "2026-08-05",
+   "reconciled_at": "2026-08-11",
    "data_source": "mock"
   },
   {
@@ -4987,6 +5057,8 @@
    "payment_method": "BANK_TRANSFER",
    "payment_reference": "TT-005019",
    "reconciliation_status": "APPLIED",
+   "confirmed_at": "2026-09-01",
+   "reconciled_at": null,
    "data_source": "mock"
   },
   {
@@ -5001,6 +5073,8 @@
    "payment_method": "BANK_TRANSFER",
    "payment_reference": "TT-005020",
    "reconciliation_status": "APPLIED",
+   "confirmed_at": "2026-07-18",
+   "reconciled_at": "2026-07-24",
    "data_source": "mock"
   },
   {
@@ -5015,6 +5089,8 @@
    "payment_method": "BANK_TRANSFER",
    "payment_reference": "TT-005021",
    "reconciliation_status": "APPLIED",
+   "confirmed_at": "2026-08-02",
+   "reconciled_at": "2026-08-08",
    "data_source": "mock"
   },
   {
@@ -5029,6 +5105,8 @@
    "payment_method": "BANK_TRANSFER",
    "payment_reference": "TT-005022",
    "reconciliation_status": "APPLIED",
+   "confirmed_at": "2026-08-22",
+   "reconciled_at": "2026-08-28",
    "data_source": "mock"
   },
   {
@@ -5043,6 +5121,8 @@
    "payment_method": "BANK_TRANSFER",
    "payment_reference": "TT-005023",
    "reconciliation_status": "APPLIED",
+   "confirmed_at": "2026-07-29",
+   "reconciled_at": "2026-08-04",
    "data_source": "mock"
   },
   {
@@ -5057,6 +5137,8 @@
    "payment_method": "BANK_TRANSFER",
    "payment_reference": "TT-005024",
    "reconciliation_status": "APPLIED",
+   "confirmed_at": "2026-07-20",
+   "reconciled_at": "2026-07-26",
    "data_source": "mock"
   },
   {
@@ -5071,6 +5153,8 @@
    "payment_method": "BANK_TRANSFER",
    "payment_reference": "TT-005025",
    "reconciliation_status": "APPLIED",
+   "confirmed_at": "2026-08-06",
+   "reconciled_at": "2026-08-12",
    "data_source": "mock"
   },
   {
@@ -5085,6 +5169,8 @@
    "payment_method": "BANK_TRANSFER",
    "payment_reference": "TT-005026",
    "reconciliation_status": "APPLIED",
+   "confirmed_at": "2026-07-23",
+   "reconciled_at": "2026-07-29",
    "data_source": "mock"
   },
   {
@@ -5099,6 +5185,8 @@
    "payment_method": "BANK_TRANSFER",
    "payment_reference": "TT-005027",
    "reconciliation_status": "APPLIED",
+   "confirmed_at": "2026-08-25",
+   "reconciled_at": "2026-08-31",
    "data_source": "mock"
   },
   {
@@ -5113,6 +5201,8 @@
    "payment_method": "BANK_TRANSFER",
    "payment_reference": "TT-005028",
    "reconciliation_status": "APPLIED",
+   "confirmed_at": "2026-08-24",
+   "reconciled_at": "2026-08-30",
    "data_source": "mock"
   },
   {
@@ -5127,6 +5217,8 @@
    "payment_method": "BANK_TRANSFER",
    "payment_reference": "TT-005029",
    "reconciliation_status": "APPLIED",
+   "confirmed_at": "2026-09-02",
+   "reconciled_at": null,
    "data_source": "mock"
   },
   {
@@ -5141,6 +5233,8 @@
    "payment_method": "BANK_TRANSFER",
    "payment_reference": "TT-005030",
    "reconciliation_status": "APPLIED",
+   "confirmed_at": "2026-07-20",
+   "reconciled_at": "2026-07-26",
    "data_source": "mock"
   },
   {
@@ -5155,6 +5249,8 @@
    "payment_method": "BANK_TRANSFER",
    "payment_reference": "TT-005031",
    "reconciliation_status": "APPLIED",
+   "confirmed_at": "2026-07-20",
+   "reconciled_at": "2026-07-26",
    "data_source": "mock"
   },
   {
@@ -5169,6 +5265,8 @@
    "payment_method": "BANK_TRANSFER",
    "payment_reference": "TT-005032",
    "reconciliation_status": "APPLIED",
+   "confirmed_at": "2026-08-17",
+   "reconciled_at": "2026-08-23",
    "data_source": "mock"
   },
   {
@@ -5183,6 +5281,8 @@
    "payment_method": "BANK_TRANSFER",
    "payment_reference": "TT-005033",
    "reconciliation_status": "APPLIED",
+   "confirmed_at": "2026-08-07",
+   "reconciled_at": "2026-08-13",
    "data_source": "mock"
   },
   {
@@ -5197,6 +5297,8 @@
    "payment_method": "BANK_TRANSFER",
    "payment_reference": "TT-005034",
    "reconciliation_status": "APPLIED",
+   "confirmed_at": "2026-08-02",
+   "reconciled_at": "2026-08-08",
    "data_source": "mock"
   },
   {
@@ -5211,6 +5313,8 @@
    "payment_method": "BANK_TRANSFER",
    "payment_reference": "TT-005035",
    "reconciliation_status": "APPLIED",
+   "confirmed_at": "2026-08-28",
+   "reconciled_at": "2026-09-03",
    "data_source": "mock"
   },
   {
@@ -5225,6 +5329,8 @@
    "payment_method": "BANK_TRANSFER",
    "payment_reference": "TT-005036",
    "reconciliation_status": "APPLIED",
+   "confirmed_at": "2026-07-24",
+   "reconciled_at": "2026-07-30",
    "data_source": "mock"
   },
   {
@@ -5239,6 +5345,8 @@
    "payment_method": "BANK_TRANSFER",
    "payment_reference": "TT-005037",
    "reconciliation_status": "APPLIED",
+   "confirmed_at": "2026-08-04",
+   "reconciled_at": "2026-08-10",
    "data_source": "mock"
   },
   {
@@ -5253,6 +5361,8 @@
    "payment_method": "BANK_TRANSFER",
    "payment_reference": "TT-005038",
    "reconciliation_status": "APPLIED",
+   "confirmed_at": "2026-07-21",
+   "reconciled_at": "2026-07-27",
    "data_source": "mock"
   },
   {
@@ -5267,6 +5377,8 @@
    "payment_method": "BANK_TRANSFER",
    "payment_reference": "TT-005039",
    "reconciliation_status": "APPLIED",
+   "confirmed_at": "2026-07-29",
+   "reconciled_at": "2026-08-04",
    "data_source": "mock"
   },
   {
@@ -5281,6 +5393,8 @@
    "payment_method": "BANK_TRANSFER",
    "payment_reference": "TT-005040",
    "reconciliation_status": "APPLIED",
+   "confirmed_at": "2026-08-03",
+   "reconciled_at": "2026-08-09",
    "data_source": "mock"
   },
   {
@@ -5295,6 +5409,8 @@
    "payment_method": "BANK_TRANSFER",
    "payment_reference": "TT-005041",
    "reconciliation_status": "APPLIED",
+   "confirmed_at": "2026-07-13",
+   "reconciled_at": "2026-07-19",
    "data_source": "mock"
   },
   {
@@ -5309,6 +5425,8 @@
    "payment_method": "BANK_TRANSFER",
    "payment_reference": "TT-005042",
    "reconciliation_status": "APPLIED",
+   "confirmed_at": "2026-07-13",
+   "reconciled_at": "2026-07-19",
    "data_source": "mock"
   },
   {
@@ -5323,6 +5441,8 @@
    "payment_method": "BANK_TRANSFER",
    "payment_reference": "TT-005043",
    "reconciliation_status": "APPLIED",
+   "confirmed_at": "2026-08-02",
+   "reconciled_at": "2026-08-08",
    "data_source": "mock"
   },
   {
@@ -5337,6 +5457,8 @@
    "payment_method": "BANK_TRANSFER",
    "payment_reference": "TT-005044",
    "reconciliation_status": "APPLIED",
+   "confirmed_at": "2026-08-19",
+   "reconciled_at": "2026-08-25",
    "data_source": "mock"
   },
   {
@@ -5351,6 +5473,8 @@
    "payment_method": "BANK_TRANSFER",
    "payment_reference": "TT-005045",
    "reconciliation_status": "APPLIED",
+   "confirmed_at": "2026-08-07",
+   "reconciled_at": "2026-08-13",
    "data_source": "mock"
   },
   {
@@ -5365,6 +5489,8 @@
    "payment_method": "BANK_TRANSFER",
    "payment_reference": "TT-005046",
    "reconciliation_status": "APPLIED",
+   "confirmed_at": "2026-07-18",
+   "reconciled_at": "2026-07-24",
    "data_source": "mock"
   },
   {
@@ -5379,6 +5505,8 @@
    "payment_method": "BANK_TRANSFER",
    "payment_reference": "TT-005047",
    "reconciliation_status": "APPLIED",
+   "confirmed_at": "2026-08-29",
+   "reconciled_at": "2026-09-04",
    "data_source": "mock"
   },
   {
@@ -5393,6 +5521,8 @@
    "payment_method": "BANK_TRANSFER",
    "payment_reference": "TT-005048",
    "reconciliation_status": "APPLIED",
+   "confirmed_at": "2026-07-30",
+   "reconciled_at": "2026-08-05",
    "data_source": "mock"
   },
   {
@@ -5407,6 +5537,8 @@
    "payment_method": "BANK_TRANSFER",
    "payment_reference": "TT-005049",
    "reconciliation_status": "APPLIED",
+   "confirmed_at": "2026-07-26",
+   "reconciled_at": "2026-08-01",
    "data_source": "mock"
   },
   {
@@ -5421,6 +5553,8 @@
    "payment_method": "BANK_TRANSFER",
    "payment_reference": "TT-005050",
    "reconciliation_status": "APPLIED",
+   "confirmed_at": "2026-08-27",
+   "reconciled_at": "2026-09-02",
    "data_source": "mock"
   },
   {
@@ -5435,6 +5569,8 @@
    "payment_method": "BANK_TRANSFER",
    "payment_reference": "TT-005051",
    "reconciliation_status": "APPLIED",
+   "confirmed_at": "2026-07-24",
+   "reconciled_at": "2026-07-30",
    "data_source": "mock"
   },
   {
@@ -5449,6 +5585,8 @@
    "payment_method": "BANK_TRANSFER",
    "payment_reference": "TT-005052",
    "reconciliation_status": "APPLIED",
+   "confirmed_at": "2026-08-06",
+   "reconciled_at": "2026-08-12",
    "data_source": "mock"
   },
   {
@@ -5463,6 +5601,8 @@
    "payment_method": "BANK_TRANSFER",
    "payment_reference": "TT-005053",
    "reconciliation_status": "APPLIED",
+   "confirmed_at": "2026-07-26",
+   "reconciled_at": "2026-08-01",
    "data_source": "mock"
   },
   {
@@ -5477,6 +5617,8 @@
    "payment_method": "BANK_TRANSFER",
    "payment_reference": "TT-005054",
    "reconciliation_status": "APPLIED",
+   "confirmed_at": "2026-07-25",
+   "reconciled_at": "2026-07-31",
    "data_source": "mock"
   },
   {
@@ -5491,6 +5633,8 @@
    "payment_method": "BANK_TRANSFER",
    "payment_reference": "TT-005055",
    "reconciliation_status": "APPLIED",
+   "confirmed_at": "2026-07-18",
+   "reconciled_at": "2026-07-24",
    "data_source": "mock"
   },
   {
@@ -5505,6 +5649,8 @@
    "payment_method": "BANK_TRANSFER",
    "payment_reference": "TT-005056",
    "reconciliation_status": "APPLIED",
+   "confirmed_at": "2026-07-24",
+   "reconciled_at": "2026-07-30",
    "data_source": "mock"
   },
   {
@@ -5519,6 +5665,8 @@
    "payment_method": "BANK_TRANSFER",
    "payment_reference": "TT-005057",
    "reconciliation_status": "APPLIED",
+   "confirmed_at": "2026-08-21",
+   "reconciled_at": "2026-08-27",
    "data_source": "mock"
   },
   {
@@ -5533,6 +5681,8 @@
    "payment_method": "BANK_TRANSFER",
    "payment_reference": "TT-005058",
    "reconciliation_status": "APPLIED",
+   "confirmed_at": "2026-08-29",
+   "reconciled_at": "2026-09-04",
    "data_source": "mock"
   },
   {
@@ -5547,6 +5697,8 @@
    "payment_method": "BANK_TRANSFER",
    "payment_reference": "TT-005059",
    "reconciliation_status": "APPLIED",
+   "confirmed_at": "2026-08-03",
+   "reconciled_at": "2026-08-09",
    "data_source": "mock"
   },
   {
@@ -5561,6 +5713,8 @@
    "payment_method": "BANK_TRANSFER",
    "payment_reference": "TT-005060",
    "reconciliation_status": "APPLIED",
+   "confirmed_at": "2026-07-25",
+   "reconciled_at": "2026-07-31",
    "data_source": "mock"
   },
   {
@@ -5575,6 +5729,8 @@
    "payment_method": "BANK_TRANSFER",
    "payment_reference": "TT-005061",
    "reconciliation_status": "APPLIED",
+   "confirmed_at": "2026-08-24",
+   "reconciled_at": "2026-08-30",
    "data_source": "mock"
   },
   {
@@ -5589,6 +5745,8 @@
    "payment_method": "BANK_TRANSFER",
    "payment_reference": "TT-005062",
    "reconciliation_status": "APPLIED",
+   "confirmed_at": "2026-07-21",
+   "reconciled_at": "2026-07-27",
    "data_source": "mock"
   },
   {
@@ -5603,6 +5761,8 @@
    "payment_method": "BANK_TRANSFER",
    "payment_reference": "TT-005063",
    "reconciliation_status": "APPLIED",
+   "confirmed_at": "2026-07-31",
+   "reconciled_at": "2026-08-06",
    "data_source": "mock"
   },
   {
@@ -5617,6 +5777,8 @@
    "payment_method": "BANK_TRANSFER",
    "payment_reference": "TT-005064",
    "reconciliation_status": "APPLIED",
+   "confirmed_at": "2026-07-27",
+   "reconciled_at": "2026-08-02",
    "data_source": "mock"
   },
   {
@@ -5631,6 +5793,8 @@
    "payment_method": "BANK_TRANSFER",
    "payment_reference": "TT-005065",
    "reconciliation_status": "APPLIED",
+   "confirmed_at": "2026-08-01",
+   "reconciled_at": "2026-08-07",
    "data_source": "mock"
   }
  ],

@@ -25,8 +25,11 @@ const SORT_OPTIONS: { value: string; label: StringKey }[] = [
   { value: 'util', label: 'sort.util' },
 ];
 
+const UNASSIGNED_ENTITY = 'unassigned';
+
 interface Filters {
   country: string;
+  entity: string;
   region: string;
   owner: string;
   currency: string;
@@ -47,6 +50,7 @@ export function CustomersPage() {
 
   const [f, setF] = useState<Filters>({
     country: sp.get('country') ?? '',
+    entity: sp.get('entity') ?? '',
     region: sp.get('region') ?? '',
     owner: sp.get('owner') ?? '',
     currency: sp.get('currency') ?? '',
@@ -62,6 +66,9 @@ export function CustomersPage() {
 
   const customers = model.customers;
   const countries = distinct(customers, (c) => c.country);
+  const unassignedEntity = t('common.unassignedEntity');
+  const entityOf = (c: CustomerRisk) => c.control_company ?? UNASSIGNED_ENTITY;
+  const entities = [...distinct(customers, (c) => c.control_company), ...(customers.some((c) => !c.control_company) ? [{ value: UNASSIGNED_ENTITY, label: unassignedEntity }] : [])];
   const regions = distinct(customers, (c) => c.region);
   const owners = distinct(customers, (c) => c.account_owner_name || unassigned);
   const currencies = distinct(customers, (c) => c.contract_currency);
@@ -70,6 +77,7 @@ export function CustomersPage() {
     const q = f.q.trim().toLowerCase();
     return customers.filter((c) => {
       if (f.country && c.country !== f.country) return false;
+      if (f.entity && entityOf(c) !== f.entity) return false;
       if (f.region && c.region !== f.region) return false;
       if (f.owner && (c.account_owner_name || unassigned) !== f.owner) return false;
       if (f.currency && c.contract_currency !== f.currency) return false;
@@ -101,6 +109,7 @@ export function CustomersPage() {
       ),
     },
     { key: 'country', header: t('col.country'), sortValue: (c) => c.country, render: (c) => c.country },
+    { key: 'entity', header: t('col.entity'), sortValue: (c) => c.control_company ?? '', render: (c) => (c.control_company ? <span data-testid="customer-entity">{c.control_company}</span> : <span className="muted" data-testid="customer-entity">{unassignedEntity}</span>) },
     { key: 'owner', header: t('col.owner'), sortValue: (c) => c.account_owner_name || unassigned, render: (c) => c.account_owner_name || <span className="muted">{unassigned}</span> },
     {
       key: 'ccy',
@@ -180,7 +189,7 @@ export function CustomersPage() {
     setSortDir('desc');
   }
 
-  const reset = () => setF({ country: '', region: '', owner: '', currency: '', q: '', bucket: '', grade: '', dispute: '', broken: '' });
+  const reset = () => setF({ country: '', entity: '', region: '', owner: '', currency: '', q: '', bucket: '', grade: '', dispute: '', broken: '' });
   const sortLabel = SORT_OPTIONS.find((o) => o.value === sortKey);
   const yesNoOptions = [
     { value: 'yes', label: t('common.yes') },
@@ -194,6 +203,7 @@ export function CustomersPage() {
       <FilterBar onReset={reset} summary={t('customers.summary', { shown: rows.length, total: customers.length, sort: sortLabel ? t(sortLabel.label) : sortKey, dir: sortDir })}>
         <TextFilter id="f-q" label={t('filter.customerName')} value={f.q} onChange={set('q')} testId="customers-search" />
         <SelectFilter id="f-country" label={t('filter.country')} value={f.country} onChange={set('country')} options={countries} />
+        <SelectFilter id="f-entity" label={t('filter.entity')} value={f.entity} onChange={set('entity')} options={entities} testId="customers-entity-filter" />
         <SelectFilter id="f-region" label={t('filter.region')} value={f.region} onChange={set('region')} options={regions} />
         <SelectFilter id="f-owner" label={t('filter.owner')} value={f.owner} onChange={set('owner')} options={owners} />
         <SelectFilter id="f-currency" label={t('filter.contractCurrency')} value={f.currency} onChange={set('currency')} options={currencies} />

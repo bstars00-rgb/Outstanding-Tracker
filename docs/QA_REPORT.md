@@ -140,3 +140,12 @@ Changes: bilingual engine text (`lang` option through `buildTrackerModel`, risk,
 Evidence: `npm run typecheck` pass · `npx vitest run` **99/99** (new: `i18n-core.test.ts`, `i18n.test.tsx`, `theme.test.tsx`, extended KpiCard/CustomersPage) · `npm run build` pass, bundle secret scan clean · Playwright **34 passed / 4 skipped (by design)** incl. `i18n-theme.spec.ts` (Korean overview, toggle, dark persistence, currency column/FX table) on desktop + mobile · dark-mode contrast sampled ≥ 5.7:1 by the frontend engineer · language never changes any number (asserted).
 
 Defects found: verification false positive on negative FX effect (magnitude quoted) — fixed (`verify.ts` allows absolute values). Scores unchanged (Planning 96 · QA mock 98 / live 87); live-scope Blocked items unchanged.
+
+
+## Iteration 4 — CEO feedback: managing-entity split and ELLIS reflection chain (2026-09-07)
+
+Changes: `Customer.control_company` + `aging_by_control_company` (Seoul / Singapore / unassigned) on Overview, Customers (filter + column), customer detail, Aging tab and the Teams card; ELLIS reflection chain (`Payment.confirmed_at` / `reconciled_at`, `reflection_queue`, action group `ELLIS_REFLECTION`, KPI totals `unverified_*` / `unreconciled_*`, configurable `REFLECTION_CHAIN`, Teams card line "ELLIS reflection pending"); ELLIS dev spec priority raised (P0: `paymentConfirmDate`, `traderCompCode`, `controlComp*`); leadership report §11 and Teams message §5; CEO feedback response note.
+
+Evidence: `npm run typecheck` pass · `npx vitest run` **109/109** (new `reflection.test.ts`, extended `CustomersPage.test.tsx`) · `npm run build` pass, bundle secret scan clean · Playwright **46 passed / 4 skipped (by design)** incl. `entity-reflection.spec.ts` on desktop + mobile · sample Korean card shows "법인별: OMH Seoul / OMH Singapore / 법인 미지정" and "ELLIS 반영 대기: 미검증 1건 · 미대사 6건" on mock data.
+
+Scores unchanged (Planning 96 · QA mock 98 / live 87). Reflection stage 3 (bank reconciliation) is tracker-owned and needs a UI/API to record `reconciled_at` in production (currently mock only) — logged as next priority.

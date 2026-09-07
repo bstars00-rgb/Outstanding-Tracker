@@ -404,6 +404,8 @@
           "payment_method": "BANK_TRANSFER",
           "payment_reference": "TT-005001",
           "reconciliation_status": "APPLIED",
+          "confirmed_at": "2026-08-27",
+          "reconciled_at": "2026-09-02",
           "data_source": "mock"
         }
       ],
@@ -457,6 +459,8 @@
           "payment_method": "BANK_TRANSFER",
           "payment_reference": "TT-005002",
           "reconciliation_status": "APPLIED",
+          "confirmed_at": "2026-08-21",
+          "reconciled_at": "2026-08-27",
           "data_source": "mock"
         }
       ],
@@ -510,6 +514,8 @@
           "payment_method": "BANK_TRANSFER",
           "payment_reference": "TT-005003",
           "reconciliation_status": "APPLIED",
+          "confirmed_at": "2026-08-24",
+          "reconciled_at": "2026-08-30",
           "data_source": "mock"
         }
       ],
@@ -563,6 +569,8 @@
           "payment_method": "BANK_TRANSFER",
           "payment_reference": "TT-005004",
           "reconciliation_status": "APPLIED",
+          "confirmed_at": "2026-08-05",
+          "reconciled_at": "2026-08-11",
           "data_source": "mock"
         }
       ],
@@ -803,6 +811,8 @@
           "payment_method": "BANK_TRANSFER",
           "payment_reference": "TT-005005",
           "reconciliation_status": "APPLIED",
+          "confirmed_at": "2026-06-28",
+          "reconciled_at": "2026-07-04",
           "data_source": "mock"
         }
       ],
@@ -1146,7 +1156,8 @@
           "overdue": 694871800,
           "invoice_count": 3
         }
-      ]
+      ],
+      "control_company": "OMH Singapore"
     },
     {
       "customer_id": "cust-002",
@@ -1258,7 +1269,8 @@
           "overdue": 10338300,
           "invoice_count": 4
         }
-      ]
+      ],
+      "control_company": "OMH Seoul"
     },
     {
       "customer_id": "cust-004",
@@ -1370,7 +1382,8 @@
           "overdue": 2000000,
           "invoice_count": 3
         }
-      ]
+      ],
+      "control_company": "OMH Singapore"
     },
     {
       "customer_id": "cust-030",
@@ -1482,7 +1495,8 @@
           "overdue": 63636.37,
           "invoice_count": 6
         }
-      ]
+      ],
+      "control_company": "OMH Singapore"
     },
     {
       "customer_id": "cust-008",
@@ -1594,7 +1608,8 @@
           "overdue": 213114800,
           "invoice_count": 3
         }
-      ]
+      ],
+      "control_company": "OMH Singapore"
     },
     {
       "customer_id": "cust-005",
@@ -1706,7 +1721,8 @@
           "overdue": 982142.86,
           "invoice_count": 3
         }
-      ]
+      ],
+      "control_company": "OMH Singapore"
     },
     {
       "customer_id": "cust-010",
@@ -1818,7 +1834,8 @@
           "overdue": 14632300,
           "invoice_count": 4
         }
-      ]
+      ],
+      "control_company": "OMH Seoul"
     },
     {
       "customer_id": "cust-028",
@@ -1930,7 +1947,8 @@
           "overdue": 428571.43,
           "invoice_count": 3
         }
-      ]
+      ],
+      "control_company": "OMH Singapore"
     },
     {
       "customer_id": "cust-007",
@@ -2042,7 +2060,8 @@
           "overdue": 23333.34,
           "invoice_count": 3
         }
-      ]
+      ],
+      "control_company": "OMH Singapore"
     },
     {
       "customer_id": "cust-014",
@@ -2166,7 +2185,8 @@
           "overdue": 0,
           "invoice_count": 2
         }
-      ]
+      ],
+      "control_company": "OMH Seoul"
     },
     {
       "customer_id": "cust-031",
@@ -2278,7 +2298,8 @@
           "overdue": 196721300,
           "invoice_count": 5
         }
-      ]
+      ],
+      "control_company": "OMH Singapore"
     },
     {
       "customer_id": "cust-006",
@@ -2390,7 +2411,8 @@
           "overdue": 78125,
           "invoice_count": 3
         }
-      ]
+      ],
+      "control_company": "OMH Singapore"
     },
     {
       "customer_id": "cust-029",
@@ -2502,7 +2524,8 @@
           "overdue": 5333.34,
           "invoice_count": 3
         }
-      ]
+      ],
+      "control_company": "OMH Singapore"
     },
     {
       "customer_id": "cust-024",
@@ -2614,7 +2637,8 @@
           "overdue": 96800,
           "invoice_count": 6
         }
-      ]
+      ],
+      "control_company": "OMH Singapore"
     },
     {
       "customer_id": "cust-033",
@@ -2726,7 +2750,8 @@
           "overdue": 12000,
           "invoice_count": 4
         }
-      ]
+      ],
+      "control_company": "OMH Seoul"
     },
     {
       "customer_id": "cust-012",
@@ -2838,7 +2863,8 @@
           "overdue": 537142.86,
           "invoice_count": 2
         }
-      ]
+      ],
+      "control_company": "OMH Singapore"
     },
     {
       "customer_id": "cust-034",
@@ -2950,7 +2976,8 @@
           "overdue": 1176500,
           "invoice_count": 6
         }
-      ]
+      ],
+      "control_company": "OMH Seoul"
     },
     {
       "customer_id": "cust-016",
@@ -3062,7 +3089,8 @@
           "overdue": 9722200,
           "invoice_count": 6
         }
-      ]
+      ],
+      "control_company": "OMH Seoul"
     },
     {
       "customer_id": "cust-017",
@@ -3174,7 +3202,8 @@
           "overdue": 8333300,
           "invoice_count": 5
         }
-      ]
+      ],
+      "control_company": "OMH Seoul"
     },
     {
       "customer_id": "cust-026",
@@ -3286,7 +3315,8 @@
           "overdue": 142857.14,
           "invoice_count": 4
         }
-      ]
+      ],
+      "control_company": "OMH Singapore"
     },
     {
       "customer_id": "cust-011",
@@ -3420,7 +3450,8 @@
           "overdue": 79487200,
           "invoice_count": 3
         }
-      ]
+      ],
+      "control_company": null
     },
     {
       "customer_id": "cust-018",
@@ -3532,7 +3563,8 @@
           "overdue": 1323500,
           "invoice_count": 3
         }
-      ]
+      ],
+      "control_company": "OMH Seoul"
     },
     {
       "customer_id": "cust-020",
@@ -3644,7 +3676,8 @@
           "overdue": 882400,
           "invoice_count": 4
         }
-      ]
+      ],
+      "control_company": "OMH Seoul"
     },
     {
       "customer_id": "cust-023",
@@ -3756,7 +3789,8 @@
           "overdue": 64500,
           "invoice_count": 2
         }
-      ]
+      ],
+      "control_company": "OMH Singapore"
     },
     {
       "customer_id": "cust-021",
@@ -3868,7 +3902,8 @@
           "overdue": 51282100,
           "invoice_count": 1
         }
-      ]
+      ],
+      "control_company": "OMH Singapore"
     },
     {
       "customer_id": "cust-019",
@@ -3980,7 +4015,8 @@
           "overdue": 1029400,
           "invoice_count": 3
         }
-      ]
+      ],
+      "control_company": "OMH Seoul"
     },
     {
       "customer_id": "cust-027",
@@ -4092,7 +4128,8 @@
           "overdue": 71428.57,
           "invoice_count": 4
         }
-      ]
+      ],
+      "control_company": "OMH Singapore"
     },
     {
       "customer_id": "cust-001",
@@ -4204,7 +4241,8 @@
           "overdue": 0,
           "invoice_count": 6
         }
-      ]
+      ],
+      "control_company": "OMH Seoul"
     },
     {
       "customer_id": "cust-009",
@@ -4316,7 +4354,8 @@
           "overdue": 0,
           "invoice_count": 1
         }
-      ]
+      ],
+      "control_company": "OMH Seoul"
     },
     {
       "customer_id": "cust-013",
@@ -4428,7 +4467,8 @@
           "overdue": 0,
           "invoice_count": 1
         }
-      ]
+      ],
+      "control_company": "OMH Singapore"
     },
     {
       "customer_id": "cust-015",
@@ -4540,7 +4580,8 @@
           "overdue": 0,
           "invoice_count": 4
         }
-      ]
+      ],
+      "control_company": "OMH Seoul"
     },
     {
       "customer_id": "cust-022",
@@ -4652,7 +4693,8 @@
           "overdue": 0,
           "invoice_count": 2
         }
-      ]
+      ],
+      "control_company": "OMH Singapore"
     },
     {
       "customer_id": "cust-025",
@@ -4764,7 +4806,8 @@
           "overdue": 0,
           "invoice_count": 4
         }
-      ]
+      ],
+      "control_company": "OMH Singapore"
     },
     {
       "customer_id": "cust-032",
@@ -4876,7 +4919,8 @@
           "overdue": 0,
           "invoice_count": 1
         }
-      ]
+      ],
+      "control_company": "OMH Singapore"
     }
   ],
   "aging_by_bucket": [
@@ -5923,6 +5967,1018 @@
       "previous_overdue": 0
     }
   ],
+  "aging_by_control_company": [
+    {
+      "key": "OMH Seoul",
+      "label": "OMH Seoul",
+      "total": 146632269.4,
+      "overdue": 35044158.71,
+      "buckets": {
+        "CURRENT": 111588110.69,
+        "D1_7": 15661709.38,
+        "D8_14": 5000005.88,
+        "D15_30": 5485343.45,
+        "D31_60": 8897100,
+        "D61_90": 0,
+        "D90_PLUS": 0
+      },
+      "previous_overdue": 27168628.25
+    },
+    {
+      "key": "OMH Singapore",
+      "label": "OMH Singapore",
+      "total": 83911558.2,
+      "overdue": 32573573.48,
+      "buckets": {
+        "CURRENT": 51337984.72,
+        "D1_7": 8808825.79,
+        "D8_14": 6029559.19,
+        "D15_30": 13749897.22,
+        "D31_60": 602940.71,
+        "D61_90": 0,
+        "D90_PLUS": 3382350.57
+      },
+      "previous_overdue": 25039329.98
+    },
+    {
+      "key": "unassigned",
+      "label": "법인 미지정",
+      "total": 2073528.14,
+      "overdue": 455882.14,
+      "buckets": {
+        "CURRENT": 617646.57,
+        "D1_7": 0,
+        "D8_14": 0,
+        "D15_30": 455882.14,
+        "D31_60": 0,
+        "D61_90": 0,
+        "D90_PLUS": 0
+      },
+      "previous_overdue": 457942.45
+    }
+  ],
+  "reflection_queue": [
+    {
+      "payment_id": "pay-5006",
+      "customer_id": "cust-007",
+      "customer_name": "Lion City Journeys Pte.",
+      "control_company": "OMH Singapore",
+      "payment_date": "2026-08-27",
+      "amount": 26666.67,
+      "currency": "SGD",
+      "amount_reporting": 2941176.84,
+      "stage": "RECORDED",
+      "next_owner": "Sangho",
+      "days_in_stage": 9,
+      "sla_days": 1,
+      "overdue_sla": true
+    },
+    {
+      "payment_id": "pay-5005",
+      "customer_id": "cust-006",
+      "customer_name": "Harbour Lights Travel",
+      "control_company": "OMH Singapore",
+      "payment_date": "2026-08-26",
+      "amount": 39062.5,
+      "currency": "HKD",
+      "amount_reporting": 735294.12,
+      "stage": "VERIFIED",
+      "next_owner": "Jackie",
+      "days_in_stage": 9,
+      "sla_days": 7,
+      "overdue_sla": true
+    },
+    {
+      "payment_id": "pay-5018",
+      "customer_id": "cust-018",
+      "customer_name": "Osaka Trip Partners",
+      "control_company": "OMH Seoul",
+      "payment_date": "2026-08-31",
+      "amount": 1176500,
+      "currency": "JPY",
+      "amount_reporting": 1176500,
+      "stage": "VERIFIED",
+      "next_owner": "Jackie",
+      "days_in_stage": 4,
+      "sla_days": 7,
+      "overdue_sla": false
+    },
+    {
+      "payment_id": "pay-5008",
+      "customer_id": "cust-009",
+      "customer_name": "Kimchi & Go Travel",
+      "control_company": "OMH Seoul",
+      "payment_date": "2026-09-01",
+      "amount": 38888900,
+      "currency": "KRW",
+      "amount_reporting": 4117648.12,
+      "stage": "VERIFIED",
+      "next_owner": "Jackie",
+      "days_in_stage": 3,
+      "sla_days": 7,
+      "overdue_sla": false
+    },
+    {
+      "payment_id": "pay-5028",
+      "customer_id": "cust-021",
+      "customer_name": "Hanoi Lotus Travel",
+      "control_company": "OMH Singapore",
+      "payment_date": "2026-09-01",
+      "amount": 205128200,
+      "currency": "VND",
+      "amount_reporting": 1176469.71,
+      "stage": "VERIFIED",
+      "next_owner": "Jackie",
+      "days_in_stage": 3,
+      "sla_days": 7,
+      "overdue_sla": false
+    },
+    {
+      "payment_id": "pay-5009",
+      "customer_id": "cust-009",
+      "customer_name": "Kimchi & Go Travel",
+      "control_company": "OMH Seoul",
+      "payment_date": "2026-09-03",
+      "amount": 22916700,
+      "currency": "KRW",
+      "amount_reporting": 2426474.05,
+      "stage": "VERIFIED",
+      "next_owner": "Jackie",
+      "days_in_stage": 1,
+      "sla_days": 7,
+      "overdue_sla": false
+    },
+    {
+      "payment_id": "pay-5007",
+      "customer_id": "cust-007",
+      "customer_name": "Lion City Journeys Pte.",
+      "control_company": "OMH Singapore",
+      "payment_date": "2026-09-04",
+      "amount": 5333.33,
+      "currency": "SGD",
+      "amount_reporting": 588234.93,
+      "stage": "VERIFIED",
+      "next_owner": "Jackie",
+      "days_in_stage": 0,
+      "sla_days": 7,
+      "overdue_sla": false
+    },
+    {
+      "payment_id": "pay-5004",
+      "customer_id": "cust-002",
+      "customer_name": "Sakura Voyage K.K.",
+      "control_company": "OMH Seoul",
+      "payment_date": "2026-06-27",
+      "amount": 3235300,
+      "currency": "JPY",
+      "amount_reporting": 3235300,
+      "stage": "RECONCILED",
+      "next_owner": "",
+      "days_in_stage": 63,
+      "sla_days": 0,
+      "overdue_sla": false
+    },
+    {
+      "payment_id": "pay-5040",
+      "customer_id": "cust-025",
+      "customer_name": "Victoria Peak Holidays",
+      "control_company": "OMH Singapore",
+      "payment_date": "2026-07-12",
+      "amount": 109375,
+      "currency": "HKD",
+      "amount_reporting": 2058823.53,
+      "stage": "RECONCILED",
+      "next_owner": "",
+      "days_in_stage": 48,
+      "sla_days": 0,
+      "overdue_sla": false
+    },
+    {
+      "payment_id": "pay-5041",
+      "customer_id": "cust-026",
+      "customer_name": "Bangkok Riverside Travel",
+      "control_company": "OMH Singapore",
+      "payment_date": "2026-07-12",
+      "amount": 464285.71,
+      "currency": "THB",
+      "amount_reporting": 1911764.69,
+      "stage": "RECONCILED",
+      "next_owner": "",
+      "days_in_stage": 48,
+      "sla_days": 0,
+      "overdue_sla": false
+    },
+    {
+      "payment_id": "pay-5019",
+      "customer_id": "cust-018",
+      "customer_name": "Osaka Trip Partners",
+      "control_company": "OMH Seoul",
+      "payment_date": "2026-07-17",
+      "amount": 1176500,
+      "currency": "JPY",
+      "amount_reporting": 1176500,
+      "stage": "RECONCILED",
+      "next_owner": "",
+      "days_in_stage": 43,
+      "sla_days": 0,
+      "overdue_sla": false
+    },
+    {
+      "payment_id": "pay-5045",
+      "customer_id": "cust-027",
+      "customer_name": "Chiang Mai Trails",
+      "control_company": "OMH Singapore",
+      "payment_date": "2026-07-17",
+      "amount": 428571.43,
+      "currency": "THB",
+      "amount_reporting": 1764705.89,
+      "stage": "RECONCILED",
+      "next_owner": "",
+      "days_in_stage": 43,
+      "sla_days": 0,
+      "overdue_sla": false
+    },
+    {
+      "payment_id": "pay-5054",
+      "customer_id": "cust-031",
+      "customer_name": "Bali Breeze Tours",
+      "control_company": "OMH Singapore",
+      "payment_date": "2026-07-17",
+      "amount": 229508200,
+      "currency": "IDR",
+      "amount_reporting": 2058823.96,
+      "stage": "RECONCILED",
+      "next_owner": "",
+      "days_in_stage": 43,
+      "sla_days": 0,
+      "overdue_sla": false
+    },
+    {
+      "payment_id": "pay-5014",
+      "customer_id": "cust-016",
+      "customer_name": "Seoul Express Holidays",
+      "control_company": "OMH Seoul",
+      "payment_date": "2026-07-18",
+      "amount": 4166700,
+      "currency": "KRW",
+      "amount_reporting": 441179.99,
+      "stage": "RECONCILED",
+      "next_owner": "",
+      "days_in_stage": 42,
+      "sla_days": 0,
+      "overdue_sla": false
+    },
+    {
+      "payment_id": "pay-5023",
+      "customer_id": "cust-019",
+      "customer_name": "Kyoto Heritage Tours",
+      "control_company": "OMH Seoul",
+      "payment_date": "2026-07-19",
+      "amount": 1617600,
+      "currency": "JPY",
+      "amount_reporting": 1617600,
+      "stage": "RECONCILED",
+      "next_owner": "",
+      "days_in_stage": 41,
+      "sla_days": 0,
+      "overdue_sla": false
+    },
+    {
+      "payment_id": "pay-5029",
+      "customer_id": "cust-021",
+      "customer_name": "Hanoi Lotus Travel",
+      "control_company": "OMH Singapore",
+      "payment_date": "2026-07-19",
+      "amount": 205128200,
+      "currency": "VND",
+      "amount_reporting": 1176469.71,
+      "stage": "RECONCILED",
+      "next_owner": "",
+      "days_in_stage": 41,
+      "sla_days": 0,
+      "overdue_sla": false
+    },
+    {
+      "payment_id": "pay-5030",
+      "customer_id": "cust-021",
+      "customer_name": "Hanoi Lotus Travel",
+      "control_company": "OMH Singapore",
+      "payment_date": "2026-07-19",
+      "amount": 230769200,
+      "currency": "VND",
+      "amount_reporting": 1323528.29,
+      "stage": "RECONCILED",
+      "next_owner": "",
+      "days_in_stage": 41,
+      "sla_days": 0,
+      "overdue_sla": false
+    },
+    {
+      "payment_id": "pay-5037",
+      "customer_id": "cust-024",
+      "customer_name": "Kaohsiung Sun Tours",
+      "control_company": "OMH Singapore",
+      "payment_date": "2026-07-20",
+      "amount": 290300,
+      "currency": "TWD",
+      "amount_reporting": 1323426.47,
+      "stage": "RECONCILED",
+      "next_owner": "",
+      "days_in_stage": 40,
+      "sla_days": 0,
+      "overdue_sla": false
+    },
+    {
+      "payment_id": "pay-5061",
+      "customer_id": "cust-033",
+      "customer_name": "Incheon Gateway Travel",
+      "control_company": "OMH Seoul",
+      "payment_date": "2026-07-20",
+      "amount": 9000,
+      "currency": "USD",
+      "amount_reporting": 1323529.41,
+      "stage": "RECONCILED",
+      "next_owner": "",
+      "days_in_stage": 40,
+      "sla_days": 0,
+      "overdue_sla": false
+    },
+    {
+      "payment_id": "pay-5025",
+      "customer_id": "cust-020",
+      "customer_name": "Hokkaido Snow Travel",
+      "control_company": "OMH Seoul",
+      "payment_date": "2026-07-22",
+      "amount": 1911800,
+      "currency": "JPY",
+      "amount_reporting": 1911800,
+      "stage": "RECONCILED",
+      "next_owner": "",
+      "days_in_stage": 38,
+      "sla_days": 0,
+      "overdue_sla": false
+    },
+    {
+      "payment_id": "pay-5035",
+      "customer_id": "cust-023",
+      "customer_name": "Taipei Metro Travel",
+      "control_company": "OMH Singapore",
+      "payment_date": "2026-07-23",
+      "amount": 387100,
+      "currency": "TWD",
+      "amount_reporting": 1764720.59,
+      "stage": "RECONCILED",
+      "next_owner": "",
+      "days_in_stage": 37,
+      "sla_days": 0,
+      "overdue_sla": false
+    },
+    {
+      "payment_id": "pay-5050",
+      "customer_id": "cust-029",
+      "customer_name": "Merlion Voyages",
+      "control_company": "OMH Singapore",
+      "payment_date": "2026-07-23",
+      "amount": 4000,
+      "currency": "SGD",
+      "amount_reporting": 441176.47,
+      "stage": "RECONCILED",
+      "next_owner": "",
+      "days_in_stage": 37,
+      "sla_days": 0,
+      "overdue_sla": false
+    },
+    {
+      "payment_id": "pay-5055",
+      "customer_id": "cust-031",
+      "customer_name": "Bali Breeze Tours",
+      "control_company": "OMH Singapore",
+      "payment_date": "2026-07-23",
+      "amount": 180327900,
+      "currency": "IDR",
+      "amount_reporting": 1617647.66,
+      "stage": "RECONCILED",
+      "next_owner": "",
+      "days_in_stage": 37,
+      "sla_days": 0,
+      "overdue_sla": false
+    },
+    {
+      "payment_id": "pay-5053",
+      "customer_id": "cust-030",
+      "customer_name": "Penang Heritage Travel",
+      "control_company": "OMH Singapore",
+      "payment_date": "2026-07-24",
+      "amount": 18181.82,
+      "currency": "MYR",
+      "amount_reporting": 588235.35,
+      "stage": "RECONCILED",
+      "next_owner": "",
+      "days_in_stage": 36,
+      "sla_days": 0,
+      "overdue_sla": false
+    },
+    {
+      "payment_id": "pay-5059",
+      "customer_id": "cust-032",
+      "customer_name": "Cebu Island Hoppers",
+      "control_company": "OMH Singapore",
+      "payment_date": "2026-07-24",
+      "amount": 342857.14,
+      "currency": "PHP",
+      "amount_reporting": 882352.93,
+      "stage": "RECONCILED",
+      "next_owner": "",
+      "days_in_stage": 36,
+      "sla_days": 0,
+      "overdue_sla": false
+    },
+    {
+      "payment_id": "pay-5048",
+      "customer_id": "cust-028",
+      "customer_name": "Phuket Sunset Tours",
+      "control_company": "OMH Singapore",
+      "payment_date": "2026-07-25",
+      "amount": 285714.29,
+      "currency": "THB",
+      "amount_reporting": 1176470.61,
+      "stage": "RECONCILED",
+      "next_owner": "",
+      "days_in_stage": 35,
+      "sla_days": 0,
+      "overdue_sla": false
+    },
+    {
+      "payment_id": "pay-5052",
+      "customer_id": "cust-030",
+      "customer_name": "Penang Heritage Travel",
+      "control_company": "OMH Singapore",
+      "payment_date": "2026-07-25",
+      "amount": 45454.55,
+      "currency": "MYR",
+      "amount_reporting": 1470588.38,
+      "stage": "RECONCILED",
+      "next_owner": "",
+      "days_in_stage": 35,
+      "sla_days": 0,
+      "overdue_sla": false
+    },
+    {
+      "payment_id": "pay-5010",
+      "customer_id": "cust-010",
+      "customer_name": "Fuji Peak Travel Inc.",
+      "control_company": "OMH Seoul",
+      "payment_date": "2026-07-26",
+      "amount": 5147100,
+      "currency": "JPY",
+      "amount_reporting": 5147100,
+      "stage": "RECONCILED",
+      "next_owner": "",
+      "days_in_stage": 34,
+      "sla_days": 0,
+      "overdue_sla": false
+    },
+    {
+      "payment_id": "pay-5063",
+      "customer_id": "cust-034",
+      "customer_name": "Nagoya Central Tours",
+      "control_company": "OMH Seoul",
+      "payment_date": "2026-07-26",
+      "amount": 588200,
+      "currency": "JPY",
+      "amount_reporting": 588200,
+      "stage": "RECONCILED",
+      "next_owner": "",
+      "days_in_stage": 34,
+      "sla_days": 0,
+      "overdue_sla": false
+    },
+    {
+      "payment_id": "pay-5015",
+      "customer_id": "cust-016",
+      "customer_name": "Seoul Express Holidays",
+      "control_company": "OMH Seoul",
+      "payment_date": "2026-07-27",
+      "amount": 8333300,
+      "currency": "KRW",
+      "amount_reporting": 882349.39,
+      "stage": "RECONCILED",
+      "next_owner": "",
+      "days_in_stage": 33,
+      "sla_days": 0,
+      "overdue_sla": false
+    },
+    {
+      "payment_id": "pay-5022",
+      "customer_id": "cust-019",
+      "customer_name": "Kyoto Heritage Tours",
+      "control_company": "OMH Seoul",
+      "payment_date": "2026-07-28",
+      "amount": 735300,
+      "currency": "JPY",
+      "amount_reporting": 735300,
+      "stage": "RECONCILED",
+      "next_owner": "",
+      "days_in_stage": 32,
+      "sla_days": 0,
+      "overdue_sla": false
+    },
+    {
+      "payment_id": "pay-5038",
+      "customer_id": "cust-024",
+      "customer_name": "Kaohsiung Sun Tours",
+      "control_company": "OMH Singapore",
+      "payment_date": "2026-07-28",
+      "amount": 193500,
+      "currency": "TWD",
+      "amount_reporting": 882132.35,
+      "stage": "RECONCILED",
+      "next_owner": "",
+      "days_in_stage": 32,
+      "sla_days": 0,
+      "overdue_sla": false
+    },
+    {
+      "payment_id": "pay-5047",
+      "customer_id": "cust-028",
+      "customer_name": "Phuket Sunset Tours",
+      "control_company": "OMH Singapore",
+      "payment_date": "2026-07-29",
+      "amount": 142857.14,
+      "currency": "THB",
+      "amount_reporting": 588235.28,
+      "stage": "RECONCILED",
+      "next_owner": "",
+      "days_in_stage": 31,
+      "sla_days": 0,
+      "overdue_sla": false
+    },
+    {
+      "payment_id": "pay-5016",
+      "customer_id": "cust-017",
+      "customer_name": "Jeju Blue Travel",
+      "control_company": "OMH Seoul",
+      "payment_date": "2026-07-30",
+      "amount": 8333300,
+      "currency": "KRW",
+      "amount_reporting": 882349.39,
+      "stage": "RECONCILED",
+      "next_owner": "",
+      "days_in_stage": 30,
+      "sla_days": 0,
+      "overdue_sla": false
+    },
+    {
+      "payment_id": "pay-5062",
+      "customer_id": "cust-033",
+      "customer_name": "Incheon Gateway Travel",
+      "control_company": "OMH Seoul",
+      "payment_date": "2026-07-30",
+      "amount": 4000,
+      "currency": "USD",
+      "amount_reporting": 588235.29,
+      "stage": "RECONCILED",
+      "next_owner": "",
+      "days_in_stage": 30,
+      "sla_days": 0,
+      "overdue_sla": false
+    },
+    {
+      "payment_id": "pay-5064",
+      "customer_id": "cust-034",
+      "customer_name": "Nagoya Central Tours",
+      "control_company": "OMH Seoul",
+      "payment_date": "2026-07-31",
+      "amount": 1617600,
+      "currency": "JPY",
+      "amount_reporting": 1617600,
+      "stage": "RECONCILED",
+      "next_owner": "",
+      "days_in_stage": 29,
+      "sla_days": 0,
+      "overdue_sla": false
+    },
+    {
+      "payment_id": "pay-5020",
+      "customer_id": "cust-018",
+      "customer_name": "Osaka Trip Partners",
+      "control_company": "OMH Seoul",
+      "payment_date": "2026-08-01",
+      "amount": 441200,
+      "currency": "JPY",
+      "amount_reporting": 441200,
+      "stage": "RECONCILED",
+      "next_owner": "",
+      "days_in_stage": 28,
+      "sla_days": 0,
+      "overdue_sla": false
+    },
+    {
+      "payment_id": "pay-5033",
+      "customer_id": "cust-022",
+      "customer_name": "Da Nang Coastal Tours",
+      "control_company": "OMH Singapore",
+      "payment_date": "2026-08-01",
+      "amount": 128205100,
+      "currency": "VND",
+      "amount_reporting": 735293.43,
+      "stage": "RECONCILED",
+      "next_owner": "",
+      "days_in_stage": 28,
+      "sla_days": 0,
+      "overdue_sla": false
+    },
+    {
+      "payment_id": "pay-5042",
+      "customer_id": "cust-026",
+      "customer_name": "Bangkok Riverside Travel",
+      "control_company": "OMH Singapore",
+      "payment_date": "2026-08-01",
+      "amount": 357142.86,
+      "currency": "THB",
+      "amount_reporting": 1470588.25,
+      "stage": "RECONCILED",
+      "next_owner": "",
+      "days_in_stage": 28,
+      "sla_days": 0,
+      "overdue_sla": false
+    },
+    {
+      "payment_id": "pay-5039",
+      "customer_id": "cust-025",
+      "customer_name": "Victoria Peak Holidays",
+      "control_company": "OMH Singapore",
+      "payment_date": "2026-08-02",
+      "amount": 78125,
+      "currency": "HKD",
+      "amount_reporting": 1470588.24,
+      "stage": "RECONCILED",
+      "next_owner": "",
+      "days_in_stage": 27,
+      "sla_days": 0,
+      "overdue_sla": false
+    },
+    {
+      "payment_id": "pay-5058",
+      "customer_id": "cust-032",
+      "customer_name": "Cebu Island Hoppers",
+      "control_company": "OMH Singapore",
+      "payment_date": "2026-08-02",
+      "amount": 228571.43,
+      "currency": "PHP",
+      "amount_reporting": 588235.3,
+      "stage": "RECONCILED",
+      "next_owner": "",
+      "days_in_stage": 27,
+      "sla_days": 0,
+      "overdue_sla": false
+    },
+    {
+      "payment_id": "pay-5036",
+      "customer_id": "cust-023",
+      "customer_name": "Taipei Metro Travel",
+      "control_company": "OMH Singapore",
+      "payment_date": "2026-08-03",
+      "amount": 161300,
+      "currency": "TWD",
+      "amount_reporting": 735338.24,
+      "stage": "RECONCILED",
+      "next_owner": "",
+      "days_in_stage": 26,
+      "sla_days": 0,
+      "overdue_sla": false
+    },
+    {
+      "payment_id": "pay-5003",
+      "customer_id": "cust-001",
+      "customer_name": "Hanbit Tours Co.",
+      "control_company": "OMH Seoul",
+      "payment_date": "2026-08-04",
+      "amount": 106944400,
+      "currency": "KRW",
+      "amount_reporting": 11323524.39,
+      "stage": "RECONCILED",
+      "next_owner": "",
+      "days_in_stage": 25,
+      "sla_days": 0,
+      "overdue_sla": false
+    },
+    {
+      "payment_id": "pay-5017",
+      "customer_id": "cust-017",
+      "customer_name": "Jeju Blue Travel",
+      "control_company": "OMH Seoul",
+      "payment_date": "2026-08-04",
+      "amount": 4166700,
+      "currency": "KRW",
+      "amount_reporting": 441179.99,
+      "stage": "RECONCILED",
+      "next_owner": "",
+      "days_in_stage": 25,
+      "sla_days": 0,
+      "overdue_sla": false
+    },
+    {
+      "payment_id": "pay-5024",
+      "customer_id": "cust-020",
+      "customer_name": "Hokkaido Snow Travel",
+      "control_company": "OMH Seoul",
+      "payment_date": "2026-08-05",
+      "amount": 441200,
+      "currency": "JPY",
+      "amount_reporting": 441200,
+      "stage": "RECONCILED",
+      "next_owner": "",
+      "days_in_stage": 24,
+      "sla_days": 0,
+      "overdue_sla": false
+    },
+    {
+      "payment_id": "pay-5051",
+      "customer_id": "cust-029",
+      "customer_name": "Merlion Voyages",
+      "control_company": "OMH Singapore",
+      "payment_date": "2026-08-05",
+      "amount": 17333.33,
+      "currency": "SGD",
+      "amount_reporting": 1911764.34,
+      "stage": "RECONCILED",
+      "next_owner": "",
+      "days_in_stage": 24,
+      "sla_days": 0,
+      "overdue_sla": false
+    },
+    {
+      "payment_id": "pay-5032",
+      "customer_id": "cust-022",
+      "customer_name": "Da Nang Coastal Tours",
+      "control_company": "OMH Singapore",
+      "payment_date": "2026-08-06",
+      "amount": 76923100,
+      "currency": "VND",
+      "amount_reporting": 441176.29,
+      "stage": "RECONCILED",
+      "next_owner": "",
+      "days_in_stage": 23,
+      "sla_days": 0,
+      "overdue_sla": false
+    },
+    {
+      "payment_id": "pay-5044",
+      "customer_id": "cust-027",
+      "customer_name": "Chiang Mai Trails",
+      "control_company": "OMH Singapore",
+      "payment_date": "2026-08-06",
+      "amount": 214285.71,
+      "currency": "THB",
+      "amount_reporting": 882352.92,
+      "stage": "RECONCILED",
+      "next_owner": "",
+      "days_in_stage": 23,
+      "sla_days": 0,
+      "overdue_sla": false
+    },
+    {
+      "payment_id": "pay-5013",
+      "customer_id": "cust-015",
+      "customer_name": "Tokyo Nights Travel",
+      "control_company": "OMH Seoul",
+      "payment_date": "2026-08-11",
+      "amount": 1176500,
+      "currency": "JPY",
+      "amount_reporting": 1176500,
+      "stage": "RECONCILED",
+      "next_owner": "",
+      "days_in_stage": 18,
+      "sla_days": 0,
+      "overdue_sla": false
+    },
+    {
+      "payment_id": "pay-5011",
+      "customer_id": "cust-013",
+      "customer_name": "Kuala Journeys Sdn Bhd",
+      "control_company": "OMH Singapore",
+      "payment_date": "2026-08-16",
+      "amount": 75000,
+      "currency": "MYR",
+      "amount_reporting": 2426470.59,
+      "stage": "RECONCILED",
+      "next_owner": "",
+      "days_in_stage": 13,
+      "sla_days": 0,
+      "overdue_sla": false
+    },
+    {
+      "payment_id": "pay-5031",
+      "customer_id": "cust-022",
+      "customer_name": "Da Nang Coastal Tours",
+      "control_company": "OMH Singapore",
+      "payment_date": "2026-08-16",
+      "amount": 282051300,
+      "currency": "VND",
+      "amount_reporting": 1617646,
+      "stage": "RECONCILED",
+      "next_owner": "",
+      "days_in_stage": 13,
+      "sla_days": 0,
+      "overdue_sla": false
+    },
+    {
+      "payment_id": "pay-5043",
+      "customer_id": "cust-027",
+      "customer_name": "Chiang Mai Trails",
+      "control_company": "OMH Singapore",
+      "payment_date": "2026-08-18",
+      "amount": 678571.43,
+      "currency": "THB",
+      "amount_reporting": 2794117.65,
+      "stage": "RECONCILED",
+      "next_owner": "",
+      "days_in_stage": 11,
+      "sla_days": 0,
+      "overdue_sla": false
+    },
+    {
+      "payment_id": "pay-5001",
+      "customer_id": "cust-001",
+      "customer_name": "Hanbit Tours Co.",
+      "control_company": "OMH Seoul",
+      "payment_date": "2026-08-20",
+      "amount": 76388900,
+      "currency": "KRW",
+      "amount_reporting": 8088236.25,
+      "stage": "RECONCILED",
+      "next_owner": "",
+      "days_in_stage": 9,
+      "sla_days": 0,
+      "overdue_sla": false
+    },
+    {
+      "payment_id": "pay-5056",
+      "customer_id": "cust-032",
+      "customer_name": "Cebu Island Hoppers",
+      "control_company": "OMH Singapore",
+      "payment_date": "2026-08-20",
+      "amount": 514285.71,
+      "currency": "PHP",
+      "amount_reporting": 1323529.4,
+      "stage": "RECONCILED",
+      "next_owner": "",
+      "days_in_stage": 9,
+      "sla_days": 0,
+      "overdue_sla": false
+    },
+    {
+      "payment_id": "pay-5021",
+      "customer_id": "cust-019",
+      "customer_name": "Kyoto Heritage Tours",
+      "control_company": "OMH Seoul",
+      "payment_date": "2026-08-21",
+      "amount": 882400,
+      "currency": "JPY",
+      "amount_reporting": 882400,
+      "stage": "RECONCILED",
+      "next_owner": "",
+      "days_in_stage": 8,
+      "sla_days": 0,
+      "overdue_sla": false
+    },
+    {
+      "payment_id": "pay-5002",
+      "customer_id": "cust-001",
+      "customer_name": "Hanbit Tours Co.",
+      "control_company": "OMH Seoul",
+      "payment_date": "2026-08-23",
+      "amount": 91666700,
+      "currency": "KRW",
+      "amount_reporting": 9705885.61,
+      "stage": "RECONCILED",
+      "next_owner": "",
+      "days_in_stage": 6,
+      "sla_days": 0,
+      "overdue_sla": false
+    },
+    {
+      "payment_id": "pay-5027",
+      "customer_id": "cust-021",
+      "customer_name": "Hanoi Lotus Travel",
+      "control_company": "OMH Singapore",
+      "payment_date": "2026-08-23",
+      "amount": 461538500,
+      "currency": "VND",
+      "amount_reporting": 2647057.14,
+      "stage": "RECONCILED",
+      "next_owner": "",
+      "days_in_stage": 6,
+      "sla_days": 0,
+      "overdue_sla": false
+    },
+    {
+      "payment_id": "pay-5060",
+      "customer_id": "cust-033",
+      "customer_name": "Incheon Gateway Travel",
+      "control_company": "OMH Seoul",
+      "payment_date": "2026-08-23",
+      "amount": 8000,
+      "currency": "USD",
+      "amount_reporting": 1176470.59,
+      "stage": "RECONCILED",
+      "next_owner": "",
+      "days_in_stage": 6,
+      "sla_days": 0,
+      "overdue_sla": false
+    },
+    {
+      "payment_id": "pay-5026",
+      "customer_id": "cust-021",
+      "customer_name": "Hanoi Lotus Travel",
+      "control_company": "OMH Singapore",
+      "payment_date": "2026-08-24",
+      "amount": 128205100,
+      "currency": "VND",
+      "amount_reporting": 735293.43,
+      "stage": "RECONCILED",
+      "next_owner": "",
+      "days_in_stage": 5,
+      "sla_days": 0,
+      "overdue_sla": false
+    },
+    {
+      "payment_id": "pay-5000",
+      "customer_id": "cust-001",
+      "customer_name": "Hanbit Tours Co.",
+      "control_company": "OMH Seoul",
+      "payment_date": "2026-08-26",
+      "amount": 80555600,
+      "currency": "KRW",
+      "amount_reporting": 8529416.23,
+      "stage": "RECONCILED",
+      "next_owner": "",
+      "days_in_stage": 3,
+      "sla_days": 0,
+      "overdue_sla": false
+    },
+    {
+      "payment_id": "pay-5049",
+      "customer_id": "cust-029",
+      "customer_name": "Merlion Voyages",
+      "control_company": "OMH Singapore",
+      "payment_date": "2026-08-26",
+      "amount": 22666.67,
+      "currency": "SGD",
+      "amount_reporting": 2500000.37,
+      "stage": "RECONCILED",
+      "next_owner": "",
+      "days_in_stage": 3,
+      "sla_days": 0,
+      "overdue_sla": false
+    },
+    {
+      "payment_id": "pay-5034",
+      "customer_id": "cust-023",
+      "customer_name": "Taipei Metro Travel",
+      "control_company": "OMH Singapore",
+      "payment_date": "2026-08-27",
+      "amount": 322600,
+      "currency": "TWD",
+      "amount_reporting": 1470676.47,
+      "stage": "RECONCILED",
+      "next_owner": "",
+      "days_in_stage": 2,
+      "sla_days": 0,
+      "overdue_sla": false
+    },
+    {
+      "payment_id": "pay-5046",
+      "customer_id": "cust-028",
+      "customer_name": "Phuket Sunset Tours",
+      "control_company": "OMH Singapore",
+      "payment_date": "2026-08-28",
+      "amount": 392857.14,
+      "currency": "THB",
+      "amount_reporting": 1617647.05,
+      "stage": "RECONCILED",
+      "next_owner": "",
+      "days_in_stage": 1,
+      "sla_days": 0,
+      "overdue_sla": false
+    },
+    {
+      "payment_id": "pay-5057",
+      "customer_id": "cust-032",
+      "customer_name": "Cebu Island Hoppers",
+      "control_company": "OMH Singapore",
+      "payment_date": "2026-08-28",
+      "amount": 400000,
+      "currency": "PHP",
+      "amount_reporting": 1029411.76,
+      "stage": "RECONCILED",
+      "next_owner": "",
+      "days_in_stage": 1,
+      "sla_days": 0,
+      "overdue_sla": false
+    }
+  ],
   "actions": [
     {
       "id": "ESCALATE:cust-003",
@@ -6027,6 +7083,19 @@
       "severity": "high",
       "status": "open",
       "recommended_action": "사용률 136%: 신규 예약 보류 또는 Finance 예외 승인 확보"
+    },
+    {
+      "id": "ELLIS_REFLECTION:pay-5006",
+      "group": "ELLIS_REFLECTION",
+      "customer_id": "cust-007",
+      "customer_name": "Lion City Journeys Pte.",
+      "invoice_id": null,
+      "owner": "Sangho",
+      "due_date": "2026-08-28",
+      "amount_reporting": 2941176.84,
+      "severity": "high",
+      "status": "open",
+      "recommended_action": "2026-08-27 입금(SGD 26,666.67) 9일째 대기: ELLIS 검증(PM CNFM·인보이스 매핑)"
     },
     {
       "customer_id": "cust-002",
@@ -6495,6 +7564,19 @@
       "due_date": "2026-09-05",
       "severity": "medium",
       "recommended_action": "연체 9일; 리마인더 발송 및 지급일 확인"
+    },
+    {
+      "id": "ELLIS_REFLECTION:pay-5005",
+      "group": "ELLIS_REFLECTION",
+      "customer_id": "cust-006",
+      "customer_name": "Harbour Lights Travel",
+      "invoice_id": null,
+      "owner": "Jackie",
+      "due_date": "2026-09-02",
+      "amount_reporting": 735294.12,
+      "severity": "medium",
+      "status": "open",
+      "recommended_action": "2026-08-26 입금(HKD 39,062.5) 9일째 대기: 은행 입금 대사·승인"
     },
     {
       "customer_id": "cust-017",
@@ -6974,6 +8056,10 @@
       "due_within_7_days": 40323170.96,
       "broken_promise_amount": 11441174.77,
       "broken_promise_count": 2,
+      "unverified_payment_amount": 2941176.84,
+      "unverified_payment_count": 1,
+      "unreconciled_payment_amount": 10220620.93,
+      "unreconciled_payment_count": 6,
       "at_risk_amount": 33279584.02,
       "invoice_count": 119,
       "customer_count": 34
@@ -7501,6 +8587,26 @@
         "label": "PHP",
         "total_outstanding": 3088235.29,
         "overdue": 1382352.95
+      }
+    ],
+    "control_companies": [
+      {
+        "key": "OMH Seoul",
+        "label": "OMH Seoul",
+        "total_outstanding": 146632269.4,
+        "overdue": 35044158.71
+      },
+      {
+        "key": "OMH Singapore",
+        "label": "OMH Singapore",
+        "total_outstanding": 83911558.2,
+        "overdue": 32573573.48
+      },
+      {
+        "key": "unassigned",
+        "label": "법인 미지정",
+        "total_outstanding": 2073528.14,
+        "overdue": 455882.14
       }
     ],
     "invoice_state": [

@@ -27,8 +27,8 @@ export const AGING_BUCKET_LABEL_I18N: Record<Lang, Record<string, string>> = {
 };
 
 export const ACTION_GROUP_LABEL_I18N: Record<Lang, Record<string, string>> = {
-  en: { CONTACT_TODAY: 'Contact today', DUE_3_DAYS: 'Due within 3 days', DUE_7_DAYS: 'Due within 7 days', PROMISE_OVERDUE: 'Promise date passed', OVERDUE_30: '30+ days overdue', OVERDUE_90: '90+ days overdue', DISPUTE: 'Dispute to resolve', CREDIT_LIMIT: 'Credit limit exceeded', ESCALATE: 'Leader escalation' },
-  ko: { CONTACT_TODAY: '오늘 연락 필요', DUE_3_DAYS: '3일 이내 만기', DUE_7_DAYS: '7일 이내 만기', PROMISE_OVERDUE: '약속일 경과', OVERDUE_30: '30일 이상 연체', OVERDUE_90: '90일 이상 연체', DISPUTE: '분쟁 해결 필요', CREDIT_LIMIT: '신용한도 초과', ESCALATE: '리더 에스컬레이션 필요' },
+  en: { CONTACT_TODAY: 'Contact today', DUE_3_DAYS: 'Due within 3 days', DUE_7_DAYS: 'Due within 7 days', PROMISE_OVERDUE: 'Promise date passed', OVERDUE_30: '30+ days overdue', OVERDUE_90: '90+ days overdue', DISPUTE: 'Dispute to resolve', CREDIT_LIMIT: 'Credit limit exceeded', ESCALATE: 'Leader escalation', ELLIS_REFLECTION: 'ELLIS reflection check' },
+  ko: { CONTACT_TODAY: '오늘 연락 필요', DUE_3_DAYS: '3일 이내 만기', DUE_7_DAYS: '7일 이내 만기', PROMISE_OVERDUE: '약속일 경과', OVERDUE_30: '30일 이상 연체', OVERDUE_90: '90일 이상 연체', DISPUTE: '분쟁 해결 필요', CREDIT_LIMIT: '신용한도 초과', ESCALATE: '리더 에스컬레이션 필요', ELLIS_REFLECTION: 'ELLIS 반영 확인 필요' },
 };
 
 export const RISK_GRADE_LABEL_I18N: Record<Lang, Record<string, string>> = {

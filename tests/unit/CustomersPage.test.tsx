@@ -46,6 +46,37 @@ describe('CustomersPage', () => {
     expect(screen.getByText(new RegExp(`Showing ${highCount} of ${total} customers`))).toBeInTheDocument();
   });
 
+  it('filters by managing entity and honours the ?entity= query parameter', () => {
+    renderPage();
+    const total = built.model.customers.length;
+    const singapore = built.model.customers.filter((c) => c.control_company === 'OMH Singapore').length;
+    const unassigned = built.model.customers.filter((c) => !c.control_company).length;
+    expect(singapore).toBeGreaterThan(0);
+    expect(singapore).toBeLessThan(total);
+    expect(unassigned).toBeGreaterThan(0);
+
+    fireEvent.change(screen.getByLabelText('Entity'), { target: { value: 'OMH Singapore' } });
+    let rows = bodyRows();
+    expect(rows).toHaveLength(singapore);
+    for (const r of rows) expect(within(r).getAllByRole('cell')[2]).toHaveTextContent('OMH Singapore');
+
+    fireEvent.change(screen.getByLabelText('Entity'), { target: { value: 'unassigned' } });
+    rows = bodyRows();
+    expect(rows).toHaveLength(unassigned);
+    expect(within(rows[0]).getAllByRole('cell')[2]).toHaveTextContent('Unassigned');
+    cleanup();
+
+    renderWithProviders(
+      <TrackerContext.Provider value={readyContextValue(built.model, built.insight)}>
+        <CustomersPage />
+      </TrackerContext.Provider>,
+      { route: '/customers?entity=OMH%20Seoul', lang: 'en' },
+    );
+    const seoul = built.model.customers.filter((c) => c.control_company === 'OMH Seoul').length;
+    expect(bodyRows()).toHaveLength(seoul);
+    expect(screen.getByLabelText('Entity')).toHaveValue('OMH Seoul');
+  });
+
   it('sorts by overdue descending when the sort select changes', () => {
     renderPage();
     fireEvent.change(screen.getByLabelText('Sort by'), { target: { value: 'overdue' } });
@@ -64,6 +95,7 @@ describe('CustomersPage', () => {
     expect(headers).toEqual([
       'Customer',
       'Country',
+      'Entity',
       'Owner',
       'Contract currency',
       'Total outstanding',
@@ -90,8 +122,8 @@ describe('CustomersPage', () => {
     expect(foreign).toBeDefined();
     const row = bodyRows().find((r) => r.getAttribute('data-row-id') === foreign.customer_id)!;
     const cells = within(row).getAllByRole('cell');
-    expect(cells[3]).toHaveTextContent(foreign.contract_currency);
-    const totalCell = cells[4];
+    expect(cells[4]).toHaveTextContent(foreign.contract_currency);
+    const totalCell = cells[5];
     expect(totalCell).toHaveTextContent(`${ccy} `);
     const sub = totalCell.querySelector('.cell-sub');
     expect(sub).not.toBeNull();
@@ -100,7 +132,7 @@ describe('CustomersPage', () => {
     const multi = built.model.customers.find((c) => c.totals_by_currency.length > 1);
     if (multi) {
       const mrow = bodyRows().find((r) => r.getAttribute('data-row-id') === multi.customer_id)!;
-      const subs = within(mrow).getAllByRole('cell')[4].querySelectorAll('.cell-sub');
+      const subs = within(mrow).getAllByRole('cell')[5].querySelectorAll('.cell-sub');
       expect(subs.length).toBe(multi.totals_by_currency.length);
     }
   });

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import { formatMoney, formatPct } from '@core/money';
 import { AGING_BUCKET_LABEL_I18N } from '@core/i18n';
-import { AGING_BUCKETS, type CustomerRisk } from '@core/types';
+import { AGING_BUCKETS, type CustomerRisk, type DimensionAging } from '@core/types';
 import { useReadyTracker } from '@app/data/TrackerContext';
 import { useI18n } from '@app/i18n/useI18n';
 import { KpiCard } from '@app/components/KpiCard';
@@ -13,7 +13,10 @@ import { RiskBadge } from '@app/components/RiskBadge';
 import { Money } from '@app/components/Money';
 import { ChartWithTable } from '@app/components/ChartWithTable';
 import { chartProps, useChartColors } from '@app/components/chart-theme';
-import { customerLink } from '@app/lib/links';
+import { customerLink, customersByEntityLink } from '@app/lib/links';
+import { StatusPill } from '@app/components/StatusPill';
+import { KPI_STATUS_LABEL_I18N } from '@core/i18n';
+import { fmtRatio } from '@app/lib/format';
 
 export function OverviewPage() {
   const { model, insight } = useReadyTracker();
@@ -54,6 +57,33 @@ export function OverviewPage() {
     },
     { key: 'risk', header: t('col.risk'), render: (c) => <RiskBadge risk={c.risk} /> },
   ];
+  const entityColumns: Column<DimensionAging>[] = [
+    { key: 'entity', header: t('col.entity'), render: (r) => <Link to={customersByEntityLink(r.key)}>{r.label}</Link> },
+    { key: 'total', header: t('col.totalOutstanding'), align: 'right', render: (r) => <Money amount={r.total} currency={ccy} /> },
+    { key: 'overdue', header: t('col.overdue'), align: 'right', render: (r) => <Money amount={r.overdue} currency={ccy} /> },
+    { key: 'share', header: t('col.overdueShare'), title: t('col.overdueShareTitle'), align: 'right', render: (r) => fmtRatio(r.total > 0 ? r.overdue / r.total : null) },
+    {
+      key: 'wow',
+      header: t('col.wowOverdueChange'),
+      align: 'right',
+      render: (r) => (r.previous_overdue === null ? <span className="muted">—</span> : <Money amount={r.overdue - r.previous_overdue} currency={ccy} signed tone />),
+    },
+    {
+      key: 'link',
+      header: '',
+      render: (r) => (
+        <Link className="small" to={customersByEntityLink(r.key)}>
+          {t('overview.entityCustomers')}
+        </Link>
+      ),
+    },
+  ];
+  const totals = model.snapshot.totals;
+  const reflectionTiles = [
+    { key: 'unverified', label: t('overview.unverified'), def: t('overview.unverifiedDef'), count: totals.unverified_payment_count, amount: totals.unverified_payment_amount },
+    { key: 'unreconciled', label: t('overview.unreconciled'), def: t('overview.unreconciledDef'), count: totals.unreconciled_payment_count, amount: totals.unreconciled_payment_amount },
+  ];
+
   const moverColumns: Column<CustomerRisk>[] = [
     { key: 'name', header: t('col.customer'), render: (c) => <Link to={customerLink(c.customer_id)}>{c.customer_name}</Link> },
     { key: 'owner', header: t('col.owner'), render: (c) => c.account_owner_name || t('common.unassigned') },
@@ -126,6 +156,44 @@ export function OverviewPage() {
             {t('overview.generatedBy', { provider: insight.provider })}
             {insight.model ? ` (${insight.model})` : ''} · {insight.verification.ok ? t('overview.verifiedOk') : t('overview.verifiedNotes')} · {t('overview.aiNote')}
           </p>
+        </section>
+      </div>
+
+      <div className="grid-2 section">
+        <section className="card" aria-labelledby="entity-h" data-testid="entity-card">
+          <h2 className="card-title" id="entity-h">
+            {t('overview.byEntity')}
+            <Link to="/aging" className="small">
+              {t('overview.agingLink')}
+            </Link>
+          </h2>
+          <DataTable columns={entityColumns} rows={model.aging_by_control_company} rowKey={(r) => r.key} compact caption={t('overview.entityCaption')} testId="entity-table" />
+        </section>
+
+        <section className="card" aria-labelledby="reflection-h" data-testid="reflection-card">
+          <h2 className="card-title" id="reflection-h">
+            {t('overview.reflection')}
+            <Link to="/actions#reflection" className="small">
+              {t('overview.reflectionLink')}
+            </Link>
+          </h2>
+          <div className="tile-grid">
+            {reflectionTiles.map((tile) => {
+              const status = tile.count === 0 ? 'good' : 'warning';
+              return (
+                <div className={`tile status-${status}`} key={tile.key} title={tile.def} data-testid={`reflection-tile-${tile.key}`}>
+                  <span className="l">{tile.label}</span>
+                  <span className="v">{t('overview.paymentCount', { n: tile.count })}</span>
+                  <span className="tnum small">{formatMoney(tile.amount, ccy)}</span>
+                  <span>
+                    <StatusPill tone={status} title={status}>
+                      {KPI_STATUS_LABEL_I18N[lang][status] ?? status}
+                    </StatusPill>
+                  </span>
+                </div>
+              );
+            })}
+          </div>
         </section>
       </div>
 

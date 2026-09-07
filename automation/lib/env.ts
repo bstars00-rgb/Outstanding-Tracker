@@ -3,6 +3,8 @@
  * - Reads once, validates, and returns a typed config.
  * - Secret VALUES are never returned to logs; use `describe()` for a redacted summary.
  */
+import { DEFAULT_REFLECTION_CHAIN, type ReflectionChain } from '@core/types';
+
 export interface PipelineEnv {
   DATA_SOURCE: 'mock' | 'ellis';
   AI_PROVIDER: 'mock' | 'claude';
@@ -16,6 +18,8 @@ export interface PipelineEnv {
   TRACKER_BASE_URL: string;
   DATA_STORAGE_CONFIG: { dir: string };
   RECIPIENT_CONFIG: { leaders_channel: string; test_channel: string; admin_channel: string | null; roles: string[] };
+  /** ELLIS reflection chain owners/SLAs (record -> verify -> reconcile). */
+  REFLECTION_CHAIN: ReflectionChain;
   secrets: {
     ELLIS_MCP_ENDPOINT: string | null;
     ELLIS_MCP_AUTH: string | null;
@@ -52,6 +56,14 @@ export function loadEnv(env: NodeJS.ProcessEnv = process.env): PipelineEnv {
       throw new Error('RECIPIENT_CONFIG must be valid JSON');
     }
   }
+  let chain: ReflectionChain = DEFAULT_REFLECTION_CHAIN;
+  if (opt(env.REFLECTION_CHAIN)) {
+    try {
+      chain = { ...DEFAULT_REFLECTION_CHAIN, ...(JSON.parse(env.REFLECTION_CHAIN!) as Partial<ReflectionChain>) };
+    } catch {
+      throw new Error('REFLECTION_CHAIN must be valid JSON');
+    }
+  }
   let storage = { dir: 'automation/state' };
   if (opt(env.DATA_STORAGE_CONFIG)) {
     try {
@@ -74,6 +86,7 @@ export function loadEnv(env: NodeJS.ProcessEnv = process.env): PipelineEnv {
     TRACKER_BASE_URL: (env.TRACKER_BASE_URL ?? 'http://localhost:4173/').replace(/\/?$/, '/'),
     DATA_STORAGE_CONFIG: storage,
     RECIPIENT_CONFIG: recipients,
+    REFLECTION_CHAIN: chain,
     secrets: {
       ELLIS_MCP_ENDPOINT: opt(env.ELLIS_MCP_ENDPOINT),
       ELLIS_MCP_AUTH: opt(env.ELLIS_MCP_AUTH),
@@ -107,6 +120,7 @@ export function describe(cfg: PipelineEnv): Record<string, unknown> {
     TRACKER_BASE_URL: cfg.TRACKER_BASE_URL,
     storage_dir: cfg.DATA_STORAGE_CONFIG.dir,
     recipients: cfg.RECIPIENT_CONFIG,
+    reflection_chain: cfg.REFLECTION_CHAIN,
     secrets: { ELLIS_MCP_ENDPOINT: has(cfg.secrets.ELLIS_MCP_ENDPOINT), ELLIS_MCP_AUTH: has(cfg.secrets.ELLIS_MCP_AUTH), TEAMS_WEBHOOK_URL: has(cfg.secrets.TEAMS_WEBHOOK_URL), TEAMS_TEST_WEBHOOK_URL: has(cfg.secrets.TEAMS_TEST_WEBHOOK_URL), TEAMS_ADMIN_WEBHOOK_URL: has(cfg.secrets.TEAMS_ADMIN_WEBHOOK_URL), AI_API_KEY: has(cfg.secrets.AI_API_KEY) },
   };
 }

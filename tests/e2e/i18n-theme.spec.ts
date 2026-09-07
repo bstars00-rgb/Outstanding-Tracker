@@ -57,8 +57,8 @@ test.describe('Korean / English UI and dark mode', () => {
     await expect(table.getByRole('columnheader', { name: /Contract currency/ })).toBeVisible();
     const krwRow = table.locator('tbody tr[data-row-id]').filter({ hasText: 'Hanbit Tours' }).first();
     await expect(krwRow.getByTestId('contract-currency')).toContainText('KRW');
-    await expect(krwRow.locator('td').nth(4)).toContainText('JPY');
-    await expect(krwRow.locator('td').nth(4).locator('.cell-sub')).toContainText('KRW');
+    await expect(krwRow.locator('td').nth(5)).toContainText('JPY');
+    await expect(krwRow.locator('td').nth(5).locator('.cell-sub')).toContainText('KRW');
 
     await krwRow.getByRole('link', { name: 'Hanbit Tours Co.' }).click();
     await expect(page.getByTestId('page-title')).toHaveText('Hanbit Tours Co.');

@@ -12,3 +12,4 @@ automation/out/
 public/data/*.json
 *.log
 .DS_Store
+handoff/

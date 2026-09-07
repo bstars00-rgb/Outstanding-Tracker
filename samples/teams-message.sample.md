@@ -5,6 +5,10 @@
 - 연체 미수금: JPY 68.07M (+JPY 15.41M (+29.3%))
 - 이번 주 회수액: JPY 9.49M
 - 30일 이상 연체: JPY 12.88M · 90일 이상 연체: JPY 3.38M · 다음 주 만기 예정: JPY 40.32M
+- 법인별: OMH Seoul: JPY 146.63M · 연체 JPY 35.04M
+- 법인별: OMH Singapore: JPY 83.91M · 연체 JPY 32.57M
+- 법인별: 법인 미지정: JPY 2.07M · 연체 JPY 455.9K
+- ELLIS 반영 대기: 미검증 1건(JPY 2.94M) · 미대사 6건(JPY 10.22M)
 - 연체 증가는 고객사 3곳에서 발생했습니다(다른 고객사의 개선으로 이들의 증가 합계가 순증가분을 초과): Fuji Peak Travel Inc. (+JPY 14,632,300), Nusantara Trips PT (+JPY 1,911,765), Bali Breeze Tours (+JPY 1,764,706).
 - 이번 주 회수액 JPY 9,485,327, 신규 연체 JPY 24,470,535. 30일 이상 연체 JPY 12,882,391, 90일 이상 연체 JPY 3,382,351.
 

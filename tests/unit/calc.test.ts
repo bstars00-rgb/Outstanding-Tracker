@@ -24,6 +24,7 @@ function customer(over: Partial<Customer> = {}): Customer {
     collection_status: 'NORMAL',
     risk_grade_manual: null,
     preferred_contact_channel: null,
+    control_company: 'OMH Seoul',
     data_source: 'test',
     ...over,
   };
@@ -54,7 +55,7 @@ function invoice(over: Partial<Invoice> = {}): Invoice {
   };
 }
 function payment(over: Partial<Payment> = {}): Payment {
-  return { payment_id: 'p1', invoice_id: 'i1', customer_id: 'c1', payment_date: addDays(REF, -2), payment_amount: 400, payment_currency: 'USD', applied_amount: 400, unapplied_amount: 0, payment_method: 'BANK_TRANSFER', payment_reference: null, reconciliation_status: 'APPLIED', data_source: 'test', ...over };
+  return { payment_id: 'p1', invoice_id: 'i1', customer_id: 'c1', payment_date: addDays(REF, -2), payment_amount: 400, payment_currency: 'USD', applied_amount: 400, unapplied_amount: 0, payment_method: 'BANK_TRANSFER', payment_reference: null, reconciliation_status: 'APPLIED', confirmed_at: addDays(REF, -1), reconciled_at: null, data_source: 'test', ...over };
 }
 function dataset(parts: Partial<ReceivablesDataset> = {}): ReceivablesDataset {
   return {

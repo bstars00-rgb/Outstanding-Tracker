@@ -5,6 +5,10 @@
 - Overdue: JPY 68.07M (+JPY 15.41M (+29.3%))
 - Collected this week: JPY 9.49M
 - 30+ days overdue: JPY 12.88M · 90+ days overdue: JPY 3.38M · Due next 7 days: JPY 40.32M
+- By managing entity: OMH Seoul: JPY 146.63M · overdue JPY 35.04M
+- By managing entity: OMH Singapore: JPY 83.91M · overdue JPY 32.57M
+- By managing entity: Unassigned entity: JPY 2.07M · overdue JPY 455.9K
+- ELLIS reflection pending: 1 unverified (JPY 2.94M) · 6 unreconciled (JPY 10.22M)
 - 3 customer(s) drove the overdue increase (their combined increase exceeds the net increase because other customers improved): Fuji Peak Travel Inc. (+JPY 14,632,300), Nusantara Trips PT (+JPY 1,911,765), Bali Breeze Tours (+JPY 1,764,706).
 - Collected this week: JPY 9,485,327. New overdue this week: JPY 24,470,535. 30+ days: JPY 12,882,391; 90+ days: JPY 3,382,351.
 
@@ -14,9 +18,6 @@
 - Risk: **Mekong Holidays JSC** (Linh Nguyen) — JPY 3,985,291: Risk High (81/100): Oldest overdue invoice: 111 days; Overdue JPY 3,985,291
 - Risk: **Sakura Voyage K.K.** (Kenta Sato) — JPY 10,338,300: Risk Medium (54/100): Oldest overdue invoice: 58 days; Overdue JPY 10,338,300
 - Risk: **Formosa Travel Hub** (Wei Chen) — JPY 9,117,647: Risk Watch (41/100): Overdue JPY 9,117,647; Oldest overdue invoice: 22 days
-- Opportunity: **Fuji Peak Travel Inc.** — JPY 14,632,300: Short overdue (5 days), paid regularly (last payment 2026-07-26)
-- Opportunity: **Lion City Journeys Pte.** — JPY 2,573,530: Payment promised for 2026-09-09; oldest item 14 days
-- Forecast next week: JPY 42,087,877 (confidence medium)
 
 **3. Required Actions**
 - **Linh Nguyen** → Mekong Holidays JSC · JPY 2,323,528 · Promise of JPY 2,323,528 missed (no new date); re-confirm remittance date · by 2026-09-07 12:00

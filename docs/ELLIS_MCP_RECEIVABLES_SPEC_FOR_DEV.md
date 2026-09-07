@@ -5,6 +5,8 @@ Status: **v0.2 (ELLIS Playbook 반영)** · 2026-09-07 · 작성: Global Ops (Ou
 
 ---
 
+> **2026-09-07 경영진 우선순위 (P0로 상향)**: ① `get_payments` 응답에 **`paymentConfirmDate`(PM CNFM)와 `traderCompCode`** 포함 — 입금 반영 확인 체인(기록→검증→대사)의 자동 판정 조건. ② `get_seller_invoices` 응답에 **`controlCompCode/controlCompName`(관리 법인)** 포함 — 서울/싱가포르 법인별 미수 현황의 조건. ③ `get_traders`에 관리 법인·담당자 필드(P1).
+
 ## 0. 한 페이지 요약
 
 Outstanding Tracker(미수금 트래커)는 매주 토요일 09:00(베트남 시각) ELLIS 데이터를 읽어 **총 미수금·연체·Aging·고객사 Risk·회수 액션**을 계산하고 Teams로 경영 보고를 보냅니다.

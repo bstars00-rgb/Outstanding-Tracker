@@ -221,7 +221,7 @@ export function generateMockDataset(referenceDate: ISODate, seed = 20260905, rep
     return inv;
   }
 
-  function pay(inv: Invoice, c: Customer, dateOffset: number, amountLocal: number, method: Payment['payment_method'] = 'BANK_TRANSFER', opts: { unapplied?: number; status?: Payment['reconciliation_status'] } = {}) {
+  function pay(inv: Invoice, c: Customer, dateOffset: number, amountLocal: number, method: Payment['payment_method'] = 'BANK_TRANSFER', opts: { unapplied?: number; status?: Payment['reconciliation_status']; confirmedAt?: string | null; reconciledAt?: string | null } = {}) {
     const unapplied = opts.unapplied ?? 0;
     const p: Payment = {
       payment_id: `pay-${paySeq++}`,
@@ -235,6 +235,9 @@ export function generateMockDataset(referenceDate: ISODate, seed = 20260905, rep
       payment_method: method,
       payment_reference: `TT-${String(paySeq).padStart(6, '0')}`,
       reconciliation_status: opts.status ?? (unapplied > 0 ? 'PARTIALLY_APPLIED' : 'APPLIED'),
+      // ELLIS reflection chain: most payments verified next day and reconciled weekly; some Singapore-managed payments lag on purpose (CEO scenario).
+      confirmed_at: opts.confirmedAt !== undefined ? opts.confirmedAt : day(dateOffset + 1) <= referenceDate ? day(dateOffset + 1) : null,
+      reconciled_at: opts.reconciledAt !== undefined ? opts.reconciledAt : dateOffset <= -8 ? day(Math.min(-1, dateOffset + 7)) : null,
       data_source: 'mock',
     };
     payments.push(p);
@@ -289,6 +292,8 @@ export function generateMockDataset(referenceDate: ISODate, seed = 20260905, rep
       collection_status: 'NORMAL',
       risk_grade_manual: null,
       preferred_contact_channel: pick(['EMAIL', 'TEAMS', 'PHONE', 'WHATSAPP', 'KAKAO', 'LINE', 'ZALO']) as Customer['preferred_contact_channel'],
+      // Receivables management moved from Seoul-only to Seoul + Singapore: NEA managed in Seoul, SEA / Greater China in Singapore.
+      control_company: s.scenario === 'MISSING_DATA' ? null : s.region === 'North East Asia' ? 'OMH Seoul' : 'OMH Singapore',
       data_source: 'mock',
     };
     customers.push(c);
@@ -344,14 +349,14 @@ export function generateMockDataset(referenceDate: ISODate, seed = 20260905, rep
       }
       case 'CREDIT_NOTE': {
         const inv = addInvoice(c, { usd: 19_000, serviceOffset: -30, creditUsd: 4_000 }); // due 16 days ago, outstanding 15k
-        pay(inv, c, -10, local(5_000, c.contract_currency));
+        pay(inv, c, -10, local(5_000, c.contract_currency), 'BANK_TRANSFER', { confirmedAt: day(-9), reconciledAt: null }); // verified but not reconciled for 9 days
         addInvoice(c, { usd: 11_200, serviceOffset: -12 });
         addInvoice(c, { usd: 6_700, serviceOffset: -3 });
         break;
       }
       case 'PARTIAL_PAYMENT': {
         const inv = addInvoice(c, { usd: 32_000, serviceOffset: -28 }); // due 14 days ago
-        pay(inv, c, -9, local(20_000, c.contract_currency));
+        pay(inv, c, -9, local(20_000, c.contract_currency), 'BANK_TRANSFER', { confirmedAt: null, reconciledAt: null }); // recorded in ELLIS, never verified (chain gap)
         const inv2 = addInvoice(c, { usd: 9_500, serviceOffset: -16 });
         pay(inv2, c, -1, local(4_000, c.contract_currency));
         addInvoice(c, { usd: 7_800, serviceOffset: -4 });
@@ -400,7 +405,7 @@ export function generateMockDataset(referenceDate: ISODate, seed = 20260905, rep
         pay(inv, c, -20, inv.original_amount, 'BANK_TRANSFER', { unapplied: local(2_500, c.contract_currency) }); // overpaid: unapplied cash
         const inv2 = addInvoice(c, { usd: 7_700, serviceOffset: -22, cancel: true });
         // refund of a payment made against the cancelled booking
-        payments.push({ payment_id: `pay-${paySeq++}`, invoice_id: inv2.invoice_id, customer_id: c.customer_id, payment_date: day(-15), payment_amount: -local(7_700, c.contract_currency), payment_currency: c.contract_currency, applied_amount: 0, unapplied_amount: 0, payment_method: 'BANK_TRANSFER', payment_reference: 'REFUND-0031', reconciliation_status: 'REFUNDED', data_source: 'mock' });
+        payments.push({ payment_id: `pay-${paySeq++}`, invoice_id: inv2.invoice_id, customer_id: c.customer_id, payment_date: day(-15), payment_amount: -local(7_700, c.contract_currency), payment_currency: c.contract_currency, applied_amount: 0, unapplied_amount: 0, payment_method: 'BANK_TRANSFER', payment_reference: 'REFUND-0031', reconciliation_status: 'REFUNDED', confirmed_at: day(-14), reconciled_at: day(-8), data_source: 'mock' });
         addInvoice(c, { usd: 10_300, serviceOffset: -9 });
         break;
       }

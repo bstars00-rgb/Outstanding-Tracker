@@ -54,6 +54,22 @@
         {
           "title": "Due next 7 days",
           "value": "JPY 40.32M"
+        },
+        {
+          "title": "By managing entity: OMH Seoul",
+          "value": "JPY 146.63M · overdue JPY 35.04M"
+        },
+        {
+          "title": "By managing entity: OMH Singapore",
+          "value": "JPY 83.91M · overdue JPY 32.57M"
+        },
+        {
+          "title": "By managing entity: Unassigned entity",
+          "value": "JPY 2.07M · overdue JPY 455.9K"
+        },
+        {
+          "title": "ELLIS reflection pending",
+          "value": "1 unverified (JPY 2.94M) · 6 unreconciled (JPY 10.22M)"
         }
       ]
     },

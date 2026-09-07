@@ -220,7 +220,7 @@ export class EllisMcpReceivablesSource implements ReceivablesSource {
     for (const i of invoices) {
       if (!known.has(i.customer_id)) {
         const src = invoiceRows.find((r) => `seller:${r.sellerCompCode.trim()}` === i.customer_id)!;
-        customers.push({ customer_id: i.customer_id, customer_name: src.sellerCompName, customer_group: null, country: 'Unknown', region: '', account_owner_id: '', account_owner_name: '', finance_owner: null, contract_currency: src.billingCurrencyCode, payment_terms_days: null, credit_limit: null, credit_status: 'ACTIVE', customer_status: 'ACTIVE', collection_status: 'NORMAL', risk_grade_manual: null, preferred_contact_channel: null, data_source: 'ellis:seller-invoice (stub customer)' });
+        customers.push({ customer_id: i.customer_id, customer_name: src.sellerCompName, customer_group: null, country: 'Unknown', region: '', account_owner_id: '', account_owner_name: '', finance_owner: null, contract_currency: src.billingCurrencyCode, payment_terms_days: null, credit_limit: null, credit_status: 'ACTIVE', customer_status: 'ACTIVE', collection_status: 'NORMAL', risk_grade_manual: null, preferred_contact_channel: null, control_company: src.controlCompName, data_source: 'ellis:seller-invoice (stub customer)' });
         known.add(i.customer_id);
       }
     }
@@ -287,6 +287,7 @@ export function bookingsToDataset(records: EllisBookingRecord[], referenceDate: 
         collection_status: 'NORMAL',
         risk_grade_manual: null,
         preferred_contact_channel: null,
+        control_company: null,
         data_source: 'ellis-mcp:get_hotel_bookings (derived)',
       });
     }
