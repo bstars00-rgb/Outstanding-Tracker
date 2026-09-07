@@ -1,0 +1,288 @@
+{
+  "type": "AdaptiveCard",
+  "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+  "version": "1.4",
+  "msteams": {
+    "width": "Full"
+  },
+  "body": [
+    {
+      "type": "TextBlock",
+      "text": "[Weekly Outstanding Report] 2026-09-05 (MOCK DATA)",
+      "wrap": true,
+      "size": "Large",
+      "weight": "Bolder"
+    },
+    {
+      "type": "TextBlock",
+      "text": "⚠️ Prototype run on fictional mock data",
+      "wrap": true,
+      "isSubtle": true,
+      "spacing": "None"
+    },
+    {
+      "type": "TextBlock",
+      "text": "1. Executive Summary",
+      "wrap": true,
+      "weight": "Bolder",
+      "size": "Medium",
+      "spacing": "Medium"
+    },
+    {
+      "type": "FactSet",
+      "facts": [
+        {
+          "title": "Total outstanding",
+          "value": "USD 1.58M (+USD 368.5K (+30.4%))"
+        },
+        {
+          "title": "Overdue",
+          "value": "USD 462.9K (+USD 106.2K (+29.8%))"
+        },
+        {
+          "title": "Collected this week",
+          "value": "USD 64.5K"
+        },
+        {
+          "title": "30+ days overdue",
+          "value": "USD 87.6K (+USD 4,330.50 (+5.2%))"
+        },
+        {
+          "title": "90+ days overdue",
+          "value": "USD 23.0K (+USD 7,192.10 (+45.5%))"
+        },
+        {
+          "title": "Due next 7 days",
+          "value": "USD 274.2K"
+        }
+      ]
+    },
+    {
+      "type": "TextBlock",
+      "text": "• Total outstanding is USD 1,581,798.06, up USD 368,493.87 (+30.4%) vs last week. Overdue is USD 462,900.59 (29.3% of total), up USD 106,217.00 (+29.8%) vs last week.",
+      "wrap": true,
+      "spacing": "Small"
+    },
+    {
+      "type": "TextBlock",
+      "text": "• 3 customer(s) drove the overdue increase (their combined increase exceeds the net increase because other customers improved): Fuji Peak Travel Inc. (+USD 99,499.64), Nusantara Trips PT (+USD 13,000.00), Bali Breeze Tours (+USD 12,000.00).",
+      "wrap": true,
+      "spacing": "Small"
+    },
+    {
+      "type": "TextBlock",
+      "text": "• Collected this week: USD 64,500.23. New overdue this week: USD 166,399.63. 30+ days: USD 87,600.28; 90+ days: USD 23,000.00.",
+      "wrap": true,
+      "spacing": "Small"
+    },
+    {
+      "type": "TextBlock",
+      "text": "2. AI Insights",
+      "wrap": true,
+      "weight": "Bolder",
+      "size": "Medium",
+      "spacing": "Medium"
+    },
+    {
+      "type": "TextBlock",
+      "text": "Key changes",
+      "wrap": true,
+      "weight": "Bolder",
+      "spacing": "Small"
+    },
+    {
+      "type": "TextBlock",
+      "text": "• Fuji Peak Travel Inc. (Kenta Sato): overdue +USD 99,499.64 to USD 99,499.64; oldest item 5 days; risk Watch (38/100). New overdue this week: USD 99,500",
+      "wrap": true,
+      "spacing": "Small"
+    },
+    {
+      "type": "TextBlock",
+      "text": "• Nusantara Trips PT (Aisha Rahman): overdue +USD 13,000.00 to USD 13,000.00; oldest item 6 days; risk Watch (40/100). Credit utilization 137%",
+      "wrap": true,
+      "spacing": "Small"
+    },
+    {
+      "type": "TextBlock",
+      "text": "• Bali Breeze Tours (Aisha Rahman): overdue +USD 12,000.00 to USD 12,000.00; oldest item 7 days; risk Watch (30/100). New overdue this week: USD 12,000",
+      "wrap": true,
+      "spacing": "Small"
+    },
+    {
+      "type": "TextBlock",
+      "text": "Top risks",
+      "wrap": true,
+      "weight": "Bolder",
+      "spacing": "Small"
+    },
+    {
+      "type": "TextBlock",
+      "text": "• **Mekong Holidays JSC** (Linh Nguyen) — USD 27,100.00: Risk High (81/100): Oldest overdue invoice: 111 days; Overdue USD 27,100",
+      "wrap": true,
+      "spacing": "Small"
+    },
+    {
+      "type": "TextBlock",
+      "text": "• **Sakura Voyage K.K.** (Kenta Sato) — USD 70,300.44: Risk Medium (57/100): Oldest overdue invoice: 58 days; Overdue USD 70,300",
+      "wrap": true,
+      "spacing": "Small"
+    },
+    {
+      "type": "TextBlock",
+      "text": "• **Formosa Travel Hub** (Wei Chen) — USD 62,000.00: Risk Watch (44/100): Overdue USD 62,000; Oldest overdue invoice: 22 days",
+      "wrap": true,
+      "spacing": "Small"
+    },
+    {
+      "type": "TextBlock",
+      "text": "• **Penang Heritage Travel** (Aisha Rahman) — USD 14,000.00: Risk Watch (40/100): Oldest overdue invoice: 26 days; Overdue USD 14,000",
+      "wrap": true,
+      "spacing": "Small"
+    },
+    {
+      "type": "TextBlock",
+      "text": "• **Siam Getaways Ltd.** (Somchai Rattana) — USD 27,500.00: Risk Watch (39/100): Overdue USD 27,500; Oldest overdue invoice: 25 days",
+      "wrap": true,
+      "spacing": "Small"
+    },
+    {
+      "type": "TextBlock",
+      "text": "Collection opportunities",
+      "wrap": true,
+      "weight": "Bolder",
+      "spacing": "Small"
+    },
+    {
+      "type": "TextBlock",
+      "text": "• **Fuji Peak Travel Inc.** — USD 99,499.64: Short overdue (5 days), paid regularly (last payment 2026-07-26)",
+      "wrap": true,
+      "spacing": "Small"
+    },
+    {
+      "type": "TextBlock",
+      "text": "• **Lion City Journeys Pte.** — USD 17,500.01: Payment promised for 2026-09-09; oldest item 14 days",
+      "wrap": true,
+      "spacing": "Small"
+    },
+    {
+      "type": "TextBlock",
+      "text": "• **Penang Heritage Travel** — USD 14,000.00: Short overdue (26 days), paid regularly (last payment 2026-07-25)",
+      "wrap": true,
+      "spacing": "Small"
+    },
+    {
+      "type": "TextBlock",
+      "text": "Forecast next week: USD 286,197.58 (confidence medium) — Invoices due next week: USD 274,197.58; Payments promised for next week: USD 12,000.00",
+      "wrap": true,
+      "spacing": "Small"
+    },
+    {
+      "type": "TextBlock",
+      "text": "3. Required Actions",
+      "wrap": true,
+      "weight": "Bolder",
+      "size": "Medium",
+      "spacing": "Medium"
+    },
+    {
+      "type": "TextBlock",
+      "text": "• **Linh Nguyen** → Mekong Holidays JSC · USD 15,800.00 · Promise of USD 15,800.00 missed (no new date); re-confirm remittance date · by 2026-09-07 12:00",
+      "wrap": true,
+      "spacing": "Small"
+    },
+    {
+      "type": "TextBlock",
+      "text": "• **Wei Chen** → Formosa Travel Hub · USD 62,000.00 · Promise of USD 62,000.00 missed (no new date); re-confirm remittance date · by 2026-09-07 12:00",
+      "wrap": true,
+      "spacing": "Small"
+    },
+    {
+      "type": "TextBlock",
+      "text": "• **Aisha Rahman** → Nusantara Trips PT · USD 34,200.00 · Credit utilization 136.8%; hold new bookings or obtain Finance exception · by 2026-09-07",
+      "wrap": true,
+      "spacing": "Small"
+    },
+    {
+      "type": "TextBlock",
+      "text": "• **Somchai Rattana** → Siam Getaways Ltd. · USD 9,500.00 · Close dispute with Ops/Finance; collect undisputed balance now · by 2026-09-09",
+      "wrap": true,
+      "spacing": "Small"
+    },
+    {
+      "type": "TextBlock",
+      "text": "• **Kenta Sato** → Sakura Voyage K.K. · USD 60,500.28 · Formal notice for USD 60,500.28 older than 30 days; agree payment plan · by 2026-09-09",
+      "wrap": true,
+      "spacing": "Small"
+    },
+    {
+      "type": "TextBlock",
+      "text": "4. CEO Decision Required",
+      "wrap": true,
+      "weight": "Bolder",
+      "size": "Medium",
+      "spacing": "Medium"
+    },
+    {
+      "type": "TextBlock",
+      "text": "• **Credit hold / legal escalation** — Mekong Holidays JSC (USD 27,100.00): Approve credit hold and collection-agency/legal path for Mekong Holidays JSC. _USD 27,100.00 overdue, oldest 111 days, risk High_",
+      "wrap": true,
+      "spacing": "Small"
+    },
+    {
+      "type": "TextBlock",
+      "text": "• **Credit limit exception** — Nusantara Trips PT (USD 34,200.00): Decide: temporary limit increase or booking hold for Nusantara Trips PT. _Utilization 136.8% with USD 13,000.00 overdue_",
+      "wrap": true,
+      "spacing": "Small"
+    },
+    {
+      "type": "TextBlock",
+      "text": "Data quality",
+      "wrap": true,
+      "weight": "Bolder",
+      "spacing": "Medium"
+    },
+    {
+      "type": "TextBlock",
+      "text": "• MOCK DATA: figures are fictional and for prototype demonstration only.",
+      "wrap": true,
+      "spacing": "Small"
+    },
+    {
+      "type": "TextBlock",
+      "text": "• MISSING_DUE_DATE x1: Missing due_date; aging cannot be computed",
+      "wrap": true,
+      "spacing": "Small"
+    },
+    {
+      "type": "TextBlock",
+      "text": "• MISSING_OWNER x1: No account owner assigned",
+      "wrap": true,
+      "spacing": "Small"
+    },
+    {
+      "type": "TextBlock",
+      "text": "Data as of 2026-09-05 09:00 GMT+7 · Sent 2026-09-05 09:00 GMT+7 · Reporting currency USD · Compared with 2026-08-29 · Data customers:full invoices:partial payments:full activities:partial fx:full · Insight: rule-based · Automated report",
+      "wrap": true,
+      "isSubtle": true,
+      "size": "Small",
+      "spacing": "Medium"
+    }
+  ],
+  "actions": [
+    {
+      "type": "Action.OpenUrl",
+      "title": "Open Tracker",
+      "url": "https://<org>.github.io/outstanding-tracker/#/"
+    },
+    {
+      "type": "Action.OpenUrl",
+      "title": "Customer Risk",
+      "url": "https://<org>.github.io/outstanding-tracker/#/customers"
+    },
+    {
+      "type": "Action.OpenUrl",
+      "title": "Action Board",
+      "url": "https://<org>.github.io/outstanding-tracker/#/actions"
+    }
+  ]
+}

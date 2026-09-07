@@ -1,0 +1,182 @@
+name: Weekly Outstanding Report (Teams)
+
+# Saturday 09:00 Asia/Ho_Chi_Minh (UTC+7, no DST) == Saturday 02:00 UTC.
+on:
+  schedule:
+    - cron: '0 2 * * 6'
+  workflow_dispatch:
+    inputs:
+      report_date:
+        description: 'Reference date YYYY-MM-DD (blank = latest Saturday in REPORT_TIMEZONE)'
+        required: false
+        default: ''
+      target_channel:
+        description: 'Teams channel to post to'
+        required: true
+        default: 'test'
+        type: choice
+        options: [test, leaders]
+      dry_run:
+        description: 'DRY_RUN=true writes preview files only and never posts to Teams'
+        required: true
+        default: 'true'
+        type: choice
+        options: ['true', 'false']
+      data_source:
+        description: 'mock (deterministic fixtures) or ellis (live MCP)'
+        required: true
+        default: 'mock'
+        type: choice
+        options: [mock, ellis]
+      ai_provider:
+        description: 'mock (rule-based) or claude (needs AI_API_KEY secret)'
+        required: true
+        default: 'mock'
+        type: choice
+        options: [mock, claude]
+      force_resend:
+        description: 'Bypass idempotency receipt'
+        required: false
+        default: 'false'
+        type: choice
+        options: ['false', 'true']
+
+permissions:
+  contents: write # commit snapshot state + published data
+
+concurrency:
+  group: weekly-report
+  cancel-in-progress: false
+
+env:
+  REPORT_TIMEZONE: ${{ vars.REPORT_TIMEZONE || 'Asia/Ho_Chi_Minh' }}
+  REPORTING_CURRENCY: ${{ vars.REPORTING_CURRENCY || 'USD' }}
+  TRACKER_BASE_URL: ${{ vars.TRACKER_BASE_URL || format('https://{0}.github.io/{1}/', github.repository_owner, github.event.repository.name) }}
+  RECIPIENT_CONFIG: ${{ vars.RECIPIENT_CONFIG }}
+  DATA_STORAGE_CONFIG: '{"dir":"automation/state"}'
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    outputs:
+      status: ${{ steps.run.outputs.status }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci --no-audit --no-fund
+
+      - name: Restore snapshot state from data branch
+        # State (aggregated snapshots + receipts; no PII) is kept on an orphan branch `tracker-state`.
+        run: |
+          set -e
+          if git ls-remote --exit-code --heads origin tracker-state >/dev/null 2>&1; then
+            git fetch origin tracker-state:tracker-state
+            rm -rf automation/state && mkdir -p automation/state
+            git --work-tree=automation/state checkout tracker-state -- . || true
+            git reset -q
+            echo "restored $(ls automation/state/snapshots 2>/dev/null | wc -l) snapshots"
+          else
+            echo "no tracker-state branch yet"
+          fi
+
+      - name: Resolve run parameters
+        id: params
+        run: |
+          # Scheduled runs use repository variables; manual runs use inputs.
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "DRY_RUN=${{ inputs.dry_run }}" >> $GITHUB_ENV
+            echo "TARGET_CHANNEL=${{ inputs.target_channel }}" >> $GITHUB_ENV
+            echo "DATA_SOURCE=${{ inputs.data_source }}" >> $GITHUB_ENV
+            echo "AI_PROVIDER=${{ inputs.ai_provider }}" >> $GITHUB_ENV
+            echo "REPORT_DATE=${{ inputs.report_date }}" >> $GITHUB_ENV
+            echo "FORCE_RESEND=${{ inputs.force_resend }}" >> $GITHUB_ENV
+          else
+            echo "DRY_RUN=${{ vars.DRY_RUN || 'true' }}" >> $GITHUB_ENV
+            echo "TARGET_CHANNEL=${{ vars.TARGET_CHANNEL || 'test' }}" >> $GITHUB_ENV
+            echo "DATA_SOURCE=${{ vars.DATA_SOURCE || 'mock' }}" >> $GITHUB_ENV
+            echo "AI_PROVIDER=${{ vars.AI_PROVIDER || 'mock' }}" >> $GITHUB_ENV
+            echo "REPORT_DATE=" >> $GITHUB_ENV
+            echo "FORCE_RESEND=false" >> $GITHUB_ENV
+          fi
+          echo "TEAMS_SENDER=${{ vars.TEAMS_SENDER || 'live' }}" >> $GITHUB_ENV
+
+      - name: Run pipeline (attempt 1)
+        id: run
+        continue-on-error: true
+        env:
+          ELLIS_MCP_ENDPOINT: ${{ secrets.ELLIS_MCP_ENDPOINT }}
+          ELLIS_MCP_AUTH: ${{ secrets.ELLIS_MCP_AUTH }}
+          TEAMS_WEBHOOK_URL: ${{ secrets.TEAMS_WEBHOOK_URL }}
+          TEAMS_TEST_WEBHOOK_URL: ${{ secrets.TEAMS_TEST_WEBHOOK_URL }}
+          TEAMS_ADMIN_WEBHOOK_URL: ${{ secrets.TEAMS_ADMIN_WEBHOOK_URL }}
+          AI_API_KEY: ${{ secrets.AI_API_KEY }}
+          PUBLISH_DATA: ${{ vars.PUBLISH_DATA || 'false' }}
+        run: |
+          set -o pipefail
+          npx tsx automation/weekly-report.ts 2>&1 | tee automation/out/run-1.log
+          echo "status=$?" >> $GITHUB_OUTPUT
+
+      - name: Run pipeline (retry after 2 minutes)
+        id: retry
+        if: steps.run.outcome == 'failure'
+        continue-on-error: true
+        env:
+          ELLIS_MCP_ENDPOINT: ${{ secrets.ELLIS_MCP_ENDPOINT }}
+          ELLIS_MCP_AUTH: ${{ secrets.ELLIS_MCP_AUTH }}
+          TEAMS_WEBHOOK_URL: ${{ secrets.TEAMS_WEBHOOK_URL }}
+          TEAMS_TEST_WEBHOOK_URL: ${{ secrets.TEAMS_TEST_WEBHOOK_URL }}
+          TEAMS_ADMIN_WEBHOOK_URL: ${{ secrets.TEAMS_ADMIN_WEBHOOK_URL }}
+          AI_API_KEY: ${{ secrets.AI_API_KEY }}
+          PUBLISH_DATA: ${{ vars.PUBLISH_DATA || 'false' }}
+        run: |
+          sleep 120
+          set -o pipefail
+          npx tsx automation/weekly-report.ts 2>&1 | tee automation/out/run-2.log
+
+      - name: Upload run artefacts (preview card, markdown, logs)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: weekly-report-${{ github.run_id }}
+          path: |
+            automation/out/*.json
+            automation/out/*.md
+            automation/out/*.log
+          retention-days: 30
+
+      - name: Persist snapshot state to data branch
+        if: always()
+        run: |
+          set -e
+          cd automation/state
+          if [ -z "$(ls -A . 2>/dev/null | grep -v .gitkeep)" ]; then echo "nothing to persist"; exit 0; fi
+          git init -q -b tracker-state
+          git config user.email "outstanding-tracker-bot@users.noreply.github.com"
+          git config user.name "outstanding-tracker-bot"
+          git add -A
+          git commit -q -m "state: run ${{ github.run_id }} ($(date -u +%FT%TZ))" || exit 0
+          git push -q --force "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" tracker-state:tracker-state
+
+      - name: Publish aggregated data for the frontend (optional)
+        if: always() && vars.PUBLISH_DATA == 'true' && hashFiles('public/data/tracker-model.json') != ''
+        run: |
+          git config user.email "outstanding-tracker-bot@users.noreply.github.com"
+          git config user.name "outstanding-tracker-bot"
+          git add public/data/tracker-model.json public/data/insight.json
+          git commit -q -m "data: weekly tracker model $(date -u +%F)" || exit 0
+          git push -q origin HEAD:${{ github.ref_name }}
+
+      - name: Fail job if both attempts failed
+        if: steps.run.outcome == 'failure' && steps.retry.outcome == 'failure'
+        run: |
+          echo "::error::Weekly report failed twice. The pipeline already posted a 'Data refresh failed' message / admin alert when possible. Check the uploaded logs."
+          exit 1

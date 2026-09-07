@@ -1,0 +1,9 @@
+{
+  "idempotency_key": "weekly-outstanding:2026-09-05:test",
+  "report_date": "2026-09-05",
+  "channel": "test",
+  "ok": true,
+  "attempts": 0,
+  "sent_at": "2026-09-07T01:00:22.372Z",
+  "dry_run": true
+}

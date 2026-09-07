@@ -1,0 +1,34 @@
+{
+  "type": "AdaptiveCard",
+  "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+  "version": "1.4",
+  "body": [
+    {
+      "type": "TextBlock",
+      "text": "⚠️ [Weekly Outstanding Report] 2026-09-05 — Data refresh failed",
+      "size": "Large",
+      "weight": "Bolder",
+      "wrap": true,
+      "color": "Attention"
+    },
+    {
+      "type": "TextBlock",
+      "text": "The weekly receivables report could not be produced.\n\nReason: Ellis MCP get_hotel_bookings timed out after 2 attempts (Japan, offset 1500)\n\nNo figures are shown because stale data must not be presented as current. The tracker shows the last successful snapshot. Ops has been alerted.",
+      "wrap": true
+    },
+    {
+      "type": "TextBlock",
+      "text": "Attempted 2026-09-05 09:00 GMT+7 · Automated message",
+      "isSubtle": true,
+      "size": "Small",
+      "wrap": true
+    }
+  ],
+  "actions": [
+    {
+      "type": "Action.OpenUrl",
+      "title": "Open Tracker",
+      "url": "https://<org>.github.io/outstanding-tracker/#/"
+    }
+  ]
+}

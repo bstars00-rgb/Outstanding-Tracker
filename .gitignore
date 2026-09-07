@@ -1,0 +1,13 @@
+node_modules/
+dist/
+coverage/
+playwright-report/
+test-results/
+.env
+.env.*
+!.env.example
+automation/state/*.json
+!automation/state/.gitkeep
+automation/out/
+*.log
+.DS_Store

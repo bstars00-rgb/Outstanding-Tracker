@@ -1,0 +1,60 @@
+name: Deploy Tracker to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - 'automation/state/**'
+      - 'docs/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+      - name: Typecheck + unit/integration tests
+        run: |
+          npm run typecheck
+          npm run test
+      - name: Build (project-site base path)
+        env:
+          # Project site => https://<owner>.github.io/<repo>/ ; override with repository variable VITE_BASE_PATH for a custom domain.
+          VITE_BASE_PATH: ${{ vars.VITE_BASE_PATH || format('/{0}/', github.event.repository.name) }}
+          VITE_DATA_MODE: ${{ vars.VITE_DATA_MODE || 'mock' }}
+          VITE_LIVE_DATA_URL: ${{ vars.VITE_LIVE_DATA_URL }}
+        run: npm run build
+      - name: Guard - no secrets in the bundle
+        run: |
+          set -e
+          if grep -rEil 'sk-ant-|webhook\.office\.com|logic\.azure\.com|ELLIS_MCP_AUTH=' dist/ ; then
+            echo "::error::Secret-looking string found in dist/"; exit 1; fi
+          echo "bundle clean"
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

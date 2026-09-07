@@ -1,0 +1,174 @@
+{
+  "output": {
+    "executive_summary": [
+      "Total outstanding is USD 1,581,798.06, up USD 368,493.87 (+30.4%) vs last week. Overdue is USD 462,900.59 (29.3% of total), up USD 106,217.00 (+29.8%) vs last week.",
+      "3 customer(s) drove the overdue increase (their combined increase exceeds the net increase because other customers improved): Fuji Peak Travel Inc. (+USD 99,499.64), Nusantara Trips PT (+USD 13,000.00), Bali Breeze Tours (+USD 12,000.00).",
+      "Collected this week: USD 64,500.23. New overdue this week: USD 166,399.63. 30+ days: USD 87,600.28; 90+ days: USD 23,000.00.",
+      "FX movement explains USD 155.20 of the week-over-week change in total outstanding (rest is real balance movement)."
+    ],
+    "major_changes": [
+      "Fuji Peak Travel Inc. (Kenta Sato): overdue +USD 99,499.64 to USD 99,499.64; oldest item 5 days; risk Watch (38/100). New overdue this week: USD 99,500",
+      "Nusantara Trips PT (Aisha Rahman): overdue +USD 13,000.00 to USD 13,000.00; oldest item 6 days; risk Watch (40/100). Credit utilization 137%",
+      "Bali Breeze Tours (Aisha Rahman): overdue +USD 12,000.00 to USD 12,000.00; oldest item 7 days; risk Watch (30/100). New overdue this week: USD 12,000",
+      "Kimchi & Go Travel: overdue reduced by USD 44,589.03 to USD 0.00 (improvement).",
+      "Osaka Trip Partners: overdue reduced by USD 7,932.20 to USD 8,999.80 (improvement)."
+    ],
+    "top_risks": [
+      {
+        "customer": "Mekong Holidays JSC",
+        "owner": "Linh Nguyen",
+        "amount": 27100,
+        "reason": "Risk High (81/100): Oldest overdue invoice: 111 days; Overdue USD 27,100",
+        "action": "Escalate to Finance leader; evaluate credit hold and legal/collection agency path",
+        "due": "2026-09-07 12:00"
+      },
+      {
+        "customer": "Sakura Voyage K.K.",
+        "owner": "Kenta Sato",
+        "amount": 70300.44,
+        "reason": "Risk Medium (57/100): Oldest overdue invoice: 58 days; Overdue USD 70,300",
+        "action": "Send formal overdue notice and call decision maker this week; request payment plan",
+        "due": "2026-09-07 12:00"
+      },
+      {
+        "customer": "Formosa Travel Hub",
+        "owner": "Wei Chen",
+        "amount": 62000,
+        "reason": "Risk Watch (44/100): Overdue USD 62,000; Oldest overdue invoice: 22 days",
+        "action": "Re-confirm payment date with customer today; escalate to Sales leader if no confirmation within 2 business days",
+        "due": "2026-09-07 12:00"
+      },
+      {
+        "customer": "Penang Heritage Travel",
+        "owner": "Aisha Rahman",
+        "amount": 14000,
+        "reason": "Risk Watch (40/100): Oldest overdue invoice: 26 days; Overdue USD 14,000",
+        "action": "Send payment reminder and confirm remittance date",
+        "due": "2026-09-09"
+      },
+      {
+        "customer": "Siam Getaways Ltd.",
+        "owner": "Somchai Rattana",
+        "amount": 27500,
+        "reason": "Risk Watch (39/100): Overdue USD 27,500; Oldest overdue invoice: 25 days",
+        "action": "Resolve dispute with Operations/Finance; agree undisputed portion to be paid now",
+        "due": "2026-09-09"
+      }
+    ],
+    "collection_opportunities": [
+      {
+        "customer": "Fuji Peak Travel Inc.",
+        "owner": "Kenta Sato",
+        "amount": 99499.64,
+        "why": "Short overdue (5 days), paid regularly (last payment 2026-07-26)"
+      },
+      {
+        "customer": "Lion City Journeys Pte.",
+        "owner": "Aisha Rahman",
+        "amount": 17500.01,
+        "why": "Payment promised for 2026-09-09; oldest item 14 days"
+      },
+      {
+        "customer": "Penang Heritage Travel",
+        "owner": "Aisha Rahman",
+        "amount": 14000,
+        "why": "Short overdue (26 days), paid regularly (last payment 2026-07-25)"
+      },
+      {
+        "customer": "Phuket Sunset Tours",
+        "owner": "Somchai Rattana",
+        "amount": 12000,
+        "why": "Short overdue (27 days), paid regularly (last payment 2026-08-28)"
+      },
+      {
+        "customer": "Bali Breeze Tours",
+        "owner": "Aisha Rahman",
+        "amount": 12000,
+        "why": "Short overdue (7 days), paid regularly (last payment 2026-07-23)"
+      }
+    ],
+    "owner_actions": [
+      {
+        "owner": "Linh Nguyen",
+        "customer": "Mekong Holidays JSC",
+        "amount": 15800,
+        "action": "Promise of USD 15,800.00 missed (no new date); re-confirm remittance date",
+        "deadline": "2026-09-07 12:00"
+      },
+      {
+        "owner": "Wei Chen",
+        "customer": "Formosa Travel Hub",
+        "amount": 62000,
+        "action": "Promise of USD 62,000.00 missed (no new date); re-confirm remittance date",
+        "deadline": "2026-09-07 12:00"
+      },
+      {
+        "owner": "Aisha Rahman",
+        "customer": "Nusantara Trips PT",
+        "amount": 34200,
+        "action": "Credit utilization 136.8%; hold new bookings or obtain Finance exception",
+        "deadline": "2026-09-07"
+      },
+      {
+        "owner": "Somchai Rattana",
+        "customer": "Siam Getaways Ltd.",
+        "amount": 9500,
+        "action": "Close dispute with Ops/Finance; collect undisputed balance now",
+        "deadline": "2026-09-09"
+      },
+      {
+        "owner": "Kenta Sato",
+        "customer": "Sakura Voyage K.K.",
+        "amount": 60500.28,
+        "action": "Formal notice for USD 60,500.28 older than 30 days; agree payment plan",
+        "deadline": "2026-09-09"
+      }
+    ],
+    "ceo_decisions": [
+      {
+        "topic": "Credit hold / legal escalation",
+        "customer": "Mekong Holidays JSC",
+        "amount": 27100,
+        "recommendation": "Approve credit hold and collection-agency/legal path for Mekong Holidays JSC",
+        "rationale": "USD 27,100.00 overdue, oldest 111 days, risk High"
+      },
+      {
+        "topic": "Credit limit exception",
+        "customer": "Nusantara Trips PT",
+        "amount": 34200,
+        "recommendation": "Decide: temporary limit increase or booking hold for Nusantara Trips PT",
+        "rationale": "Utilization 136.8% with USD 13,000.00 overdue"
+      }
+    ],
+    "forecast_next_week": {
+      "expected_collection": 286197.58,
+      "currency": "USD",
+      "confidence": "medium",
+      "basis": [
+        "Invoices due next week: USD 274,197.58",
+        "Payments promised for next week: USD 12,000.00",
+        "Collected this week: USD 64,500.23 (reference for run-rate)"
+      ]
+    },
+    "data_quality_warnings": [
+      "MOCK DATA: figures are fictional and for prototype demonstration only.",
+      "MISSING_DUE_DATE x1: Missing due_date; aging cannot be computed",
+      "MISSING_OWNER x1: No account owner assigned",
+      "invoices data is partial",
+      "activities data is partial",
+      "MOCK DATA: fictional customers, invoices and payments. One invoice intentionally lacks a due date and one customer lacks owner/credit limit (data-quality scenario)."
+    ]
+  },
+  "provider": "rule-based",
+  "model": null,
+  "generated_at": "2026-09-07T01:28:42.701Z",
+  "verification": {
+    "ok": true,
+    "checked_numbers": 96,
+    "unverified_numbers": [],
+    "unknown_customers": [],
+    "unknown_owners": [],
+    "notes": []
+  },
+  "fallback_used": false
+}

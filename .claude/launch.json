@@ -1,0 +1,6 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    { "name": "preview", "runtimeExecutable": "npm", "runtimeArgs": ["run", "preview", "--", "--host", "127.0.0.1"], "port": 4173 }
+  ]
+}
