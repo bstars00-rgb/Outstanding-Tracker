@@ -16,6 +16,18 @@
 
 ---
 
+## 0. Update 2026-09-07 — ELLIS Playbook findings
+
+The ELLIS Admin user guide (https://ellis-playbook.ohmyhotel.com) documents the settlement data that the tracker needs:
+**Seller Invoice** (invoice ledger: `invoiceSeq`, I.Status Unpaid/Paid/Over Paid, B.Cur, B.Sum Amt, Paid Amt, Balance, Issued/Due Date),
+**Payment In/Out** (`paymentSeq`, `paidDate`, `currencyCode`, `depositAmount`, `invoiceSeq`, Deposit/Withdraw, `sellerDisputeYn`),
+**Traders** (Company Code, Country, Status, Seller tab: Credit Limit, Payment Terms, Currency) and
+**Applied Exchange Rates** (`originCurrencyCode` → `targetCurrencyCode`, `appliedRate`).
+Full catalogue with field names, types and codes: [ELLIS_PLAYBOOK_DATA_MODEL.md](ELLIS_PLAYBOOK_DATA_MODEL.md).
+Status of these entities: **UI-confirmed (Playbook)** — the MCP tools exposing them are still **Required**.
+The live adapter now probes `tools/list` (`discoverCapabilities()`) and builds the full dataset from these entities
+(`fetchSettlementDataset()`, mapping in `src/adapters/ellis/ellis-entities.ts`) when the tools exist; otherwise it falls back to the bookings-derived mode below.
+
 ## 1. Confirmed
 
 ### 1.1 Connector

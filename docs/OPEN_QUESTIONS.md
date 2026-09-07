@@ -92,3 +92,16 @@
 ## 6. Decision log
 
 Decisions are recorded in `docs/DECISION_LOG.md` (phases 1–5). Items in this document that are answered should be moved there with date and decider.
+
+
+## Addendum 2026-09-07 — after reading the ELLIS Playbook
+
+| ID | Owner | Question | Why | Impact |
+|----|-------|----------|-----|--------|
+| E15 | Ellis dev | Expose **Seller Invoice** list + booking lines through MCP (proposed `get_seller_invoices`; fields per Playbook: invoiceSeq, paymentStatus, sellerCompCode, billingCurrencyCode, billingSumAmount, paidSumAmount, balanceAmount, issuedDate, dueDate, remark, bookings[]) | It is the receivables ledger | Without it: bookings-derived approximation only |
+| E16 | Ellis dev | Expose **Payment In/Out** (Sales side) with **`traderCompCode`** in the row (grid shows only `traderCompName`) | Attribute payments to customers by immutable code | Payments dropped / mis-attributed by name |
+| E17 | Ellis dev | Expose **Traders** with Seller tab (creditLimit, paymentTerms, currency, status, country) and confirm the **format of Payment Terms** (days vs text) | Credit utilization, due-date validation | Terms parsing may be wrong |
+| E18 | Ellis dev | Expose **Applied Exchange Rates** (origin→target, date) or confirm the Book Currency per control company (Playbook FX example uses JPY, MCP bookings use KRW) | JPY reporting with official rates | Illustrative FX table stays in use |
+| E19 | Ellis dev | Confirm whether the Seller Invoice API shares Vendor Billing's structure (`invoiceAmount`, `paidSumAmount`, `balanceAmount`, `depositDueDate`, BS01–BS05) | Field naming in the adapter | Adapter field mapping |
+| E20 | Ellis dev / Finance | Which field identifies the OhMyHotel **account owner** of a seller (BKG PIC? CRM/HubSpot owner? Control Company?) | Owner-level actions and bottlenecks | Owner views show "Unassigned" |
+| E21 | Ellis dev | `updatedSince` support, or accept Settlement History (Action Types SAT01–41, max 3-month range) as the change feed | Incremental weekly pulls | Full re-pull each week (acceptable initially) |

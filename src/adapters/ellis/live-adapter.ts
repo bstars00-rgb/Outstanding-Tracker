@@ -1,7 +1,27 @@
 import { addDays } from '@core/dates';
 import { round2 } from '@core/money';
 import type { BookingContext, Customer, DatasetCompleteness, FxTable, Invoice, ISODate, ReceivablesDataset } from '@core/types';
+import { appliedRatesToFxTable, ellisPaymentsToPayments, sellerInvoicesToInvoices, tradersToCustomers, type EllisAppliedRate, type EllisPayment, type EllisSellerInvoice, type EllisTrader } from './ellis-entities';
 import { type McpToolClient, type ReceivablesSource, ToolNotConfirmedError } from './types';
+
+/**
+ * Tool names the adapter probes via tools/list. Only `bookings` is confirmed today; the others are the
+ * names proposed in docs/ELLIS_MCP_RECEIVABLES_SPEC_FOR_DEV.md and can be overridden when Ellis publishes them.
+ */
+export interface EllisToolNames {
+  bookings: string;
+  sellerInvoices: string;
+  payments: string;
+  traders: string;
+  appliedRates: string;
+}
+export const DEFAULT_TOOL_NAMES: EllisToolNames = {
+  bookings: 'get_hotel_bookings',
+  sellerInvoices: 'get_seller_invoices',
+  payments: 'get_payments',
+  traders: 'get_traders',
+  appliedRates: 'get_applied_exchange_rates',
+};
 
 /**
  * ===== CONFIRMED Ellis MCP surface (observed in production use, 2026-08/09) =====
@@ -75,6 +95,8 @@ export interface EllisLiveConfig {
   receivablePaymentMethods: string[];
   /** Assumed: statuses that represent a delivered/billable service. */
   billableStatuses: string[];
+  /** Tool names probed on the MCP server (see DEFAULT_TOOL_NAMES). */
+  toolNames: EllisToolNames;
 }
 
 export const DEFAULT_LIVE_CONFIG: Omit<EllisLiveConfig, 'fx' | 'reportingCurrency'> = {
@@ -84,6 +106,7 @@ export const DEFAULT_LIVE_CONFIG: Omit<EllisLiveConfig, 'fx' | 'reportingCurrenc
   pageSize: 500,
   receivablePaymentMethods: ['Cash'],
   billableStatuses: ['Confirmed'],
+  toolNames: DEFAULT_TOOL_NAMES,
 };
 
 export class EllisMcpReceivablesSource implements ReceivablesSource {
@@ -144,13 +167,92 @@ export class EllisMcpReceivablesSource implements ReceivablesSource {
     throw new ToolNotConfirmedError('collection activities', 'no Ellis tool expected; tracker-owned store (see ARCHITECTURE.md)');
   }
 
+  /** Generic limit/offset pagination over `{ list|records, totalCount }` results. */
+  private async pageAll<T>(tool: string, args: Record<string, unknown>): Promise<T[]> {
+    const out: T[] = [];
+    let offset = 0;
+    let total = Infinity;
+    while (out.length < total) {
+      const res = await this.client.callTool<{ list?: T[]; records?: T[]; totalCount?: number }>(tool, { ...args, limit: this.cfg.pageSize, offset });
+      const list = res.list ?? res.records ?? [];
+      total = typeof res.totalCount === 'number' ? res.totalCount : list.length;
+      out.push(...list);
+      offset += this.cfg.pageSize;
+      if (list.length === 0) break;
+    }
+    return out;
+  }
+
+  /** Which of the settlement tools the server actually exposes (capability discovery, never assumed). */
+  async discoverCapabilities(): Promise<Record<keyof EllisToolNames, boolean>> {
+    const names = new Set((await this.client.listTools()).map((t) => t.name));
+    const n = this.cfg.toolNames;
+    return { bookings: names.has(n.bookings), sellerInvoices: names.has(n.sellerInvoices), payments: names.has(n.payments), traders: names.has(n.traders), appliedRates: names.has(n.appliedRates) };
+  }
+
   /**
+   * Full settlement dataset from the Playbook entities (Seller Invoice + Payment In/Out + Traders [+ applied FX]).
+   * Argument names follow docs/ELLIS_MCP_RECEIVABLES_SPEC_FOR_DEV.md and must be confirmed with the Ellis team.
+   */
+  async fetchSettlementDataset(referenceDate: ISODate): Promise<ReceivablesDataset> {
+    const n = this.cfg.toolNames;
+    const from = addDays(referenceDate, -this.cfg.lookbackDays);
+    const [invoiceRows, paymentRows, traderRows] = await Promise.all([
+      this.pageAll<EllisSellerInvoice>(n.sellerInvoices, { dateType: 'ISSUE_DATE', fromDate: from, toDate: referenceDate, includeBookings: true }),
+      this.pageAll<EllisPayment>(n.payments, { dateType: 'PDS01', fromDate: from, toDate: referenceDate, salesOrVendor: 'S' }),
+      this.pageAll<EllisTrader>(n.traders, { companyType: 'Seller', status: 'ALL' }),
+    ]);
+    const caps = await this.discoverCapabilities();
+    let fx = this.cfg.fx;
+    let fxNote = 'FX: illustrative table (Ellis applied rates tool not exposed).';
+    if (caps.appliedRates) {
+      const rates = await this.pageAll<EllisAppliedRate>(n.appliedRates, { targetCurrencyCode: this.cfg.reportingCurrency, date: referenceDate });
+      const table = appliedRatesToFxTable(rates, this.cfg.reportingCurrency, referenceDate);
+      if (table.rates.length) {
+        fx = table;
+        fxNote = 'FX: ELLIS applied exchange rates (origin -> reporting).';
+      }
+    }
+    const customers = tradersToCustomers(traderRows);
+    const known = new Set(customers.map((c) => c.customer_id));
+    const invoices = sellerInvoicesToInvoices(invoiceRows);
+    // Sellers that invoice but are missing from the trader pull still get a stub customer so nothing is silently dropped.
+    for (const i of invoices) {
+      if (!known.has(i.customer_id)) {
+        const src = invoiceRows.find((r) => `seller:${r.sellerCompCode.trim()}` === i.customer_id)!;
+        customers.push({ customer_id: i.customer_id, customer_name: src.sellerCompName, customer_group: null, country: 'Unknown', region: '', account_owner_id: '', account_owner_name: '', finance_owner: null, contract_currency: src.billingCurrencyCode, payment_terms_days: null, credit_limit: null, credit_status: 'ACTIVE', customer_status: 'ACTIVE', collection_status: 'NORMAL', risk_grade_manual: null, preferred_contact_channel: null, data_source: 'ellis:seller-invoice (stub customer)' });
+        known.add(i.customer_id);
+      }
+    }
+    const traderByName = new Map(traderRows.map((t) => [t.companyName.trim().toLowerCase(), t.companyCode]));
+    const { payments, dropped } = ellisPaymentsToPayments(paymentRows, (r) => (r.traderCompName ? (traderByName.get(r.traderCompName.trim().toLowerCase()) ?? null) : null));
+    const notes = [fxNote, 'Collection activities are tracker-owned (no Ellis entity).'];
+    if (dropped.length) notes.push(`${dropped.length} sales payment(s) could not be attributed to a trader code and were excluded.`);
+    if (invoices.some((i) => !i.due_date)) notes.push('Some seller invoices have no Due Date; they are shown as "unknown due date".');
+    const completeness: DatasetCompleteness = {
+      customers: customers.some((c) => c.data_source.includes('stub')) ? 'partial' : 'full',
+      invoices: 'full',
+      payments: dropped.length ? 'partial' : 'full',
+      activities: 'missing',
+      fx: fx === this.cfg.fx ? 'partial' : 'full',
+      notes,
+    };
+    return { as_of: new Date().toISOString(), source: 'ellis-mcp', reporting_currency: this.cfg.reportingCurrency, fx, customers, invoices, payments, activities: [], bookings: [], completeness };
+  }
+
+  /**
+   * Capability-driven fetch: if the server exposes the settlement tools (Seller Invoice, Payment In/Out, Traders),
+   * the full receivables dataset is built from them; otherwise the bookings-derived approximation is used.
+   *
    * Bookings-derived dataset (ASSUMED model, clearly labelled): every billable post-paid booking becomes one
    * invoice line; due date = checkout + assumed terms; no payments are known => everything is treated as open.
    * This is only good enough to exercise the pipeline end-to-end against the real connector; it must NOT be
    * presented as actual receivables until the ledger tools are confirmed.
    */
   async fetchDataset(referenceDate: ISODate): Promise<ReceivablesDataset> {
+    const caps = await this.discoverCapabilities();
+    if (caps.sellerInvoices && caps.payments && caps.traders) return this.fetchSettlementDataset(referenceDate);
+    if (!caps.bookings) throw new ToolNotConfirmedError('any receivables source', `${this.cfg.toolNames.bookings} (confirmed) or settlement tools`);
     const from = addDays(referenceDate, -this.cfg.lookbackDays);
     const bookings = await this.fetchBookings(from, referenceDate, 'BOOKING_DATE');
     return bookingsToDataset(bookings, referenceDate, this.cfg);

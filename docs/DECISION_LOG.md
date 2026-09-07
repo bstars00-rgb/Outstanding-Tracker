@@ -104,4 +104,6 @@ Each phase records: decisions taken, evidence, and the risks that remain open at
 | D28 | **Bilingual engine text (en/ko)**: `buildTrackerModel({lang})`, `computeRiskScore(.., lang)`, `buildActions(.., lang)`, `generateRuleBasedInsight(input, lang)`, Teams card headings/footer, `REPORT_LANGUAGE` (default `ko`). Numbers never change with language. UI language toggle + dark mode delivered in the frontend. | User request 2026-09-07 ("한국어와 다크모드"). |
 | D29 | Developer-facing spec for the receivables MCP tools written: `docs/ELLIS_MCP_RECEIVABLES_SPEC_FOR_DEV.md` (5 read-only tools, common contract, currency rules, acceptance tests). | User request 2026-09-07. |
 
+| D30 | **ELLIS Playbook read (2026-09-07)**: Seller Invoice / Payment In/Out / Traders / Applied Exchange Rate identified as the receivables sources; entity types + mapping (`ellis-entities.ts`) and capability discovery in the live adapter added; developer spec rewritten with the Playbook field names; Credit Note modelled as "no entity, Compensation adjusts principal"; overdue derived from Due Date. | User request: derive fields/types from the Playbook. Playbook is a UI guide, so MCP/API names remain Required. |
+
 Results and remaining risks: `docs/QA_REPORT.md`.

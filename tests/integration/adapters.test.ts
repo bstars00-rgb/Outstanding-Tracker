@@ -162,3 +162,39 @@ describe('dataset contract', () => {
     expect(DatasetSchema.safeParse(ds).success).toBe(true);
   });
 });
+
+describe('Ellis live adapter — capability discovery (Playbook settlement tools)', () => {
+  const cfg = { ...DEFAULT_LIVE_CONFIG, reportingCurrency: 'JPY', fx: mockFxTable('2026-09-05', '2026-09-05', 'JPY'), countries: ['Korea'], pageSize: 500 };
+  class SettlementMcp implements McpToolClient {
+    calls: string[] = [];
+    async listTools() {
+      return ['get_hotel_bookings', 'get_seller_invoices', 'get_payments', 'get_traders', 'get_applied_exchange_rates'].map((name) => ({ name }));
+    }
+    async callTool<T>(name: string, args: Record<string, unknown>): Promise<T> {
+      this.calls.push(name);
+      const page = (list: unknown[]) => ({ list, totalCount: list.length }) as unknown as T;
+      if (name === 'get_seller_invoices') return page([{ invoiceSeq: 501, paymentStatus: 'Unpaid', controlCompName: 'OMH JP', sellerCompCode: 'S0001', sellerCompName: 'Fictional Seller A', sellerOperationName: null, billingCurrencyCode: 'USD', billingSumAmount: 1000, paidSumAmount: 0, balanceAmount: 1000, issuedDate: '2026-08-20', dueDate: '2026-09-03', remark: null }]);
+      if (name === 'get_payments') return page([{ paymentSeq: 77, salesOrVendor: 'S', bookingItemCode: null, depositWithdrawTypeCode: 'Deposit', paidDate: '2026-09-04', currencyCode: 'USD', firstDepositAmount: 300, depositAmount: 300, depositTypeName: 'Bank Transfer', traderCompCode: null, traderCompName: 'Fictional Seller A', invoiceSeq: 501, sellerDisputeYn: 'N', paymentConfirmDate: '2026-09-04' }]);
+      if (name === 'get_traders') return page([{ companyCode: 'S0001', companyName: 'Fictional Seller A', country: 'JP', status: 'Active', seller: { isSeller: true, sellerType: 'Regular Seller', creditLimit: 10000, paymentTerms: 14, currency: 'USD' } }]);
+      if (name === 'get_applied_exchange_rates') return page([{ originCurrencyCode: 'USD', targetCurrencyCode: 'JPY', appliedRate: 150 }]);
+      expect(args).toBeDefined();
+      return page([]);
+    }
+  }
+  it('uses the settlement tools when exposed and produces a full dataset (payments attributed by trader name)', async () => {
+    const mcp = new SettlementMcp();
+    const src = new EllisMcpReceivablesSource(mcp, cfg);
+    expect(await src.discoverCapabilities()).toEqual({ bookings: true, sellerInvoices: true, payments: true, traders: true, appliedRates: true });
+    const ds = await src.fetchDataset('2026-09-05');
+    expect(ds.source).toBe('ellis-mcp');
+    expect(mcp.calls).not.toContain('get_hotel_bookings');
+    expect(ds.completeness.invoices).toBe('full');
+    expect(ds.completeness.fx).toBe('full');
+    expect(ds.fx.rates).toEqual([{ currency: 'USD', rate_to_reporting: 150, rate_date: '2026-09-05', source: 'ELLIS applied exchange rate' }]);
+    expect(ds.payments[0].customer_id).toBe('seller:S0001');
+    expect(validateDataset(ds).ok).toBe(true);
+    const m = buildTrackerModel(ds, { referenceDate: '2026-09-05', previousSnapshot: null });
+    expect(m.snapshot.totals.total_outstanding).toBe(150000);
+    expect(m.snapshot.totals.collected_during_week).toBe(45000);
+  });
+});
