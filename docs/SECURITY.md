@@ -156,3 +156,16 @@
 | 11 | Dependabot alerts enabled; `npm audit` clean or triaged | Engineering | Required |
 | 12 | Artifact retention for `automation/out` set to 30 days (Confirmed); repository (and therefore the `tracker-state` branch) private | GitHub admin | Required (repo visibility) |
 | 13 | Incident procedure documented: webhook rotation, key rotation, how to re-send with `FORCE_RESEND` | Engineering | Required |
+
+
+## Addendum — password gate on the static site (2026-09-07)
+
+A client-side password gate (`src/app/gate/PasswordGate.tsx`) wraps the whole app. Properties:
+
+| Aspect | Implementation |
+|--------|----------------|
+| Secret in bundle | Only `pbkdf2$<iterations>$<salt>$<hash>` (150,000 iterations, SHA-256, 16-byte random salt). The password never leaves the operator's channel. |
+| Verification | WebCrypto PBKDF2 in the browser, constant-time comparison. |
+| Session | Token = SHA-256 of the configured hash string, kept in `sessionStorage` (or `localStorage` with "remember"). Rotating the hash invalidates every token. |
+| Brute force | PBKDF2 cost + client delay after 5 failures. Offline guessing against the public hash is possible, hence a random 16-character default password and rotation via `VITE_GATE_HASH`. |
+| What it does NOT do | It is not authentication: the bundle, mock data and any file under `public/data/` remain downloadable by URL. Real receivables data must be served from an access-controlled origin. |

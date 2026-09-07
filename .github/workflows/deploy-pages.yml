@@ -37,6 +37,9 @@ jobs:
           VITE_BASE_PATH: ${{ vars.VITE_BASE_PATH || format('/{0}/', github.event.repository.name) }}
           VITE_DATA_MODE: ${{ vars.VITE_DATA_MODE || 'mock' }}
           VITE_LIVE_DATA_URL: ${{ vars.VITE_LIVE_DATA_URL }}
+          # Password gate: salted PBKDF2 hash of the access password (the password itself is never stored).
+          # Rotate with `npm run gate:hash -- "<new password>"` and set repository variable VITE_GATE_HASH.
+          VITE_GATE_HASH: ${{ vars.VITE_GATE_HASH || 'pbkdf2$150000$7n932X/k/7zNxwsQO1lmxQ==$gEH4cgoS1NgSi1sfxRaaO6AKDiHbUQq0eRO/kSM+XGw=' }}
         run: npm run build
       - name: Guard - no secrets in the bundle
         run: |

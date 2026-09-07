@@ -98,4 +98,6 @@ Each phase records: decisions taken, evidence, and the risks that remain open at
 | D24 | Scores reported twice (mock/contract 97, live 86 Blocked) rather than inflating live readiness. | PRD §15 rule on external dependencies. |
 | D25 | Snapshot state is git-ignored in `main` and lives only on the `tracker-state` branch written by the workflow. | Keeps the code branch free of data artefacts. |
 
+| D26 | Landing page made private with a **client-side password gate** (PBKDF2-SHA256, 150k iterations, salted; only the hash is embedded via `VITE_GATE_HASH`; sessions in session/local storage; Lock button; rotation invalidates sessions). Documented as an access deterrent, not authentication. | User request (2026-09-07). GitHub Pages has no server-side auth on the free plan; true protection of real data still requires a private origin (`SECURITY.md` addendum). |
+
 Results and remaining risks: `docs/QA_REPORT.md`.

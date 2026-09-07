@@ -1052,3 +1052,17 @@ table.compact td {
 .banner-details { margin-top: 4px; }
 .banner-details summary { cursor: pointer; font-weight: 600; text-decoration: underline; }
 .banner-details ul { margin: 6px 0 0; }
+
+/* ---------- Password gate ---------- */
+.gate-screen { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: var(--bg, #f6f7f9); padding: 24px; }
+.gate-card { width: 100%; max-width: 380px; background: #fff; border: 1px solid var(--border, #e3e6ea); border-radius: 12px; padding: 28px 28px 20px; box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06); display: flex; flex-direction: column; gap: 10px; }
+.gate-brand { width: 40px; height: 40px; border-radius: 10px; background: var(--accent, #1f4e9c); color: #fff; font-weight: 700; display: flex; align-items: center; justify-content: center; font-size: 14px; }
+.gate-card h1 { font-size: 20px; margin: 4px 0 0; }
+.gate-sub { margin: 0; font-size: 14px; }
+.gate-label { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted, #5b6472); margin-top: 6px; }
+.gate-input { font-size: 16px; padding: 10px 12px; border: 1px solid var(--border, #cfd5dc); border-radius: 8px; width: 100%; }
+.gate-input:focus { outline: 2px solid var(--accent, #1f4e9c); outline-offset: 1px; }
+.gate-remember { font-size: 13px; display: flex; align-items: center; gap: 8px; }
+.gate-error { color: #b42318; font-size: 13px; margin: 0; }
+.gate-submit { margin-top: 6px; padding: 10px 14px; font-size: 15px; }
+.gate-foot { font-size: 11px; margin: 8px 0 0; }

@@ -15,13 +15,14 @@ Pass criteria (PRD §15): Planning ≥ 96, QA ≥ 96, 0 Critical/High open defec
 | Check | Command | Result |
 |-------|---------|--------|
 | Type check (app + automation) | `npm run typecheck` | pass |
-| Unit + integration | `npx vitest run` | **80 passed / 0 failed** (10 files: calc, risk, mock-data, insight, teams-message, infra, KpiCard, CustomersPage, pipeline, adapters) |
+| Unit + integration | `npx vitest run` | **83 passed / 0 failed** (10 files: calc, risk, mock-data, insight, teams-message, infra, KpiCard, CustomersPage, pipeline, adapters) |
 | Production build | `npm run build` | pass (777 KB `dist/`, recharts chunk warning only) |
 | Secret scan of bundle | grep for `sk-ant-`, `webhook.office.com`, `logic.azure.com`, env names | clean |
 | E2E desktop + mobile (Pixel 5) | `npx playwright test` | **28 passed, 2 skipped (mobile-only specs on desktop project), 0 failed** |
 | Pipeline CLI dry run (mock) | `npm run report:weekly:dry` | 13 steps logged, 12 snapshots persisted, card + markdown + insight written, exit 0 |
 | Workflow YAML | parsed with PyYAML | both workflows valid (jobs `report`; `build`,`deploy`) |
 | GitHub Pages deploy | push to `bstars00-rgb/Outstanding-Tracker`, run 34077262767 | **success**; https://bstars00-rgb.github.io/Outstanding-Tracker/ returns HTTP 200; mock overview and customer detail verified in browser. Weekly report workflow not yet executed on Actions (needs a manual `dry_run=true` run) |
+| Password gate | gated build (`VITE_GATE_HASH` set) + `E2E_GATE_PASSWORD` | 3 hashing tests + gate E2E (desktop + mobile) pass; password string absent from `dist/` |
 | Visual review | Browser pane 1440×900 and 375×812 | Overview, Aging, Customer detail, Insights, Actions, Invoices reviewed; two defects found and fixed (see Iteration 2) |
 
 ---

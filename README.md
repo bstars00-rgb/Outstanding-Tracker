@@ -119,6 +119,21 @@ Secret values are never printed: `automation/lib/logger.ts` redacts protected va
 > Real customer balances must not be published on a public Pages site. Keep the repo private with restricted Pages
 > (GitHub Enterprise) or point `VITE_LIVE_DATA_URL` at an access-controlled endpoint. Mock mode is safe to publish.
 
+## 5a. Password gate (private landing page)
+
+The deployed site is protected by a client-side password gate (`src/app/gate/`). The bundle only contains a salted
+PBKDF2 hash (`VITE_GATE_HASH`); the password itself is never stored in git.
+
+- Rotate: `npm run gate:hash -- "<new password>"` → set repository variable `VITE_GATE_HASH` → redeploy. All remembered
+  sessions are invalidated automatically.
+- Lock from the UI: **Lock** button in the top bar. Sessions live in `sessionStorage` (tab) or `localStorage` when
+  "remember on this device" is ticked.
+- Local dev/tests: leave `VITE_GATE_HASH` empty → gate disabled. To test the gate locally:
+  `VITE_GATE_HASH=$(npm run -s gate:hash -- "pw") npm run build && E2E_GATE_PASSWORD=pw npx playwright test gate`.
+- Limits: this is an access deterrent for a static site, not server authentication. Anyone with the bundle can attempt
+  offline guessing against the hash (150k PBKDF2 iterations, random 16-char default password) and the mock data is in the
+  bundle by design. Real customer data must stay behind a private repository or a protected `VITE_LIVE_DATA_URL`.
+
 ## 6. Teams Workflows webhook
 
 1. In Teams, open the target channel → **Workflows** → template *"Post to a channel when a webhook request is received"*.

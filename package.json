@@ -17,7 +17,8 @@
     "mock:generate": "tsx automation/generate-mock-data.ts",
     "report:weekly": "tsx automation/weekly-report.ts",
     "report:weekly:dry": "cross-env DRY_RUN=true DATA_SOURCE=mock AI_PROVIDER=mock TEAMS_SENDER=mock tsx automation/weekly-report.ts",
-    "report:sample": "tsx automation/render-samples.ts"
+    "report:sample": "tsx automation/render-samples.ts",
+    "gate:hash": "tsx automation/gate-hash.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.124.0",

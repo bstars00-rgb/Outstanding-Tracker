@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 import { NavLink } from 'react-router-dom';
 import { formatInTimeZone } from '@core/dates';
 import { useTracker } from '@app/data/TrackerContext';
+import { gateEnabled, lockGate } from '@app/gate/PasswordGate';
 import { IconActions, IconAging, IconCheck, IconCustomers, IconInsights, IconInvoices, IconOverview, IconWarning } from './Icons';
 
 const NAV = [
@@ -87,6 +88,11 @@ export function Layout({ children }: { children: ReactNode }) {
           <button type="button" className="btn small" onClick={data.refresh} aria-label="Refresh data">
             Refresh
           </button>
+          {gateEnabled() && (
+            <button type="button" className="btn small" onClick={lockGate} aria-label="Lock the dashboard (sign out)" data-testid="gate-lock">
+              Lock
+            </button>
+          )}
         </header>
 
         <main className="content" id="main">
