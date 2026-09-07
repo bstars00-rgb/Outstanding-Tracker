@@ -20,7 +20,8 @@ Pass criteria (PRD §15): Planning ≥ 96, QA ≥ 96, 0 Critical/High open defec
 | Secret scan of bundle | grep for `sk-ant-`, `webhook.office.com`, `logic.azure.com`, env names | clean |
 | E2E desktop + mobile (Pixel 5) | `npx playwright test` | **28 passed, 2 skipped (mobile-only specs on desktop project), 0 failed** |
 | Pipeline CLI dry run (mock) | `npm run report:weekly:dry` | 13 steps logged, 12 snapshots persisted, card + markdown + insight written, exit 0 |
-| Workflow YAML | parsed with PyYAML | both workflows valid (jobs `report`; `build`,`deploy`) — **not executed on GitHub (Blocked: no repository yet)** |
+| Workflow YAML | parsed with PyYAML | both workflows valid (jobs `report`; `build`,`deploy`) |
+| GitHub Pages deploy | push to `bstars00-rgb/Outstanding-Tracker`, run 34077262767 | **success**; https://bstars00-rgb.github.io/Outstanding-Tracker/ returns HTTP 200; mock overview and customer detail verified in browser. Weekly report workflow not yet executed on Actions (needs a manual `dry_run=true` run) |
 | Visual review | Browser pane 1440×900 and 375×812 | Overview, Aging, Customer detail, Insights, Actions, Invoices reviewed; two defects found and fixed (see Iteration 2) |
 
 ---
@@ -88,8 +89,8 @@ Next Iteration Priority: re-score after fixes; confirm visual fixes in browser.
 | Security check | 10 | 10 | 10 | Bundle scan clean, redaction tests, env guards refuse live sends without secrets, no PII fields in model, `.env.example` only |
 | UI / responsive / accessibility | 10 | 9 | 9 | Desktop + mobile E2E (no horizontal overflow), table alternative for every chart, status text + icon, focus styles; **−1**: no automated axe audit |
 | Error / empty / partial handling | 5 | 5 | 5 | E2E for error, empty, loading, partial, live-not-published |
-| Deployment reproducibility | 5 | 4 | 3 | `npm ci` + build reproducible locally, workflows parse, bundle guard; **−1**: not executed on GitHub Actions/Pages (Blocked: repository not created — needs user) |
-| **Total** | **100** | **97** | **86** |
+| Deployment reproducibility | 5 | 5 | 4 | Pages workflow executed on GitHub Actions (typecheck + tests + build + bundle guard + deploy: success); **−1 live**: weekly report workflow not yet run on Actions |
+| **Total** | **100** | **98** | **87** |
 
 ### Defects
 
@@ -108,7 +109,7 @@ Next Iteration Priority: re-score after fixes; confirm visual fixes in browser.
 | Condition | Result |
 |-----------|--------|
 | Planning ≥ 96 | **Pass (96)** |
-| QA ≥ 96 | **Pass in mock/contract scope (97)** · **Not met in live scope (86) — Blocked, not failed**: Ellis MCP access, Teams webhook, AI key, GitHub repository are user-provided prerequisites (PRD §15 explicitly allows Blocked marking) |
+| QA ≥ 96 | **Pass in mock/contract scope (98)** · **Not met in live scope (87) — Blocked, not failed**: Ellis MCP access, Teams webhook, AI key, GitHub repository are user-provided prerequisites (PRD §15 explicitly allows Blocked marking) |
 | 0 Critical/High defects | Pass |
 | 0 open defects in automation / calculation / credentials | Pass |
 | Main user flows E2E | Pass (overview → each page, customer filter → detail → risk factors, aging → invoice drill-down, action status persistence, states, mobile) |
@@ -121,8 +122,8 @@ Next Iteration Priority: re-score after fixes; confirm visual fixes in browser.
 | Ellis MCP live | endpoint + auth, tool list confirmation | `DATA_SOURCE=ellis DRY_RUN=true ELLIS_MCP_ENDPOINT=… ELLIS_MCP_AUTH=… npx tsx automation/weekly-report.ts` → check `[3/13]` counts and `completeness` notes |
 | Teams webhook | Workflows webhook URL for test channel | `TEAMS_SENDER=live DRY_RUN=false TARGET_CHANNEL=test TEAMS_TEST_WEBHOOK_URL=… npx tsx automation/weekly-report.ts`; verify card on desktop + mobile Teams |
 | AI live | `AI_API_KEY` | `AI_PROVIDER=claude AI_API_KEY=… DRY_RUN=true npx tsx automation/weekly-report.ts` → check `[9/13] verification ok=true` and `fallback=false` |
-| GitHub deploy | repository + Pages source = Actions | push `main` (README §11) → Actions *Deploy Tracker to GitHub Pages* green → open `https://<owner>.github.io/<repo>/#/?mode=mock` |
-| Saturday schedule | repository | Actions → *Weekly Outstanding Report (Teams)* → Run workflow (`dry_run=true`) → artefacts contain `teams-message.json` |
+| GitHub deploy | done 2026-09-07 | Deployed: https://bstars00-rgb.github.io/Outstanding-Tracker/#/?mode=mock |
+| Saturday schedule | manual run on Actions | Actions → *Weekly Outstanding Report (Teams)* → Run workflow (`dry_run=true`, `data_source=mock`) → artefacts contain `teams-message.json`; creates branch `tracker-state` |
 
 ### Remaining risks
 - R-A Risk weights/thresholds are a first calibration; Finance review recommended before leaders channel go-live.
