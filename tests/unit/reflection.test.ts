@@ -33,7 +33,7 @@ describe('CEO feedback: managing entity split and ELLIS reflection chain', () =>
     expect(t.unverified_payment_count + t.unreconciled_payment_count).toBeGreaterThan(0);
     const items = model.actions.filter((a) => a.group === 'ELLIS_REFLECTION');
     expect(items.length).toBeGreaterThan(0);
-    expect(items.every((a) => ['Sangho', 'Jackie'].includes(a.owner))).toBe(true);
+    expect(items.every((a) => ['Sangho', 'Management Support (TBD)'].includes(a.owner))).toBe(true);
     expect(items[0].recommended_action).toMatch(/ELLIS 검증|은행 입금 대사/);
   });
   it('language does not change the queue', () => {

@@ -55,7 +55,7 @@ test.describe('Managing entity and ELLIS reflection chain', () => {
     await expect(section).toContainText('ELLIS reflection chain');
     await expect(section).toContainText('Rina (Josh)');
     await expect(section).toContainText('Sangho');
-    await expect(section).toContainText('Jackie');
+    await expect(section).toContainText('Management Support (TBD)');
     const table = page.getByTestId('reflection-table');
     await expect(table).toBeVisible();
     const over = table.getByTestId('reflection-over-sla');

@@ -349,10 +349,14 @@ export interface ReflectionChain {
   reconcile: { owner: string; sla_days: number };
 }
 
+/**
+ * Default owners (to be confirmed): record = Rina (Josh), verify (PM CNFM) = Sangho, reconcile (weekly bank vs ELLIS)
+ * = Management Support (경영지원). The CEO (Jackie) is the recipient of the Saturday report, not a stage owner.
+ */
 export const DEFAULT_REFLECTION_CHAIN: ReflectionChain = {
   record: { owner: 'Rina (Josh)', sla_days: 1 },
   verify: { owner: 'Sangho', sla_days: 1 },
-  reconcile: { owner: 'Jackie', sla_days: 7 },
+  reconcile: { owner: 'Management Support (TBD)', sla_days: 7 },
 };
 
 /** Weekly snapshot: the persisted, comparable state of a given reference date. */
