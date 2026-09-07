@@ -42,7 +42,7 @@ Other commands:
 | Command | What it does |
 |---------|--------------|
 | `npm run typecheck` | TypeScript for app + automation |
-| `npm run test` | Vitest unit + integration (74+ tests, no network) |
+| `npm run test` | Vitest unit + integration (80 tests, no network) |
 | `npm run test:e2e` | Playwright (desktop + mobile) against `npm run preview` |
 | `npm run build` | Production bundle to `dist/` |
 | `npm run mock:generate` | Prints the mock dataset profile and scenario coverage |
@@ -102,7 +102,7 @@ Settings → Secrets and variables → Actions.
 | `TEAMS_SENDER` | `live` | `live` or `mock` |
 | `REPORTING_CURRENCY` | `USD` | ISO 4217 |
 | `REPORT_TIMEZONE` | `Asia/Ho_Chi_Minh` | IANA zone for timestamps |
-| `TRACKER_BASE_URL` | `https://<owner>.github.io/<repo>/` | Links in the card |
+| `TRACKER_BASE_URL` | `https://bstars00-rgb.github.io/Outstanding-Tracker/` | Links in the card |
 | `RECIPIENT_CONFIG` | see `.env.example` | Channel names / roles (no personal data) |
 | `PUBLISH_DATA` | `false` | Commit aggregated model for the frontend live mode |
 | `VITE_BASE_PATH`, `VITE_DATA_MODE`, `VITE_LIVE_DATA_URL` | | Frontend build options |
@@ -114,7 +114,7 @@ Secret values are never printed: `automation/lib/logger.ts` redacts protected va
 1. Create the repository (private recommended) and push `main` (see §11 for the exact commands).
 2. Settings → Pages → Source: **GitHub Actions**.
 3. `.github/workflows/deploy-pages.yml` runs typecheck + tests, builds with `VITE_BASE_PATH=/<repo>/`, scans the
-   bundle for secret-looking strings, and deploys. URL: `https://<owner>.github.io/<repo>/`.
+   bundle for secret-looking strings, and deploys. URL: `https://bstars00-rgb.github.io/Outstanding-Tracker/`.
 
 > Real customer balances must not be published on a public Pages site. Keep the repo private with restricted Pages
 > (GitHub Enterprise) or point `VITE_LIVE_DATA_URL` at an access-controlled endpoint. Mock mode is safe to publish.
@@ -168,7 +168,7 @@ TEAMS_SENDER=live DRY_RUN=false TARGET_CHANNEL=test TEAMS_TEST_WEBHOOK_URL=... n
 git init -b main
 git add -A
 git commit -m "feat: outstanding receivables tracker prototype"
-git remote add origin https://github.com/<owner>/<repo>.git
+git remote add origin https://github.com/bstars00-rgb/Outstanding-Tracker.git
 git push -u origin main
 ```
 
