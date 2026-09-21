@@ -226,3 +226,24 @@ ELLIS Playbook을 확인한 결과, 필요한 데이터는 **ELLIS Admin에 이�
 6. `updatedSince` 지원 여부, MCP 엔드포인트 URL·인증·호출 한도·갱신 시각, 스테이징 계정.
 
 부록 A. 트래커 내부 스키마: `src/core/types.ts`. 플레이북 엔티티 타입과 매핑: `src/adapters/ellis/ellis-entities.ts`.
+
+---
+
+## 10. 운영팀 미수 관리 파일(Outstanding_2022-2026 FINAL FILE)과의 대응 (2026-09-21 추가)
+
+운영팀이 수기로 관리하는 엑셀의 컬럼은 ELLIS Seller Invoice 화면 값 + 업무 계층으로 구성됩니다. 도구가 제공되면 ELLIS 값 부분은 자동화되고, 업무 계층은 트래커가 계산합니다.
+
+| 엑셀 컬럼 | 출처 | 도구/필드 또는 트래커 계산 |
+|---|---|---|
+| Invocie No | ELLIS | `get_seller_invoices.invoiceSeq` |
+| Seller code / Seller name | ELLIS | `sellerCompCode` / `sellerCompName` (= Traders `companyCode`) |
+| B.Cur, B.Sum amount, Paid amount, Balance | ELLIS | `billingCurrencyCode`, `billingSumAmount`, `paidSumAmount`, `balanceAmount` |
+| Issue date, Due date | ELLIS | `issuedDate`, `dueDate` |
+| Noted (예약 코드 : 금액) | ELLIS | `bookings[].bookingItemCode` / `balanceAmount` |
+| Tier (Tier 1/2/3) | 채널 마스터(엑셀 Tier 시트, 월별) | `get_traders.tier` 요청; 없으면 트래커 설정(`CUSTOMER_TIERS`) |
+| PIC(OMH) (Sophia/Grace/Ben/Jane) | 채널 마스터 | `get_traders.accountOwner` 요청; 없으면 트래커 설정 |
+| Tier deadline | 계산 | 발행월 + Tier별 개월(1: 6, 2: 4, 3: 3) — 트래커 계산 |
+| Balance in JPY | 계산 | `get_applied_exchange_rates`(origin→JPY) — 엑셀은 USD 150 / KRW 0.11 / VND 0.006 고정값 |
+| Probability Score (0–100) | 체크리스트 6항목 | 트래커 Risk Score와 병행 산출(채널 결제이력 25, 예치금 20, 금액 규모 20, 응답성 15, Tier 10, 분쟁 명확성 10; <60 = Expected loss) |
+| VNOP action (Expected loss / Long-term receivable), Probability deadline, Final | 운영 판단 | 트래커 회수 활동(트래커 소유)로 기록 |
+| L1–L4 긴급도, 승인 라우팅 | 정책 | Tier + JPY 금액(¥1M/¥500K/¥100K)로 트래커 계산; ¥500K 이하 Local Director, 초과 CEO |
