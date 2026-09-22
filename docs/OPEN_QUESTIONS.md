@@ -94,6 +94,19 @@
 Decisions are recorded in `docs/DECISION_LOG.md` (phases 1–5). Items in this document that are answered should be moved there with date and decider.
 
 
+## Status update 2026-09-22 — Daniel's reply (ELLIS dev)
+
+| Item | Status | Detail |
+|------|--------|--------|
+| E15–E18 tools feasibility | **Confirmed feasible** | Dedicated MCP layer (not direct Admin API wrapping), business fields only. Endpoints `stg-mcp.ohmytrip.com` / `mcp.ohmytrip.com`. |
+| E16 `traderCompCode`, `paymentConfirmDate` | **Resolved** | Already in ELLIS payment data. |
+| E20 managing entity | **Resolved** | `list_channels.ownerCompCode/ownerCompName` (Traders "Control"; also the issuing entity on the invoice). Map to `control_company`. |
+| E17 credit limit | **Pending Finance** | Proposed = Seller tab Deposit Type "Credit by company" + Deposit Amount (`get_channel.depositTypeCode/depositAmount/depositCurrencyCode/depositDate`). Other deposit types = collateral, not a limit. |
+| E20 account owner (PIC OMH) | **Pending GSM** | Likely Account Manager (AM) under Users › CRM Trader › PIC; CM/AM both requested. Otherwise tracker configuration. |
+| Tier | **Decided** | Not in ELLIS; tracker configuration `CUSTOMER_TIERS`. |
+| **E23 (new) Unattended auth** | **Open — blocking for the Saturday batch** | MCP auth is Microsoft Entra ID SSO via the AI Agent connector. GitHub Actions cannot do interactive SSO. Options requested: client-credentials app registration, scoped service token, or daily export file. |
+| Staging | **Ready** | Same Microsoft account, "ELLIS STAGING" connector, remove after tests; name the environment in prompts. |
+
 ## Addendum 2026-09-07 — after reading the ELLIS Playbook
 
 | ID | Owner | Question | Why | Impact |
