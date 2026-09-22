@@ -6,7 +6,9 @@
 import { DEFAULT_REFLECTION_CHAIN, type ReflectionChain } from '@core/types';
 
 export interface PipelineEnv {
-  DATA_SOURCE: 'mock' | 'ellis';
+  DATA_SOURCE: 'mock' | 'ellis' | 'file';
+  /** DATA_SOURCE=file: path to a ReceivablesDataset JSON or a raw ELLIS export (sellerInvoices/payments/traders[/appliedRates]). */
+  DATA_FILE: string;
   AI_PROVIDER: 'mock' | 'claude';
   TEAMS_SENDER: 'mock' | 'live';
   DRY_RUN: boolean;
@@ -37,7 +39,7 @@ export function loadEnv(env: NodeJS.ProcessEnv = process.env): PipelineEnv {
   const dataSource = (env.DATA_SOURCE ?? 'mock').toLowerCase();
   const ai = (env.AI_PROVIDER ?? 'mock').toLowerCase();
   const teams = (env.TEAMS_SENDER ?? 'mock').toLowerCase();
-  if (!['mock', 'ellis'].includes(dataSource)) throw new Error(`DATA_SOURCE must be mock|ellis (got ${dataSource})`);
+  if (!['mock', 'ellis', 'file'].includes(dataSource)) throw new Error(`DATA_SOURCE must be mock|ellis|file (got ${dataSource})`);
   if (!['mock', 'claude'].includes(ai)) throw new Error(`AI_PROVIDER must be mock|claude (got ${ai})`);
   if (!['mock', 'live'].includes(teams)) throw new Error(`TEAMS_SENDER must be mock|live (got ${teams})`);
   const dryRun = bool(env.DRY_RUN, true); // SAFE DEFAULT: dry run unless explicitly disabled
@@ -80,6 +82,7 @@ export function loadEnv(env: NodeJS.ProcessEnv = process.env): PipelineEnv {
     DRY_RUN: dryRun,
     TARGET_CHANNEL: target as PipelineEnv['TARGET_CHANNEL'],
     REPORT_DATE: reportDate,
+    DATA_FILE: opt(env.DATA_FILE) ?? 'automation/input/ellis-export.json',
     REPORTING_CURRENCY: currency,
     REPORT_LANGUAGE: (env.REPORT_LANGUAGE ?? 'ko').toLowerCase().startsWith('ko') ? 'ko' : 'en',
     REPORT_TIMEZONE: env.REPORT_TIMEZONE ?? 'Asia/Ho_Chi_Minh',
@@ -114,6 +117,7 @@ export function describe(cfg: PipelineEnv): Record<string, unknown> {
     DRY_RUN: cfg.DRY_RUN,
     TARGET_CHANNEL: cfg.TARGET_CHANNEL,
     REPORT_DATE: cfg.REPORT_DATE ?? '(auto: latest Saturday)',
+    DATA_FILE: cfg.DATA_SOURCE === 'file' ? cfg.DATA_FILE : undefined,
     REPORTING_CURRENCY: cfg.REPORTING_CURRENCY,
     REPORT_LANGUAGE: cfg.REPORT_LANGUAGE,
     REPORT_TIMEZONE: cfg.REPORT_TIMEZONE,

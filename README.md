@@ -152,6 +152,12 @@ PBKDF2 hash (`VITE_GATE_HASH`); the password itself is never stored in git.
 3. Store as `TEAMS_WEBHOOK_URL` (leaders) / `TEAMS_TEST_WEBHOOK_URL` (test). Create one per channel — never reuse.
 4. Payload format and card structure: [docs/TEAMS_MESSAGE_SPEC.md](docs/TEAMS_MESSAGE_SPEC.md).
 
+## 6a. Manual run mode (current operating model)
+
+The weekly report is run by Global Ops through the AI Agent (ELLIS MCP with Entra ID SSO): pull the four tool results into
+`automation/input/ellis-export.json`, then `DATA_SOURCE=file REPORT_LANGUAGE=ko DRY_RUN=true npx tsx automation/weekly-report.ts`.
+Step-by-step: [docs/RUNBOOK_MANUAL_RUN.md](docs/RUNBOOK_MANUAL_RUN.md). The scheduled workflow below stays optional.
+
 ## 7. Saturday schedule
 
 `.github/workflows/weekly-report.yml` — cron `0 2 * * 6` (UTC) = **Saturday 09:00 Asia/Ho_Chi_Minh** (UTC+7, no DST).

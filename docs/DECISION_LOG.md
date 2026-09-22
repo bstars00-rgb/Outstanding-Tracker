@@ -110,4 +110,6 @@ Each phase records: decisions taken, evidence, and the risks that remain open at
 
 | D32 | **Daniel (ELLIS dev) confirmed feasibility (2026-09-22)**: tools delivered through a dedicated MCP layer (`stg-mcp.ohmytrip.com` / `mcp.ohmytrip.com`, Entra ID SSO, department access). Mapping decisions: `control_company` ← `list_channels.ownerCompCode/Name`; credit limit ← Deposit Type "Credit by company" + Deposit Amount (Finance to confirm); account owner ← CRM Trader PIC AM (GSM to confirm); Tier stays tracker config. **New risk R-E: unattended batch authentication** (SSO-only) — requested service-principal / token / export alternative. | Keep the weekly automation unattended; do not store personal SSO sessions in CI. |
 
+| D33 | **Operating mode = manual run by Global Ops (2026-09-22)**: no unattended batch authentication will be requested from ELLIS. Added `DATA_SOURCE=file` (`FileReceivablesSource`: raw ELLIS tool export or tracker dataset JSON) and `docs/RUNBOOK_MANUAL_RUN.md`; the Saturday GitHub Actions schedule remains optional. R-E closed. | User decision ("무인 자동보고는 고려하지 않아도 돼. 내가 할거니까."). |
+
 Results and remaining risks: `docs/QA_REPORT.md`.

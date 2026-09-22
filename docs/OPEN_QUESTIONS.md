@@ -104,7 +104,7 @@ Decisions are recorded in `docs/DECISION_LOG.md` (phases 1–5). Items in this d
 | E17 credit limit | **Pending Finance** | Proposed = Seller tab Deposit Type "Credit by company" + Deposit Amount (`get_channel.depositTypeCode/depositAmount/depositCurrencyCode/depositDate`). Other deposit types = collateral, not a limit. |
 | E20 account owner (PIC OMH) | **Pending GSM** | Likely Account Manager (AM) under Users › CRM Trader › PIC; CM/AM both requested. Otherwise tracker configuration. |
 | Tier | **Decided** | Not in ELLIS; tracker configuration `CUSTOMER_TIERS`. |
-| **E23 (new) Unattended auth** | **Open — blocking for the Saturday batch** | MCP auth is Microsoft Entra ID SSO via the AI Agent connector. GitHub Actions cannot do interactive SSO. Options requested: client-credentials app registration, scoped service token, or daily export file. |
+| E23 Unattended auth | **Closed — not required** (decision 2026-09-22) | Global Ops runs the weekly report manually through the AI Agent SSO session; `DATA_SOURCE=file` mode + `docs/RUNBOOK_MANUAL_RUN.md`. GitHub Actions schedule stays optional (mock/dry-run). |
 | Staging | **Ready** | Same Microsoft account, "ELLIS STAGING" connector, remove after tests; name the environment in prompts. |
 
 ## Addendum 2026-09-07 — after reading the ELLIS Playbook

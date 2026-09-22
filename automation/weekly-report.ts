@@ -17,6 +17,7 @@ import { latestSaturday, tzOffsetMinutes } from '@core/dates';
 import { validateDataset } from '@core/validate';
 import type { ReceivablesDataset, Snapshot, TrackerModel } from '@core/types';
 import { MockReceivablesSource } from '@adapters/ellis/mock-adapter';
+import { FileReceivablesSource } from '@adapters/ellis/file-adapter';
 import { EllisMcpReceivablesSource } from '@adapters/ellis/live-adapter';
 import { HttpMcpClient } from '@adapters/ellis/mcp-client';
 import type { ReceivablesSource } from '@adapters/ellis/types';
@@ -188,6 +189,8 @@ export function buildDeps(env: PipelineEnv, log: RedactingLogger, now: () => Dat
   const source: ReceivablesSource =
     env.DATA_SOURCE === 'mock'
       ? new MockReceivablesSource(20260905, env.REPORTING_CURRENCY)
+      : env.DATA_SOURCE === 'file'
+        ? new FileReceivablesSource(env.DATA_FILE, env.REPORTING_CURRENCY, mockFxTable(refDate, refDate, env.REPORTING_CURRENCY))
       : new EllisMcpReceivablesSource(new HttpMcpClient(env.secrets.ELLIS_MCP_ENDPOINT!, env.secrets.ELLIS_MCP_AUTH), {
           reportingCurrency: env.REPORTING_CURRENCY,
           // FX for live mode: until a rates feed is wired (Required item), the illustrative table is used and flagged in completeness notes.

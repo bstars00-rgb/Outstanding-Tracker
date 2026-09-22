@@ -5,7 +5,7 @@ Status: **v0.2 (ELLIS Playbook 반영)** · 2026-09-07 · 작성: Global Ops (Ou
 
 ---
 
-> **2026-09-22 Daniel 회신 반영**: 4개 도구 구현 가능 확인. 전용 MCP 계층(`stg-mcp.ohmytrip.com` / `mcp.ohmytrip.com`, Entra ID SSO, 부서별 접근). `traderCompCode`·`paymentConfirmDate` 이미 제공 가능. 관리 법인은 `list_channels.ownerCompCode/Name`. Credit Limit = Seller 탭 Deposit Type "Credit by company" + Deposit Amount(Finance 확인 중). PIC(OMH)=CRM Trader PIC의 AM 추정(GSM 확인 중). Tier는 트래커 설정. **무인 배치용 인증(서비스 주체/토큰/export) 회신 대기 — 토요일 자동 보고의 선결 조건.**
+> **2026-09-22 Daniel 회신 반영**: 4개 도구 구현 가능 확인. 전용 MCP 계층(`stg-mcp.ohmytrip.com` / `mcp.ohmytrip.com`, Entra ID SSO, 부서별 접근). `traderCompCode`·`paymentConfirmDate` 이미 제공 가능. 관리 법인은 `list_channels.ownerCompCode/Name`. Credit Limit = Seller 탭 Deposit Type "Credit by company" + Deposit Amount(Finance 확인 중). PIC(OMH)=CRM Trader PIC의 AM 추정(GSM 확인 중). Tier는 트래커 설정. 무인 배치 인증은 **요청하지 않음**(2026-09-22 결정: Global Ops가 AI Agent SSO 세션으로 수동 실행, `DATA_SOURCE=file` 모드).
 
 > **담당 (2026-09-07 스레드)**: ELLIS 측 총괄 조셉(Joseph), 미수 관련 API 구현 Daniel. §9 질의 회신은 Global Ops로.
 

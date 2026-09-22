@@ -13,3 +13,5 @@ public/data/*.json
 *.log
 .DS_Store
 handoff/
+automation/input/*
+!automation/input/README.md
