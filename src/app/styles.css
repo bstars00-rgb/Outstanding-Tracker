@@ -1244,3 +1244,25 @@ table.compact td {
   font-weight: 700;
   font-variant-numeric: tabular-nums;
 }
+
+/* KPI drill-down */
+.kpi.clickable {
+  cursor: pointer;
+  transition: border-color 120ms ease, transform 120ms ease;
+}
+.kpi.clickable:hover,
+.kpi.clickable:focus-visible {
+  border-color: var(--accent, #6ea8fe);
+  transform: translateY(-1px);
+  outline: none;
+}
+.kpi.clickable:focus-visible {
+  box-shadow: 0 0 0 2px var(--accent, #6ea8fe);
+}
+.banner.kpi-filter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}

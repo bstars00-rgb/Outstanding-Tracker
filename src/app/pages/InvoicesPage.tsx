@@ -12,10 +12,12 @@ import { Money } from '@app/components/Money';
 import { StatusPill, invoiceStatusTone } from '@app/components/StatusPill';
 import { customerLink } from '@app/lib/links';
 import { fmtDate } from '@app/lib/format';
+import { KPI_TEXT_I18N } from '@core/kpis';
+import { kpiInvoicePredicate, kpiRowAmount } from '@app/lib/kpi-drilldown';
 
 const SOP_ORDER = ['L1', 'L2', 'L3', 'L4'];
 
-const PARAMS = ['customer', 'bucket', 'owner', 'country', 'status', 'currency', 'q'] as const;
+const PARAMS = ['customer', 'bucket', 'owner', 'country', 'status', 'currency', 'q', 'kpi'] as const;
 type Param = (typeof PARAMS)[number];
 
 export function InvoicesPage() {
@@ -46,10 +48,13 @@ export function InvoicesPage() {
   const currencies = distinct(all, (i) => i.invoice_currency);
   const customers = useMemo(() => [...new Map(all.map((i) => [i.customer_id, i.customer_name])).entries()].map(([value, label]) => ({ value, label })).sort((a, b) => a.label.localeCompare(b.label)), [all]);
 
-  const f = { customer: get('customer'), bucket: get('bucket'), owner: get('owner'), country: get('country'), status: get('status'), currency: get('currency'), q: get('q') };
+  const f = { customer: get('customer'), bucket: get('bucket'), owner: get('owner'), country: get('country'), status: get('status'), currency: get('currency'), q: get('q'), kpi: get('kpi') };
+  const kpiPred = useMemo(() => (f.kpi ? kpiInvoicePredicate(f.kpi, model) : null), [f.kpi, model]);
+  const kpiLabel = f.kpi ? (KPI_TEXT_I18N[lang]?.label[f.kpi] ?? model.kpis.find((k) => k.key === f.kpi)?.label ?? f.kpi) : '';
   const rows = useMemo(() => {
     const q = f.q.trim().toLowerCase();
     return all.filter((i) => {
+      if (kpiPred && !kpiPred(i)) return false;
       if (f.customer && i.customer_id !== f.customer) return false;
       if (f.bucket && i.aging_bucket !== f.bucket) return false;
       if (f.owner && (i.account_owner_name || i.owner || unassigned) !== f.owner) return false;
@@ -59,9 +64,10 @@ export function InvoicesPage() {
       if (q && !i.invoice_number.toLowerCase().includes(q) && !i.customer_name.toLowerCase().includes(q)) return false;
       return true;
     });
-  }, [all, f.customer, f.bucket, f.owner, f.country, f.status, f.currency, f.q, unassigned]);
+  }, [all, f.customer, f.bucket, f.owner, f.country, f.status, f.currency, f.q, unassigned, kpiPred]);
 
   const totalOut = rows.reduce((s, i) => s + i.outstanding_reporting, 0);
+  const kpiAmount = f.kpi ? rows.reduce((s, i) => s + kpiRowAmount(f.kpi, i, model), 0) : 0;
 
   const columns: Column<CalculatedInvoice>[] = [
     { key: 'no', header: t('col.invoiceNo'), sortValue: (i) => i.invoice_number, render: (i) => <strong className="tnum">{i.invoice_number}</strong> },
@@ -187,6 +193,14 @@ export function InvoicesPage() {
   return (
     <div>
       <PageHeader title={t('invoices.title')} subtitle={t('invoices.subtitle')} />
+      {f.kpi && kpiPred && (
+        <div className="banner info kpi-filter" data-testid="kpi-filter" role="status">
+          <span>{t('invoices.kpiFilter', { label: kpiLabel, n: rows.length, amount: formatMoney(kpiAmount, ccy) })}</span>{' '}
+          <button type="button" className="btn small" onClick={() => setParam('kpi')('')} data-testid="kpi-filter-clear">
+            {t('invoices.kpiClear')}
+          </button>
+        </div>
+      )}
 
       <FilterBar
         onReset={reset}

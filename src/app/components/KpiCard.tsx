@@ -1,4 +1,6 @@
-import { useState } from 'react';
+import { useState, type KeyboardEvent, type MouseEvent } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { kpiDrilldownPath } from '@app/lib/kpi-drilldown';
 import { KPI_STATUS_LABEL_I18N } from '@core/i18n';
 import { KPI_TEXT_I18N } from '@core/kpis';
 import type { KpiValue } from '@core/types';
@@ -21,8 +23,32 @@ export function KpiCard({ kpi, currency }: { kpi: KpiValue; currency: string }) 
   const change = kpiChangeText(kpi, currency);
   const ChangeIcon = kpi.change === null || kpi.change === 0 ? IconMinus : kpi.change > 0 ? IconUp : IconDown;
   const defId = `kpi-def-${kpi.key}`;
+  const navigate = useNavigate();
+  const href = kpiDrilldownPath(kpi.key);
+  const open = () => navigate(href);
+  const onKey = (e: KeyboardEvent<HTMLElement>) => {
+    if (e.target !== e.currentTarget) return;
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      open();
+    }
+  };
+  const toggleDef = (e: MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+    setShowDef((s) => !s);
+  };
   return (
-    <article className={`card kpi status-${kpi.status}`} data-testid={`kpi-card-${kpi.key}`} title={definition} aria-labelledby={`kpi-label-${kpi.key}`}>
+    <article
+      className={`card kpi clickable status-${kpi.status}`}
+      data-testid={`kpi-card-${kpi.key}`}
+      title={`${definition} — ${t('kpi.open')}`}
+      aria-labelledby={`kpi-label-${kpi.key}`}
+      role="link"
+      tabIndex={0}
+      data-href={href}
+      onClick={open}
+      onKeyDown={onKey}
+    >
       <div className="kpi-head">
         <span className="kpi-label" id={`kpi-label-${kpi.key}`}>
           {label}
@@ -34,7 +60,7 @@ export function KpiCard({ kpi, currency }: { kpi: KpiValue; currency: string }) 
           aria-expanded={showDef}
           aria-controls={defId}
           title={definition}
-          onClick={() => setShowDef((s) => !s)}
+          onClick={toggleDef}
         >
           <span aria-hidden="true">i</span>
         </button>

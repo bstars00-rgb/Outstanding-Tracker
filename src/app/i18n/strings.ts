@@ -108,6 +108,9 @@ const en = {
   'kpi.wow': 'WoW',
   'kpi.definition': 'Definition:',
   'kpi.definitionOf': 'Definition of {label}',
+  'kpi.open': 'Click to see the underlying rows',
+  'invoices.kpiFilter': 'Rows behind KPI "{label}": {n} invoice(s) · {amount}',
+  'invoices.kpiClear': 'Clear KPI filter',
 
   // ---------- risk grade help ----------
   'grade.help.Low': 'Low risk (score < 30): paying on time, no warning signals.',
@@ -591,6 +594,9 @@ const ko: Record<StringKey, string> = {
   'kpi.wow': '전주 대비',
   'kpi.definition': '정의:',
   'kpi.definitionOf': '{label} 정의',
+  'kpi.open': '클릭하면 해당 인보이스 목록을 봅니다',
+  'invoices.kpiFilter': 'KPI "{label}" 상세: {n}건 · {amount}',
+  'invoices.kpiClear': 'KPI 필터 해제',
 
   'grade.help.Low': '낮음 (점수 30 미만): 정상 결제, 경고 신호 없음.',
   'grade.help.Watch': '관찰 (점수 30–49): 초기 신호 감지, 정기 팔로업 필요.',

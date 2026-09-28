@@ -22,7 +22,7 @@ const kpi: KpiValue = {
 
 describe('KpiCard', () => {
   it('renders value, WoW change and a text status label', () => {
-    renderWithProviders(<KpiCard kpi={kpi} currency="USD" />);
+    renderWithProviders(<KpiCard kpi={kpi} currency="USD" />, { route: '/' });
     const card = screen.getByTestId('kpi-card-overdue_outstanding');
     expect(card).toHaveTextContent('Overdue Outstanding');
     expect(card).toHaveTextContent('USD 462,900.59');
@@ -31,12 +31,13 @@ describe('KpiCard', () => {
     expect(card).toHaveTextContent('Critical');
     expect(card).toHaveTextContent('Overdue grew sharply this week.');
     // Definition/label follow the UI language map (published models may be in another language); custom text is a fallback only.
-    expect(card).toHaveAttribute('title', KPI_TEXT_I18N.en.definition.overdue_outstanding);
+    expect(card.getAttribute('title')).toContain(KPI_TEXT_I18N.en.definition.overdue_outstanding); // + drill-down hint
+    expect(card).toHaveAttribute('data-href', '/invoices?kpi=overdue_outstanding');
   });
 
   it('formats ratio KPIs as percent with pp change and shows the definition on demand', () => {
     const ratio: KpiValue = { ...kpi, key: 'overdue_ratio', label: 'Overdue Ratio', unit: 'ratio', value: 0.2926, previous: 0.2938, change: -0.0012, change_pct: null, status: 'warning' };
-    renderWithProviders(<KpiCard kpi={ratio} currency="USD" />);
+    renderWithProviders(<KpiCard kpi={ratio} currency="USD" />, { route: '/' });
     const card = screen.getByTestId('kpi-card-overdue_ratio');
     expect(card).toHaveTextContent('29.3%');
     expect(card).toHaveTextContent('-0.1 pp');
@@ -50,13 +51,13 @@ describe('KpiCard', () => {
 
   it('shows a no-comparison message when there is no previous week', () => {
     const fresh: KpiValue = { ...kpi, previous: null, change: null, change_pct: null, status: 'neutral' };
-    renderWithProviders(<KpiCard kpi={fresh} currency="USD" />);
+    renderWithProviders(<KpiCard kpi={fresh} currency="USD" />, { route: '/' });
     expect(screen.getByTestId('kpi-card-overdue_outstanding')).toHaveTextContent('No prior week for comparison');
     expect(screen.getByTestId('kpi-card-overdue_outstanding')).toHaveTextContent('Neutral');
   });
 
   it('localises the status label and chrome in Korean while keeping numbers unchanged', () => {
-    renderWithProviders(<KpiCard kpi={kpi} currency="JPY" />, { lang: 'ko' });
+    renderWithProviders(<KpiCard kpi={kpi} currency="JPY" />, { lang: 'ko', route: '/' });
     const card = screen.getByTestId('kpi-card-overdue_outstanding');
     expect(card).toHaveTextContent('위험');
     expect(card).toHaveTextContent('전주 대비');

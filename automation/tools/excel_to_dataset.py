@@ -25,6 +25,19 @@ import openpyxl
 #   "Business Trip in ..."  = employee business trips (출장)
 #   "Unsold room (JP)"      = hard-block unsold inventory (하드블럭 미판매분)
 INTERNAL_HINTS = ("business trip", "unsold room")
+
+# Managing entity (control company) per channel, confirmed by Global Ops 2026-09-28:
+#   Ctrip Vietnam -> OMH Vietnam; Ctrip Korea, Agoda, Kakao -> OMH Korea; everything else -> OMH Singapore (HQ).
+CONTROL_COMPANY_DEFAULT = "OMH Singapore"
+CONTROL_COMPANY_BY_CHANNEL = {
+    "ctrip vietnam": "OMH Vietnam",
+    "ctrip korea": "OMH Korea",
+    "agoda": "OMH Korea",
+    "kakao": "OMH Korea",
+}
+
+def control_company_for(name):
+    return CONTROL_COMPANY_BY_CHANNEL.get(name.strip().lower(), CONTROL_COMPANY_DEFAULT)
 NOTE_HDR = re.compile(r"^\[(\d{4}-\d{2}-\d{2})\]\s*(.+?)\s*\|\s*([\d,\.]+)\s*$")
 
 
@@ -105,7 +118,7 @@ def main(path, as_of, out):
                 "account_owner_id": (str(t["pic"]).lower() if t and t["pic"] else ""), "account_owner_name": (str(t["pic"]) if t and t["pic"] else ""),
                 "finance_owner": None, "contract_currency": ccy, "payment_terms_days": None, "credit_limit": None,
                 "credit_status": "ACTIVE", "customer_status": "ACTIVE", "collection_status": "NORMAL", "risk_grade_manual": None,
-                "preferred_contact_channel": None, "control_company": None,
+                "preferred_contact_channel": None, "control_company": control_company_for(name),
                 "tier": (int(str(t["tier"]).replace("Tier", "").strip()) if t and t.get("tier") and str(t["tier"]).startswith("Tier") else None),
                 "data_source": "op-workbook:Tier" if t else "op-workbook:Outstanding (not in Tier sheet)",
             }
@@ -174,7 +187,7 @@ def main(path, as_of, out):
         notes.append("Internal accounts excluded (not customer receivables; 출장/하드블럭 미판매분): " + ", ".join(f"{n} {e['n']} inv. JPY {e['jpy']:,.0f}" for n, e in by_name.items()) + f" — total JPY {total_jpy:,.0f}.")
     if unmatched_tier:
         notes.append("Sellers not found in the Tier sheet (no PIC / tier): " + ", ".join(sorted(unmatched_tier)) + ".")
-    notes.append("Managing entity (Seoul / Singapore) is not in the workbook; control_company left empty for all customers.")
+    notes.append("Managing entity is not in the workbook; assigned from the tracker mapping (Ctrip Vietnam -> OMH Vietnam; Ctrip Korea, Agoda, Kakao -> OMH Korea; others -> OMH Singapore HQ) until ELLIS ownerCompName is available.")
     notes.append("Payments come from the ELLIS remark notes on each invoice (record stage). PM CNFM and bank reconciliation are NOT tracked in the workbook, so the ELLIS reflection chain shows 0 pending by construction until the MCP tools deliver paymentConfirmDate.")
     notes.append("Credit limits, countries and booking context are not in the workbook.")
 

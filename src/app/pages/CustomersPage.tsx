@@ -58,7 +58,7 @@ export function CustomersPage() {
     bucket: sp.get('bucket') ?? '',
     grade: sp.get('grade') ?? '',
     dispute: '',
-    broken: '',
+    broken: sp.get('kpi') === 'broken_promises' ? 'yes' : '',
   });
   const [sortKey, setSortKey] = useState<string>('risk');
   const [sortDir, setSortDir] = useState<SortDir>('desc');
