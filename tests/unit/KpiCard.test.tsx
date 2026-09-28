@@ -1,3 +1,4 @@
+import { KPI_TEXT_I18N } from '@core/kpis';
 import { afterEach, describe, expect, it } from 'vitest';
 import { cleanup, fireEvent, screen } from '@testing-library/react';
 
@@ -29,7 +30,8 @@ describe('KpiCard', () => {
     expect(card).toHaveTextContent('+29.8%');
     expect(card).toHaveTextContent('Critical');
     expect(card).toHaveTextContent('Overdue grew sharply this week.');
-    expect(card).toHaveAttribute('title', kpi.definition);
+    // Definition/label follow the UI language map (published models may be in another language); custom text is a fallback only.
+    expect(card).toHaveAttribute('title', KPI_TEXT_I18N.en.definition.overdue_outstanding);
   });
 
   it('formats ratio KPIs as percent with pp change and shows the definition on demand', () => {
