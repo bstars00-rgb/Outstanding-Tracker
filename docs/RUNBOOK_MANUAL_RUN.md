@@ -13,6 +13,14 @@ Status: v1.0 · 2026-09-22 · 운영 방식 결정: **무인 배치 대신 Globa
 | 5 | 발송: `TEAMS_SENDER=live DRY_RUN=false TARGET_CHANNEL=test`(검증) → `leaders`(정식). Webhook URL은 셸 환경변수로만 전달 | 터미널 |
 | 6 | 스냅샷 보관: `automation/state/`가 자동 저장되므로 다음 주 전주 대비가 계산됨. 커넥터 사용 후 STAGING 커넥터는 제거 | — |
 
+## 대안: 주간 엑셀(Outstanding_Report_<날짜>.xlsx)로 실행
+MCP 도구가 아직 없을 때는 OP 워크북을 그대로 변환해 실행한다.
+```
+python automation/tools/excel_to_dataset.py automation/input/Outstanding_Report_2026-09-28.xlsx 2026-09-28 automation/input/outstanding-2026-09-28.json
+DATA_SOURCE=file DATA_FILE=automation/input/outstanding-2026-09-28.json REPORT_DATE=2026-09-28 REPORT_LANGUAGE=ko DRY_RUN=true npx tsx automation/weekly-report.ts
+```
+워크북에 없는 것: 관리 법인(서울/싱가포르), PM CNFM·은행 대사 일자, 신용한도, 국가. 엔진은 SOP(L1~L4, ¥500K 결재 경로, Tier 회수기한)를 자동 적용한다.
+
 ## AI Agent 프롬프트 예시
 ```
 Use ELLIS PRODUCTION. Call get_seller_invoices (dateType ISSUE_DATE, fromDate <오늘-120일>, toDate <오늘>, includeBookings true),

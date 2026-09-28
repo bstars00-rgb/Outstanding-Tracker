@@ -31,7 +31,7 @@ export function generateRuleBasedInsight(i: InsightInput, lang: Lang = 'en'): In
   const ratio = kpi('overdue_ratio');
   const nextMonday = addDays(i.report_date, 2);
   const nextWed = addDays(i.report_date, 4);
-  const owner = (c: CustomerFact) => c.owner || p('Unassigned', '담당자 미지정');
+  const owner = (c: { owner: string }) => c.owner || p('Unassigned', '담당자 미지정');
   const grade = (g: string) => RISK_GRADE_LABEL_I18N[lang][g] ?? g;
 
   const delta = (k: typeof total) => {
@@ -46,7 +46,7 @@ export function generateRuleBasedInsight(i: InsightInput, lang: Lang = 'en'): In
   executive_summary.push(
     p(
       `Total outstanding is ${M(total.value)}, ${delta(total)}. Overdue is ${M(overdue.value)} (${formatPct(ratio.value)} of total), ${delta(overdue)}.`,
-      `총 미수금은 ${M(total.value)}로 ${delta(total)}했습니다. 연체 미수금은 ${M(overdue.value)}(총액의 ${formatPct(ratio.value)})로 ${delta(overdue)}했습니다.`,
+      `총 미수금은 ${M(total.value)}(${delta(total)}), 연체 미수금은 ${M(overdue.value)}(총액의 ${formatPct(ratio.value)}, ${delta(overdue)})입니다.`,
     ),
   );
   if (i.new_overdue_customers.length && overdue.change && overdue.change > 0) {
@@ -103,6 +103,11 @@ export function generateRuleBasedInsight(i: InsightInput, lang: Lang = 'en'): In
   }));
 
   const owner_actions: InsightOutput['owner_actions'] = [];
+  const nextDay = addDays(i.report_date, 1);
+  for (const c of i.sop_l1 ?? [])
+    owner_actions.push({ owner: owner(c), customer: c.customer, amount: c.amount, action: p(`SOP L1: ${c.invoice_count} Tier-1 invoice(s) ≥ ¥1M overdue (oldest ${c.max_aging_days} days); report to Director/Finance/CEO within 24h and confirm remittance date`, `SOP L1: Tier 1 ¥1M 이상 연체 ${c.invoice_count}건(최장 ${c.max_aging_days}일); 24시간 내 Director·Finance·CEO 보고, 송금일 확정`), deadline: `${nextDay} 12:00` });
+  for (const d of (i.sop_past_deadline ?? []).filter((x) => x.route !== 'CEO').slice(0, 3))
+    owner_actions.push({ owner: d.owner || p('Unassigned', '담당자 미지정'), customer: d.customer, amount: d.amount, action: p(`Tier ${d.tier ?? '-'} collection period ended ${d.tier_deadline}: run collection-probability checklist; Local Director decides (≤ ¥500K)`, `Tier ${d.tier ?? '-'} 회수기한 ${d.tier_deadline} 경과: 회수 확률 체크리스트 실행, Local Director 결정(¥500K 이하)`), deadline: nextWed });
   for (const c of i.broken_promises)
     owner_actions.push({
       owner: owner(c),
@@ -126,6 +131,10 @@ export function generateRuleBasedInsight(i: InsightInput, lang: Lang = 'en'): In
     .slice(0, 8);
 
   const ceo_decisions: InsightOutput['ceo_decisions'] = [];
+  for (const c of i.sop_l1 ?? [])
+    ceo_decisions.push({ topic: p('SOP L1 — Tier 1 ≥ ¥1M overdue', 'SOP L1 — Tier 1 ¥1M 이상 연체'), customer: c.customer, amount: c.amount, recommendation: p(`Acknowledge the 24h escalation for ${c.customer} and confirm the collection plan (remittance date or credit action)`, `${c.customer} 24시간 에스컬레이션 확인 및 회수 계획(송금일 또는 신용 조치) 결정`), rationale: p(`${c.invoice_count} invoice(s), ${M(c.amount)} overdue, oldest ${c.max_aging_days} days`, `${c.invoice_count}건, 연체 ${M(c.amount)}, 최장 ${c.max_aging_days}일`) });
+  for (const d of (i.sop_past_deadline ?? []).filter((x) => x.route === 'CEO'))
+    ceo_decisions.push({ topic: p('Tier collection period ended (> ¥500K)', 'Tier 회수기한 경과(¥500K 초과)'), customer: d.customer, amount: d.amount, recommendation: p(`${d.customer}: approve long-term receivable management or loss treatment per the collection-probability checklist`, `${d.customer}: 회수 확률 체크리스트 결과에 따라 장기 미수 관리 또는 손실 처리 승인`), rationale: p(`Tier ${d.tier ?? '-'} deadline ${d.tier_deadline} passed; ${M(d.amount)} open`, `Tier ${d.tier ?? '-'} 기한 ${d.tier_deadline} 경과; 미수 ${M(d.amount)}`) });
   for (const c of i.top_overdue_customers.filter((c) => c.max_aging_days > 90))
     ceo_decisions.push({ topic: p('Credit hold / legal escalation', '신용 중단 / 법무 에스컬레이션'), customer: c.customer, amount: c.overdue, recommendation: p(`Approve credit hold and collection-agency/legal path for ${c.customer}`, `${c.customer}에 대한 신용 중단 및 추심·법무 절차 승인`), rationale: p(`${M(c.overdue)} overdue, oldest ${c.max_aging_days} days, risk ${c.risk_grade}`, `연체 ${M(c.overdue)}, 최장 ${c.max_aging_days}일, 위험 ${grade(c.risk_grade)}`) });
   for (const c of i.credit_limit_exceeded)

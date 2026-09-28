@@ -54,6 +54,20 @@ export function buildInsightInput(m: TrackerModel): InsightInput {
     dq.set(i.code, e);
   }
 
+  const l1ByCustomer = new Map<string, InsightInput['sop_l1'][number]>();
+  for (const i of m.invoices.filter((x) => x.outstanding_amount > 0 && x.sop.level === 'L1')) {
+    const e = l1ByCustomer.get(i.customer_id) ?? { customer: i.customer_name, owner: i.account_owner_name, amount: 0, invoice_count: 0, max_aging_days: 0 };
+    e.amount = round2(e.amount + i.outstanding_reporting);
+    e.invoice_count++;
+    e.max_aging_days = Math.max(e.max_aging_days, i.aging_days ?? 0);
+    l1ByCustomer.set(i.customer_id, e);
+  }
+  const sopPastDeadline = m.invoices
+    .filter((i) => i.outstanding_amount > 0 && i.sop.past_tier_deadline)
+    .map((i) => ({ customer: i.customer_name, owner: i.account_owner_name, invoice_id: i.invoice_id, amount: i.outstanding_reporting, tier: i.sop.tier, tier_deadline: i.sop.tier_deadline, route: i.sop.route }))
+    .sort((a, b) => b.amount - a.amount)
+    .slice(0, 10);
+
   const activityCutoff = m.week.start;
   const recentActivities = m.invoices.flatMap((i) => i.activities).filter((a) => a.activity_date >= activityCutoff).length;
 
@@ -83,5 +97,8 @@ export function buildInsightInput(m: TrackerModel): InsightInput {
     recent_activity_count: recentActivities,
     data_quality: [...dq.entries()].map(([code, e]) => ({ code, count: e.count, sample: e.sample })),
     completeness: m.completeness,
+    sop_summary: m.sop_summary,
+    sop_l1: [...l1ByCustomer.values()].sort((a, b) => b.amount - a.amount).slice(0, 8),
+    sop_past_deadline: sopPastDeadline,
   };
 }

@@ -54,6 +54,8 @@ export interface Customer {
   preferred_contact_channel: ContactChannel | null;
   /** OhMyHotel entity that manages this customer's receivables (ELLIS Seller Invoice "Control"), e.g. "OMH Seoul", "OMH Singapore". */
   control_company: string | null;
+  /** OMH channel tier (SOP collection period / urgency). null = untiered or unknown. */
+  tier?: 1 | 2 | 3 | null;
   data_source: string;
 }
 
@@ -196,6 +198,26 @@ export interface CalculatedInvoice extends Invoice {
   owner: string;
   payments: Payment[];
   activities: CollectionActivity[];
+  /** OMH Outstanding Handling SOP classification (urgency level, approval route, Tier deadline). */
+  sop: SopAssessment;
+}
+
+/** SOP urgency level: L1 Urgent · L2 Critical · L3 General · L4 Monitor (see src/core/sop.ts). */
+export type SopLevel = 'L1' | 'L2' | 'L3' | 'L4';
+export type SopRoute = 'CEO' | 'LOCAL_DIRECTOR';
+export interface SopAssessment {
+  level: SopLevel | null; // null when not overdue or amount not convertible to JPY
+  route: SopRoute | null; // > ¥500K => CEO approval, otherwise Local Director
+  tier: 1 | 2 | 3 | null;
+  amount_jpy: number | null;
+  tier_deadline: ISODate | null; // due date + Tier collection period
+  past_tier_deadline: boolean; // => run the collection-probability checklist
+  rule: string; // which SOP rule (or assumption) produced the level
+}
+export interface SopSummaryRow {
+  level: SopLevel;
+  count: number;
+  amount: number; // reporting currency
 }
 
 export interface RiskFactor {
@@ -459,4 +481,8 @@ export interface TrackerModel {
   unknown_due_reporting: number;
   /** Language of the engine-generated wording in this model ('en' | 'ko'). */
   lang: 'en' | 'ko';
+  /** Open overdue balance per SOP urgency level. */
+  sop_summary: SopSummaryRow[];
+  /** Overdue balance whose Tier collection period has already ended (probability checklist due). */
+  sop_past_deadline: { count: number; amount: number };
 }

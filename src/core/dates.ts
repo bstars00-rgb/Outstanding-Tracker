@@ -19,6 +19,17 @@ export function daysBetween(from: ISODate, to: ISODate): number {
   return Math.round((toUTCDate(to).getTime() - toUTCDate(from).getTime()) / DAY_MS);
 }
 
+/** Calendar months later, keeping the day of month (clamped to the target month's length). */
+export function addMonths(iso: ISODate, months: number): ISODate {
+  const d = toUTCDate(iso);
+  const day = d.getUTCDate();
+  d.setUTCDate(1);
+  d.setUTCMonth(d.getUTCMonth() + months);
+  const last = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth() + 1, 0)).getUTCDate();
+  d.setUTCDate(Math.min(day, last));
+  return isoDate(d);
+}
+
 export function addDays(iso: ISODate, days: number): ISODate {
   const d = toUTCDate(iso);
   d.setUTCDate(d.getUTCDate() + days);

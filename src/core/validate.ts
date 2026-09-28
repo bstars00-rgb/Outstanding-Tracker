@@ -23,6 +23,7 @@ export const CustomerSchema = z.object({
   risk_grade_manual: z.enum(['Low', 'Watch', 'Medium', 'High', 'Critical']).nullable(),
   preferred_contact_channel: z.string().nullable(),
   control_company: z.string().nullable().optional().default(null),
+  tier: z.union([z.literal(1), z.literal(2), z.literal(3)]).nullable().optional().default(null),
   data_source: z.string(),
 });
 

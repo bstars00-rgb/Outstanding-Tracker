@@ -158,6 +158,15 @@ The weekly report is run by Global Ops through the AI Agent (ELLIS MCP with Entr
 `automation/input/ellis-export.json`, then `DATA_SOURCE=file REPORT_LANGUAGE=ko DRY_RUN=true npx tsx automation/weekly-report.ts`.
 Step-by-step: [docs/RUNBOOK_MANUAL_RUN.md](docs/RUNBOOK_MANUAL_RUN.md). The scheduled workflow below stays optional.
 
+### Running from the weekly OP workbook
+
+```bash
+python automation/tools/excel_to_dataset.py automation/input/Outstanding_Report_2026-09-28.xlsx 2026-09-28 automation/input/outstanding-2026-09-28.json
+DATA_SOURCE=file DATA_FILE=automation/input/outstanding-2026-09-28.json REPORT_DATE=2026-09-28 REPORT_LANGUAGE=ko DRY_RUN=true npx tsx automation/weekly-report.ts
+```
+
+The converter maps the Outstanding / Tier / information sheets (invoices, PIC + Tier, FX) and parses the ELLIS remark notes into payments. The engine then applies the OMH SOP (L1–L4 urgency, ¥500K approval route, Tier collection deadlines; `src/core/sop.ts`).
+
 ## 7. Saturday schedule
 
 `.github/workflows/weekly-report.yml` — cron `0 2 * * 6` (UTC) = **Saturday 09:00 Asia/Ho_Chi_Minh** (UTC+7, no DST).

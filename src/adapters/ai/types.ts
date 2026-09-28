@@ -26,6 +26,12 @@ export interface InsightInput {
   recent_activity_count: number;
   data_quality: { code: string; count: number; sample: string }[];
   completeness: TrackerModel['completeness'];
+  /** OMH SOP: overdue balance per urgency level (L1 Urgent … L4 Monitor). */
+  sop_summary: TrackerModel['sop_summary'];
+  /** Customers with L1 items (Tier 1, ≥ ¥1M overdue) — CEO within 24h. */
+  sop_l1: { customer: string; owner: string; amount: number; invoice_count: number; max_aging_days: number }[];
+  /** Invoices whose Tier collection period has ended — probability checklist + approval routing. */
+  sop_past_deadline: { customer: string; owner: string; invoice_id: string; amount: number; tier: number | null; tier_deadline: ISODate | null; route: 'CEO' | 'LOCAL_DIRECTOR' | null }[];
 }
 
 export interface CustomerFact {

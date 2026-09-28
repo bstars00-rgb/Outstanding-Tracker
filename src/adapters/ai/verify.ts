@@ -18,6 +18,8 @@ export function verifyInsight(input: InsightInput, out: InsightOutput): Verifica
   addFacts(input.disputes);
   addFacts(input.collection_opportunities);
   addFacts(input.due_next_week);
+  addFacts(input.sop_l1 ?? []);
+  addFacts(input.sop_past_deadline ?? []);
   input.by_owner.forEach((o) => allowedOwners.add(norm(o.owner)));
   allowedOwners.add(norm('Unassigned'));
 
@@ -103,6 +105,8 @@ function collectNumbers(input: InsightInput): number[] {
     else if (v && typeof v === 'object') Object.values(v as Record<string, unknown>).forEach(walk);
   };
   walk(input);
+  // SOP constants quoted verbatim in SOP wording: 24h escalation, ¥100K / ¥500K / ¥1M thresholds, Tier 1-3 and their 6/4/3-month periods.
+  nums.push(24, 100_000, 500_000, 1_000_000, 1, 2, 3, 4, 6);
   // derived: absolute changes, ratios as percentages, thousands
   for (const k of input.kpis) {
     if (k.change !== null) nums.push(Math.abs(k.change));

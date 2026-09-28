@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { formatMoney } from '@core/money';
-import { AGING_BUCKET_LABEL_I18N } from '@core/i18n';
+import { AGING_BUCKET_LABEL_I18N, SOP_LEVEL_LABEL_I18N } from '@core/i18n';
 import { AGING_BUCKETS, type CalculatedInvoice } from '@core/types';
 import { useReadyTracker } from '@app/data/TrackerContext';
 import { useI18n } from '@app/i18n/useI18n';
@@ -13,6 +13,8 @@ import { StatusPill, invoiceStatusTone } from '@app/components/StatusPill';
 import { customerLink } from '@app/lib/links';
 import { fmtDate } from '@app/lib/format';
 
+const SOP_ORDER = ['L1', 'L2', 'L3', 'L4'];
+
 const PARAMS = ['customer', 'bucket', 'owner', 'country', 'status', 'currency', 'q'] as const;
 type Param = (typeof PARAMS)[number];
 
@@ -21,6 +23,7 @@ export function InvoicesPage() {
   const { lang, t, te } = useI18n();
   const ccy = model.reporting_currency;
   const bucketLabel = AGING_BUCKET_LABEL_I18N[lang];
+  const sopLabel = SOP_LEVEL_LABEL_I18N[lang];
   const unassigned = t('common.unassigned');
   const [sp, setSp] = useSearchParams();
   const get = (k: Param) => sp.get(k) ?? '';
@@ -115,6 +118,20 @@ export function InvoicesPage() {
             {i.exchange_rate === 1 ? '1.0000' : i.exchange_rate.toPrecision(4)}
             <span className="cell-sub">{i.exchange_rate_date ?? ''}</span>
           </span>
+        ),
+    },
+    {
+      key: 'sop',
+      header: t('col.sop'),
+      title: t('col.sopTitle'),
+      sortValue: (i) => (i.sop.level ? SOP_ORDER.indexOf(i.sop.level) : 99),
+      render: (i) =>
+        i.sop.level ? (
+          <StatusPill tone={i.sop.level === 'L1' ? 'critical' : i.sop.level === 'L2' ? 'warning' : 'neutral'} icon={false} title={`${i.sop.rule}${i.sop.route ? ` · ${i.sop.route === 'CEO' ? t('invoices.routeCeo') : t('invoices.routeDirector')}` : ''}${i.sop.tier_deadline ? ` · ${t('invoices.tierDeadline', { date: i.sop.tier_deadline })}` : ''}`}>
+            {sopLabel[i.sop.level]}
+          </StatusPill>
+        ) : (
+          <span className="muted">{t('common.na')}</span>
         ),
     },
     {

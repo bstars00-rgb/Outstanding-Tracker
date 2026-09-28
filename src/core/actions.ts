@@ -55,6 +55,18 @@ export function buildActions(invoices: CalculatedInvoice[], customers: CustomerR
     }
   }
 
+  // OMH SOP: L1 (Tier 1, >= ¥1M overdue) must reach the CEO within 24h; items past their Tier collection period go to the probability checklist.
+  for (const i of open) {
+    const owner = custMap.get(i.customer_id)?.account_owner_name ?? i.owner;
+    if (i.sop.level === 'L1') {
+      items.push({ id: `SOP_L1:${i.invoice_id}`, group: 'ESCALATE', customer_id: i.customer_id, customer_name: i.customer_name, invoice_id: i.invoice_id, owner, due_date: addDays(ref, 1), amount_reporting: i.outstanding_reporting, severity: 'critical', status: 'open', recommended_action: p(`SOP L1 (Tier 1, ≥ ¥1M, overdue ${i.aging_days} day(s)): report OP → Director → Finance → CEO within 24h and confirm the remittance date`, `SOP L1(Tier 1, ¥1M 이상, 연체 ${i.aging_days}일): 24시간 내 OP→Director→Finance→CEO 보고, 송금일 확정`) });
+    }
+    if (i.sop.past_tier_deadline) {
+      const route = i.sop.route === 'CEO' ? p('CEO approval (> ¥500K)', 'CEO 승인(¥500K 초과)') : p('Local Director decision (≤ ¥500K)', 'Local Director 결정(¥500K 이하)');
+      items.push({ id: `SOP_DEADLINE:${i.invoice_id}`, group: 'ESCALATE', customer_id: i.customer_id, customer_name: i.customer_name, invoice_id: i.invoice_id, owner, due_date: addDays(ref, 5), amount_reporting: i.outstanding_reporting, severity: 'high', status: 'open', recommended_action: p(`Tier ${i.sop.tier} collection period ended ${i.sop.tier_deadline}: run the collection-probability checklist; route ${route}`, `Tier ${i.sop.tier} 회수기한 ${i.sop.tier_deadline} 경과: 회수 확률 체크리스트 실행, ${route} 경로`) });
+    }
+  }
+
   for (const c of customers) {
     if (c.credit_limit_exceeded) {
       const util = Math.round((c.credit_utilization ?? 0) * 100);

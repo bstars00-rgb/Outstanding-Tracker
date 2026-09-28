@@ -4,6 +4,7 @@ import { convert, round2 } from './money';
 import { computeRiskScore, DEFAULT_RISK_CONFIG, type RiskConfig } from './risk';
 import { buildActions } from './actions';
 import { buildKpis } from './kpis';
+import { assessSop, DEFAULT_SOP_CONFIG, SOP_LEVELS, type SopConfig } from './sop';
 import { pick, type Lang } from './i18n';
 import type {
   AgingBucket,
@@ -36,6 +37,8 @@ export interface BuildOptions {
   lang?: Lang;
   /** Owners/SLAs of the ELLIS reflection chain (record -> verify -> reconcile). */
   reflectionChain?: ReflectionChain;
+  /** SOP thresholds (JPY) and Tier collection periods. */
+  sopConfig?: SopConfig;
 }
 
 /** Invoices in these states never carry outstanding balance. */
@@ -54,6 +57,10 @@ export function buildTrackerModel(ds: ReceivablesDataset, opts: BuildOptions): T
     : riskCfg;
   const week = reportWeek(ref, prev?.snapshot_date ?? null);
   const rc = ds.reporting_currency;
+  // SOP thresholds are defined in JPY: JPY per 1 unit of reporting currency (null => SOP level cannot be assessed).
+  const sopCfg = opts.sopConfig ?? DEFAULT_SOP_CONFIG;
+  const jpyRate = rc === 'JPY' ? 1 : (ds.fx.rates.find((r) => r.currency === 'JPY')?.rate_to_reporting ?? null);
+  const jpyPerReporting = jpyRate ? 1 / jpyRate : null;
 
   const customersById = new Map(ds.customers.map((c) => [c.customer_id, c]));
   const paymentsByInvoice = groupBy(ds.payments, (p) => p.invoice_id ?? '');
@@ -92,13 +99,19 @@ export function buildTrackerModel(ds: ReceivablesDataset, opts: BuildOptions): T
     const invActivities = (activitiesByInvoice.get(inv.invoice_id) ?? []).slice().sort((a, b) => a.activity_date.localeCompare(b.activity_date));
     const openPromise = invActivities.filter((a) => a.promised_payment_date && !a.completed).slice(-1)[0];
     const nextAction = invActivities.filter((a) => a.next_action && !a.completed).slice(-1)[0];
+    const outstandingReporting = conv?.value ?? 0;
+    const isOverdue = outstanding > 0 && aging !== null && aging > 0;
+    const sop = assessSop(
+      { tier: cust?.tier ?? null, amount_jpy: jpyPerReporting !== null && outstandingReporting > 0 ? round2(outstandingReporting * jpyPerReporting) : null, is_overdue: isOverdue, due_date: inv.due_date, referenceDate: ref },
+      sopCfg,
+    );
     invoices.push({
       ...inv,
       outstanding_amount: outstanding,
       aging_days: aging,
       aging_bucket: outstanding > 0 ? bucketFor(aging) : aging === null ? 'UNKNOWN' : 'CURRENT',
-      is_overdue: outstanding > 0 && aging !== null && aging > 0,
-      outstanding_reporting: conv?.value ?? 0,
+      is_overdue: isOverdue,
+      outstanding_reporting: outstandingReporting,
       disputed_reporting: disputedConv?.value ?? 0,
       exchange_rate: conv?.rate ?? null,
       exchange_rate_date: conv?.rate_date ?? null,
@@ -111,6 +124,7 @@ export function buildTrackerModel(ds: ReceivablesDataset, opts: BuildOptions): T
       owner: cust?.account_owner_name ?? 'Unassigned',
       payments: (paymentsByInvoice.get(inv.invoice_id) ?? []).slice().sort((a, b) => a.payment_date.localeCompare(b.payment_date)),
       activities: invActivities,
+      sop,
     });
   }
   // Unapplied cash from payments not linked to any invoice (or partially applied)
@@ -266,6 +280,13 @@ export function buildTrackerModel(ds: ReceivablesDataset, opts: BuildOptions): T
 
   const bucketTotals = emptyBuckets();
   for (const i of open) if (i.aging_bucket !== 'UNKNOWN') bucketTotals[i.aging_bucket] += i.outstanding_reporting;
+  const sopSummary = SOP_LEVELS.map((level) => {
+    const xs = open.filter((i) => i.sop.level === level);
+    return { level, count: xs.length, amount: round2(sum(xs.map((i) => i.outstanding_reporting))) };
+  });
+  const pastDeadline = open.filter((i) => i.sop.past_tier_deadline);
+  const sopPastDeadline = { count: pastDeadline.length, amount: round2(sum(pastDeadline.map((i) => i.outstanding_reporting))) };
+  if (jpyPerReporting === null) issues.push({ severity: 'warning', code: 'MISSING_FX_RATE', entity: 'fx', entity_id: 'JPY', message: 'No JPY rate: SOP urgency levels (JPY thresholds) could not be assessed' });
 
   const totals = {
     total_outstanding: round2(total),
@@ -380,6 +401,8 @@ export function buildTrackerModel(ds: ReceivablesDataset, opts: BuildOptions): T
     fx_effect_reporting: fxEffect,
     unknown_due_reporting: sum(open.filter((i) => i.aging_bucket === 'UNKNOWN').map((i) => i.outstanding_reporting)),
     lang,
+    sop_summary: sopSummary,
+    sop_past_deadline: sopPastDeadline,
   };
 }
 

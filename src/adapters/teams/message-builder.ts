@@ -48,6 +48,7 @@ export function buildTeamsMessage(m: TrackerModel, insight: InsightResult, ctx: 
 
   const H = {
     reflection: p('ELLIS reflection pending', 'ELLIS 반영 대기'),
+    sop: p('SOP urgency', 'SOP 긴급도'),
     entity: p('By managing entity', '법인별'),
     exec: p('1. Executive Summary', '1. 경영 요약'),
     ai: p('2. AI Insights', '2. AI 인사이트'),
@@ -90,6 +91,9 @@ export function buildTeamsMessage(m: TrackerModel, insight: InsightResult, ctx: 
     `미검증 ${t.unverified_payment_count}건(${M(t.unverified_payment_amount)}) · 미대사 ${t.unreconciled_payment_count}건(${M(t.unreconciled_payment_amount)})`,
   );
 
+  const unit = p('', '건');
+  const sopValue = m.sop_summary.map((r) => `${r.level} ${r.count}${unit} (${M(r.amount)})`).join(' · ') + (m.sop_past_deadline.count ? ` · ${p('past Tier deadline', 'Tier 기한 경과')} ${m.sop_past_deadline.count}${unit} (${M(m.sop_past_deadline.amount)})` : '');
+
   // ---------- Adaptive Card ----------
   const factSet = (facts: { title: string; value: string }[]) => ({ type: 'FactSet', facts });
   const text = (t: string, opts: Record<string, unknown> = {}) => ({ type: 'TextBlock', text: t, wrap: true, ...opts });
@@ -121,6 +125,7 @@ export function buildTeamsMessage(m: TrackerModel, insight: InsightResult, ctx: 
         { title: H.due7, value: M(due7.value) },
         ...entityFacts,
         { title: H.reflection, value: reflectionValue },
+        { title: H.sop, value: sopValue },
       ]),
       ...bullets(out.executive_summary.slice(0, 3)),
       text(H.ai, { weight: 'Bolder', size: 'Medium', spacing: 'Medium' }),
@@ -161,6 +166,7 @@ export function buildTeamsMessage(m: TrackerModel, insight: InsightResult, ctx: 
         `${H.o30}: ${M(o30.value)} · ${H.o90}: ${M(o90.value)} · ${H.due7}: ${M(due7.value)}`,
         ...entityFacts.map((f) => `${f.title}: ${f.value}`),
         `${H.reflection}: ${reflectionValue}`,
+        `${H.sop}: ${sopValue}`,
         ...out.executive_summary.slice(1, 3), // first sentence repeats the KPI lines
       ],
     },
