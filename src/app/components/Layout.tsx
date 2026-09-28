@@ -5,7 +5,7 @@ import { useTracker } from '@app/data/TrackerContext';
 import { gateEnabled, lockGate } from '@app/gate/PasswordGate';
 import { useI18n } from '@app/i18n/useI18n';
 import type { StringKey } from '@app/i18n/strings';
-import { IconActions, IconAging, IconCheck, IconCustomers, IconInsights, IconInvoices, IconOverview, IconWarning } from './Icons';
+import { IconActions, IconAging, IconCheck, IconCustomers, IconInsights, IconInvoices, IconOverview } from './Icons';
 import { LangToggle } from './LangToggle';
 import { ThemeToggle } from './ThemeToggle';
 
@@ -19,7 +19,6 @@ const NAV: { to: string; label: StringKey; short: StringKey; Icon: typeof IconOv
 ];
 
 const SOURCE_KEY: Record<string, StringKey> = {
-  mock: 'source.mock',
   'ellis-mcp': 'source.ellis-mcp',
   'ellis-bookings-derived': 'source.ellis-bookings-derived',
   file: 'source.file',
@@ -29,11 +28,9 @@ export function Layout({ children }: { children: ReactNode }) {
   const data = useTracker();
   const { t } = useI18n();
   const model = data.model;
-  const isMock = model ? model.is_mock : data.mode === 'mock';
   const asOf = model ? formatInTimeZone(model.as_of, 'Asia/Ho_Chi_Minh') : '—';
   const dates = data.availableDates.length ? [...data.availableDates].reverse() : [data.referenceDate];
-  const sourceLabel = model ? (SOURCE_KEY[model.source] ? t(SOURCE_KEY[model.source]) : model.source) : data.mode === 'mock' ? t('source.mock') : t('source.published');
-  const otherMode = data.mode === 'mock' ? 'live' : 'mock';
+  const sourceLabel = model ? (SOURCE_KEY[model.source] ? t(SOURCE_KEY[model.source]) : model.source) : t('source.published');
 
   return (
     <div className="app">
@@ -55,9 +52,9 @@ export function Layout({ children }: { children: ReactNode }) {
 
       <div className="main">
         <header className="topbar">
-          <span className={`mode-badge ${isMock ? 'mock' : 'live'}`} data-testid="mode-badge" title={isMock ? t('badge.mock.title') : t('badge.live.title')}>
-            {isMock ? <IconWarning width={13} height={13} /> : <IconCheck width={13} height={13} />}
-            {isMock ? t('badge.mock') : t('badge.live')}
+          <span className="mode-badge live" data-testid="mode-badge" title={t('badge.live.title')}>
+            <IconCheck width={13} height={13} />
+            {t('badge.live')}
           </span>
 
           <span className="topbar-item">
@@ -68,8 +65,8 @@ export function Layout({ children }: { children: ReactNode }) {
               data-testid="ref-date-select"
               value={data.referenceDate}
               onChange={(e) => data.setReferenceDate(e.target.value)}
-              disabled={data.mode !== 'mock' || data.status === 'loading'}
-              title={data.mode === 'mock' ? t('topbar.refDate.mockTitle') : t('topbar.refDate.liveTitle')}
+              disabled={dates.length <= 1 || data.status === 'loading'}
+              title={t('topbar.refDate.liveTitle')}
             >
               {dates.map((d) => (
                 <option key={d} value={d}>
@@ -91,9 +88,6 @@ export function Layout({ children }: { children: ReactNode }) {
           <span className="topbar-spacer" />
           <LangToggle />
           <ThemeToggle />
-          <button type="button" className="btn small" onClick={() => data.setMode(otherMode)} aria-label={t('topbar.switchToAria', { mode: t(`mode.${otherMode}`) })}>
-            {t('topbar.switchTo', { mode: t(`mode.${otherMode}`) })}
-          </button>
           <button type="button" className="btn small" onClick={data.refresh} aria-label={t('topbar.refreshAria')}>
             {t('topbar.refresh')}
           </button>

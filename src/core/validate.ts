@@ -93,7 +93,7 @@ export const FxTableSchema = z.object({
 
 export const DatasetSchema = z.object({
   as_of: z.string().datetime({ offset: true }),
-  source: z.enum(['mock', 'ellis-mcp', 'ellis-bookings-derived', 'file']),
+  source: z.enum(['ellis-mcp', 'ellis-bookings-derived', 'file']),
   reporting_currency: ccy,
   fx: FxTableSchema,
   customers: z.array(CustomerSchema),

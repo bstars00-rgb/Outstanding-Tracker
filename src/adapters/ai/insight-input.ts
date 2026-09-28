@@ -75,7 +75,6 @@ export function buildInsightInput(m: TrackerModel): InsightInput {
     report_date: m.reference_date,
     previous_snapshot_date: m.previous_snapshot_date,
     reporting_currency: m.reporting_currency,
-    is_mock: m.is_mock,
     kpis: m.kpis.map((k) => ({ key: k.key, label: k.label, value: k.value, previous: k.previous, change: k.change, change_pct: k.change_pct, unit: k.unit })),
     fx_effect_reporting: m.fx_effect_reporting,
     top_overdue_customers: withBalance.filter((c) => c.overdue_reporting > 0).sort((a, b) => b.overdue_reporting - a.overdue_reporting).slice(0, 8).map(fact),

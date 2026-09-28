@@ -381,7 +381,6 @@ export function buildTrackerModel(ds: ReceivablesDataset, opts: BuildOptions): T
     previous_snapshot_date: prev?.snapshot_date ?? null,
     reporting_currency: rc,
     source: ds.source,
-    is_mock: ds.source === 'mock',
     kpis,
     invoices,
     customers: customers.sort((a, b) => b.risk.score - a.risk.score || b.overdue_reporting - a.overdue_reporting),

@@ -36,8 +36,6 @@ export function readyContextValue(model: TrackerModel, insight: InsightResult, o
     model,
     insight,
     error: null,
-    mode: 'mock',
-    setMode: () => {},
     referenceDate: model.reference_date,
     setReferenceDate: () => {},
     availableDates: [model.reference_date],

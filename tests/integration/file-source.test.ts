@@ -3,8 +3,8 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { FileReceivablesSource } from '@adapters/ellis/file-adapter';
-import { MockReceivablesSource } from '@adapters/ellis/mock-adapter';
-import { mockFxTable } from '@adapters/ellis/mock-data';
+import { FixtureReceivablesSource } from '../fixtures/fixture-source';
+import { fixtureFxTable } from '../fixtures/fixture-data';
 import { InMemorySnapshotStore } from '@adapters/storage/snapshot-store';
 import { MockTeamsSender } from '@adapters/teams/mock-sender';
 import { RuleBasedInsightProvider } from '@adapters/ai/mock-provider';
@@ -20,7 +20,7 @@ afterAll(async () => {
   await rm(dir, { recursive: true, force: true });
 });
 
-const fx = mockFxTable('2026-09-05', '2026-09-05', 'JPY');
+const fx = fixtureFxTable('2026-09-05', '2026-09-05', 'JPY');
 
 describe('manual run mode: DATA_SOURCE=file', () => {
   it('loads a raw ELLIS export (tool results) and maps it like the live adapter', async () => {
@@ -54,7 +54,7 @@ describe('manual run mode: DATA_SOURCE=file', () => {
   });
 
   it('accepts a full ReceivablesDataset JSON too and rejects unknown layouts', async () => {
-    const ds = await new MockReceivablesSource().fetchDataset('2026-09-05');
+    const ds = await new FixtureReceivablesSource().fetchDataset('2026-09-05');
     const p = join(dir, 'dataset.json');
     await writeFile(p, JSON.stringify(ds));
     const loaded = await new FileReceivablesSource(p, 'JPY', fx).fetchDataset('2026-09-05');

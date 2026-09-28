@@ -5,7 +5,7 @@ import { useI18n } from '@app/i18n/useI18n';
 import { Banner } from './Banner';
 import { PageSkeleton } from './Skeleton';
 
-export function ErrorState({ message, onRetry, onSwitchToMock, showSwitch }: { message: string; onRetry: () => void; onSwitchToMock: () => void; showSwitch: boolean }) {
+export function ErrorState({ message, onRetry }: { message: string; onRetry: () => void }) {
   const { t } = useI18n();
   return (
     <div className="state" data-testid="state-error" role="alert">
@@ -15,11 +15,6 @@ export function ErrorState({ message, onRetry, onSwitchToMock, showSwitch }: { m
         <button type="button" className="btn primary" onClick={onRetry}>
           {t('state.retry')}
         </button>
-        {showSwitch && (
-          <button type="button" className="btn" onClick={onSwitchToMock}>
-            {t('state.switchMock')}
-          </button>
-        )}
       </div>
     </div>
   );
@@ -57,7 +52,7 @@ export function DataGate({ children }: { children: ReactNode }) {
   const { pathname } = useLocation();
   if (data.status === 'loading') return <PageSkeleton variant={skeletonVariant(pathname)} />;
   if (data.status === 'error' || !data.model || !data.insight) {
-    return <ErrorState message={data.error ?? t('state.unknownError')} onRetry={data.refresh} onSwitchToMock={() => data.setMode('mock')} showSwitch={data.mode !== 'mock'} />;
+    return <ErrorState message={data.error ?? t('state.unknownError')} onRetry={data.refresh} />;
   }
   if (data.model.invoices.length === 0) return <EmptyState referenceDate={data.model.reference_date} onRefresh={data.refresh} />;
   return (

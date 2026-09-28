@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test';
 
 test.describe('Managing entity and ELLIS reflection chain', () => {
   test('overview shows the entity card (Seoul + Singapore) and the reflection status card', async ({ page }) => {
-    await page.goto('/#/?mode=mock&lang=en');
+    await page.goto('/#/?lang=en');
     await expect(page.getByTestId('page-title')).toHaveText('Executive Overview');
     const entity = page.getByTestId('entity-card');
     await expect(entity).toBeVisible();
@@ -38,7 +38,7 @@ test.describe('Managing entity and ELLIS reflection chain', () => {
   });
 
   test('aging page has a By Entity tab linking to the customer list', async ({ page }) => {
-    await page.goto('/#/aging?mode=mock&lang=en');
+    await page.goto('/#/aging?lang=en');
     await page.getByTestId('aging-tab-entity').click();
     const table = page.getByTestId('aging-table-entity');
     await expect(table).toBeVisible();
@@ -46,7 +46,7 @@ test.describe('Managing entity and ELLIS reflection chain', () => {
   });
 
   test('actions page renders the ELLIS_REFLECTION group and the reflection chain with over-SLA rows', async ({ page }) => {
-    await page.goto('/#/actions?mode=mock&lang=en');
+    await page.goto('/#/actions?lang=en');
     await expect(page.getByTestId('page-title')).toHaveText('Collection Action Board');
     await expect(page.getByTestId('action-group-ELLIS_REFLECTION')).toBeVisible();
     await expect(page.getByTestId('action-group-ELLIS_REFLECTION')).toContainText('ELLIS reflection check');
@@ -70,10 +70,10 @@ test.describe('Managing entity and ELLIS reflection chain', () => {
   });
 
   test('Korean labels for the entity card and reflection chain', async ({ page }) => {
-    await page.goto('/#/?mode=mock&lang=ko');
+    await page.goto('/#/?lang=ko');
     await expect(page.getByTestId('entity-card')).toContainText('법인별 현황');
     await expect(page.getByTestId('reflection-card')).toContainText('ELLIS 반영 상태');
-    await page.goto('/#/actions?mode=mock&lang=ko');
+    await page.goto('/#/actions?lang=ko');
     await expect(page.getByTestId('reflection-section')).toContainText('ELLIS 반영 확인 체인');
     await expect(page.getByTestId('reflection-table').getByTestId('reflection-over-sla').first()).toContainText('SLA 초과');
   });

@@ -1,4 +1,8 @@
 /**
+ * TEST FIXTURE ONLY. Deterministic, fictional receivables dataset used by unit / integration / E2E tests.
+ * It is not part of the application bundle or the pipeline (the product runs on published real data).
+ */
+/**
  * Deterministic mock dataset generator.
  * Produces >= 30 customers, >= 150 invoices and the raw material for 12 weekly snapshots.
  * Every required scenario from the PRD is represented by a named customer (see SCENARIOS).
@@ -21,7 +25,7 @@ export function mulberry32(seed: number) {
 }
 
 /** Illustrative USD cross rates (1 unit of currency in USD). Reporting-currency rates are derived from these. */
-export const MOCK_FX_USD: Record<string, number> = {
+export const FIXTURE_FX_USD: Record<string, number> = {
   USD: 1,
   KRW: 0.00072,
   JPY: 0.0068,
@@ -42,21 +46,21 @@ export const DEFAULT_REPORTING_CURRENCY = 'JPY';
  * FX table for a date, expressed as "reporting units per 1 unit of currency" (cross rate via USD).
  * Older weeks drift deterministically so the FX effect is visible in WoW comparisons.
  */
-export function mockFxTable(date: ISODate, referenceDate: ISODate, reporting = DEFAULT_REPORTING_CURRENCY): FxTable {
+export function fixtureFxTable(date: ISODate, referenceDate: ISODate, reporting = DEFAULT_REPORTING_CURRENCY): FxTable {
   const weeksBack = Math.max(0, Math.round((Date.parse(referenceDate) - Date.parse(date)) / (7 * 86_400_000)));
   const drift: Record<string, number> = { JPY: -0.004, KRW: 0.002, VND: 0.0005, TWD: -0.001, THB: 0.001, USD: 0.001 };
-  const usdOf = (ccy: string, wb: number) => (MOCK_FX_USD[ccy] ?? 1) * (1 + (drift[ccy] ?? 0) * wb);
+  const usdOf = (ccy: string, wb: number) => (FIXTURE_FX_USD[ccy] ?? 1) * (1 + (drift[ccy] ?? 0) * wb);
   const reportingUsd = usdOf(reporting, weeksBack);
   return {
     reporting_currency: reporting,
     as_of: date,
-    rates: Object.keys(MOCK_FX_USD)
+    rates: Object.keys(FIXTURE_FX_USD)
       .filter((currency) => currency !== reporting)
       .map((currency) => ({
         currency,
         rate_to_reporting: Math.round((usdOf(currency, weeksBack) / reportingUsd) * 1e8) / 1e8,
         rate_date: date,
-        source: 'mock-fx (illustrative rates)',
+        source: 'test-fixture fx (illustrative rates)',
       })),
   };
 }
@@ -140,14 +144,14 @@ export const SCENARIOS: Seed[] = [
 const HOTELS = ['Grand Sakura Hotel Tokyo', 'Harbor View Hotel Busan', 'Riverside Residence Saigon', 'Lotus Garden Hanoi', 'Marina Crest Singapore', 'Sukhumvit Plaza Bangkok', 'Kowloon Sky Hotel', 'Taipei Signature Inn', 'Osaka Riverside Hotel', 'Jeju Ocean Resort', 'Da Nang Beachfront Resort', 'Kyoto Machiya Stay'];
 const DEST = ['Tokyo', 'Busan', 'Ho Chi Minh City', 'Hanoi', 'Singapore', 'Bangkok', 'Hong Kong', 'Taipei', 'Osaka', 'Jeju', 'Da Nang', 'Kyoto'];
 
-export interface MockDataset extends ReceivablesDataset {
+export interface FixtureDataset extends ReceivablesDataset {
   scenario_index: Record<string, Scenario>;
 }
 
-export function generateMockDataset(referenceDate: ISODate, seed = 20260905, reporting = DEFAULT_REPORTING_CURRENCY): MockDataset {
+export function generateFixtureDataset(referenceDate: ISODate, seed = 20260905, reporting = DEFAULT_REPORTING_CURRENCY): FixtureDataset {
   const rnd = mulberry32(seed);
-  const fx = mockFxTable(referenceDate, referenceDate, reporting);
-  const rate = (ccy: string) => MOCK_FX_USD[ccy] ?? 1;
+  const fx = fixtureFxTable(referenceDate, referenceDate, reporting);
+  const rate = (ccy: string) => FIXTURE_FX_USD[ccy] ?? 1;
   /** Convert a USD magnitude to a rounded local-currency amount. */
   const local = (usd: number, ccy: string) => {
     const v = usd / rate(ccy);
@@ -214,7 +218,7 @@ export function generateMockDataset(referenceDate: ISODate, seed = 20260905, rep
       cancellation_status: cancelled ? 'CANCELLED' : 'NONE',
       last_payment_date: null,
       last_payment_amount: null,
-      data_source: 'mock',
+      data_source: 'test-fixture',
     };
     if (inv.invoice_status === 'CREDITED' && inv.outstanding_amount > 0) inv.invoice_status = 'OPEN';
     invoices.push(inv);
@@ -238,7 +242,7 @@ export function generateMockDataset(referenceDate: ISODate, seed = 20260905, rep
       // ELLIS reflection chain: most payments verified next day and reconciled weekly; some Singapore-managed payments lag on purpose (CEO scenario).
       confirmed_at: opts.confirmedAt !== undefined ? opts.confirmedAt : day(dateOffset + 1) <= referenceDate ? day(dateOffset + 1) : null,
       reconciled_at: opts.reconciledAt !== undefined ? opts.reconciledAt : dateOffset <= -8 ? day(Math.min(-1, dateOffset + 7)) : null,
-      data_source: 'mock',
+      data_source: 'test-fixture',
     };
     payments.push(p);
     inv.paid_amount = round2(inv.paid_amount + amountLocal);
@@ -294,7 +298,7 @@ export function generateMockDataset(referenceDate: ISODate, seed = 20260905, rep
       preferred_contact_channel: pick(['EMAIL', 'TEAMS', 'PHONE', 'WHATSAPP', 'KAKAO', 'LINE', 'ZALO']) as Customer['preferred_contact_channel'],
       // Receivables management moved from Seoul-only to Seoul + Singapore: NEA managed in Seoul, SEA / Greater China in Singapore.
       control_company: s.scenario === 'MISSING_DATA' ? null : s.region === 'North East Asia' ? 'OMH Seoul' : 'OMH Singapore',
-      data_source: 'mock',
+      data_source: 'test-fixture',
     };
     customers.push(c);
     scenario_index[c.customer_id] = s.scenario;
@@ -405,7 +409,7 @@ export function generateMockDataset(referenceDate: ISODate, seed = 20260905, rep
         pay(inv, c, -20, inv.original_amount, 'BANK_TRANSFER', { unapplied: local(2_500, c.contract_currency) }); // overpaid: unapplied cash
         const inv2 = addInvoice(c, { usd: 7_700, serviceOffset: -22, cancel: true });
         // refund of a payment made against the cancelled booking
-        payments.push({ payment_id: `pay-${paySeq++}`, invoice_id: inv2.invoice_id, customer_id: c.customer_id, payment_date: day(-15), payment_amount: -local(7_700, c.contract_currency), payment_currency: c.contract_currency, applied_amount: 0, unapplied_amount: 0, payment_method: 'BANK_TRANSFER', payment_reference: 'REFUND-0031', reconciliation_status: 'REFUNDED', confirmed_at: day(-14), reconciled_at: day(-8), data_source: 'mock' });
+        payments.push({ payment_id: `pay-${paySeq++}`, invoice_id: inv2.invoice_id, customer_id: c.customer_id, payment_date: day(-15), payment_amount: -local(7_700, c.contract_currency), payment_currency: c.contract_currency, applied_amount: 0, unapplied_amount: 0, payment_method: 'BANK_TRANSFER', payment_reference: 'REFUND-0031', reconciliation_status: 'REFUNDED', confirmed_at: day(-14), reconciled_at: day(-8), data_source: 'test-fixture' });
         addInvoice(c, { usd: 10_300, serviceOffset: -9 });
         break;
       }
@@ -447,7 +451,7 @@ export function generateMockDataset(referenceDate: ISODate, seed = 20260905, rep
 
   return {
     as_of: `${referenceDate}T02:00:00.000Z`,
-    source: 'mock',
+    source: 'file',
     reporting_currency: reporting,
     fx,
     customers,

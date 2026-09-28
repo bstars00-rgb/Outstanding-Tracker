@@ -3,16 +3,16 @@ import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 
 afterEach(cleanup);
 import { MemoryRouter } from 'react-router-dom';
-import { buildMockModel, type MockBuild } from '@app/data/mock-model';
+import { buildFixtureModel, type FixtureBuild } from '../fixtures/fixture-model';
 import { TrackerContext, readyContextValue } from '@app/data/TrackerContext';
 import { Layout } from '@app/components/Layout';
 import { I18nProvider, LANG_STORAGE_KEY, resolveInitialLang } from '@app/i18n/useI18n';
 import { STRINGS, translate } from '@app/i18n/strings';
 
-let built: MockBuild;
+let built: FixtureBuild;
 
 beforeAll(async () => {
-  built = await buildMockModel('2026-09-05');
+  built = await buildFixtureModel('2026-09-05');
 });
 
 beforeEach(() => {
@@ -63,7 +63,7 @@ describe('i18n', () => {
     expect(navKo).not.toHaveTextContent('Customers');
     expect(document.documentElement.getAttribute('lang')).toBe('ko');
     expect(window.localStorage.getItem(LANG_STORAGE_KEY)).toBe('ko');
-    expect(screen.getByTestId('mode-badge')).toHaveTextContent('MOCK DATA');
+    expect(screen.getByTestId('mode-badge')).toHaveTextContent('LIVE');
     expect(screen.getAllByText('보고 통화', { exact: false }).length).toBeGreaterThan(0);
 
     fireEvent.click(screen.getByTestId('lang-en'));
@@ -72,7 +72,7 @@ describe('i18n', () => {
   });
 
   it('resolves the initial language from the hash query, then localStorage, then the browser', () => {
-    window.location.hash = '#/?mode=mock&lang=ko';
+    window.location.hash = '#/?lang=ko';
     expect(resolveInitialLang()).toBe('ko');
     expect(window.localStorage.getItem(LANG_STORAGE_KEY)).toBe('ko');
 

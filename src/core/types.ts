@@ -154,7 +154,7 @@ export interface DataQualityIssue {
   message: string;
 }
 
-export type DataSourceKind = 'mock' | 'ellis-mcp' | 'ellis-bookings-derived' | 'file';
+export type DataSourceKind = 'ellis-mcp' | 'ellis-bookings-derived' | 'file';
 
 export interface DatasetCompleteness {
   customers: 'full' | 'partial' | 'missing';
@@ -457,7 +457,6 @@ export interface TrackerModel {
   previous_snapshot_date: ISODate | null;
   reporting_currency: CurrencyCode;
   source: DataSourceKind;
-  is_mock: boolean;
   kpis: KpiValue[];
   invoices: CalculatedInvoice[];
   customers: CustomerRisk[];

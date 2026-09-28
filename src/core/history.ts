@@ -5,7 +5,7 @@ import { validateDataset } from './validate';
 
 /**
  * Derive the dataset as it would have looked on an earlier reference date.
- * Used (a) by the mock adapter to produce a consistent 12-week snapshot history and
+ * Used (a) by the test fixture source to produce a consistent 12-week snapshot history and
  * (b) by the live pipeline to re-create a Saturday snapshot from dated transactions
  * when the source system does not expose historical snapshots itself.
  *

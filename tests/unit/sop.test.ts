@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { assessSop, DEFAULT_SOP_CONFIG } from '@core/sop';
 import { addMonths } from '@core/dates';
 import { buildTrackerModel } from '@core/calc';
-import { MockReceivablesSource } from '@adapters/ellis/mock-adapter';
+import { FixtureReceivablesSource } from '../fixtures/fixture-source';
 import { buildInsightInput } from '@adapters/ai/insight-input';
 import { generateRuleBasedInsight } from '@adapters/ai/mock-provider';
 import { verifyInsight } from '@adapters/ai/verify';
@@ -49,7 +49,7 @@ describe('OMH SOP urgency levels (src/core/sop.ts)', () => {
 
 describe('SOP in the model, actions, insight and verification', () => {
   it('classifies every open overdue invoice, sums by level and raises CEO decisions for L1', async () => {
-    const ds = await new MockReceivablesSource().fetchDataset(ref);
+    const ds = await new FixtureReceivablesSource().fetchDataset(ref);
     // Give the mock customers tiers so the SOP applies (mock master data is untiered by default).
     ds.customers.forEach((c, n) => (c.tier = ((n % 3) + 1) as 1 | 2 | 3));
     const m = buildTrackerModel(ds, { referenceDate: ref, previousSnapshot: null, lang: 'ko' });

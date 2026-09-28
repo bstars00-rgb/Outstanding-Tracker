@@ -2,15 +2,15 @@ import { afterEach, beforeAll, describe, expect, it } from 'vitest';
 import { cleanup, fireEvent, screen, within } from '@testing-library/react';
 
 afterEach(cleanup);
-import { buildMockModel, type MockBuild } from '@app/data/mock-model';
+import { buildFixtureModel, type FixtureBuild } from '../fixtures/fixture-model';
 import { TrackerContext, readyContextValue } from '@app/data/TrackerContext';
 import { CustomersPage } from '@app/pages/CustomersPage';
 import { renderWithProviders } from './test-utils';
 
-let built: MockBuild;
+let built: FixtureBuild;
 
 beforeAll(async () => {
-  built = await buildMockModel('2026-09-05');
+  built = await buildFixtureModel('2026-09-05');
 });
 
 function renderPage(lang: 'en' | 'ko' = 'en') {

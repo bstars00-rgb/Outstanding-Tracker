@@ -163,7 +163,6 @@ export function generateRuleBasedInsight(i: InsightInput, lang: Lang = 'en'): In
   };
 
   const data_quality_warnings: string[] = [];
-  if (i.is_mock) data_quality_warnings.push(p('MOCK DATA: figures are fictional and for prototype demonstration only.', 'MOCK DATA: 프로토타입 시연용 가상 수치입니다.'));
   for (const d of i.data_quality.filter((d) => d.code !== 'MISSING_CREDIT_LIMIT' && d.code !== 'MISSING_TERMS')) data_quality_warnings.push(`${d.code} x${d.count}: ${d.sample}`);
   for (const [k, v] of Object.entries(i.completeness)) if (k !== 'notes' && v !== 'full') data_quality_warnings.push(p(`${k} data is ${v}`, `${k} 데이터 ${v === 'partial' ? '일부 누락' : '없음'}`));
   if (i.completeness.notes.length) data_quality_warnings.push(...i.completeness.notes);

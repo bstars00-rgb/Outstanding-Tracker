@@ -8,7 +8,6 @@ export interface InsightInput {
   report_date: ISODate;
   previous_snapshot_date: ISODate | null;
   reporting_currency: string;
-  is_mock: boolean;
   kpis: { key: string; label: string; value: number; previous: number | null; change: number | null; change_pct: number | null; unit: string }[];
   fx_effect_reporting: number | null;
   top_overdue_customers: CustomerFact[];

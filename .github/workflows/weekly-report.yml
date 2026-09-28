@@ -1,9 +1,9 @@
 name: Weekly Outstanding Report (Teams)
 
 # Saturday 09:00 Asia/Ho_Chi_Minh (UTC+7, no DST) == Saturday 02:00 UTC.
+# Manual operation (decision D33): Global Ops runs the report locally from the ELLIS export / OP workbook.
+# The schedule is disabled; this workflow stays for a future ELLIS MCP run triggered by hand.
 on:
-  schedule:
-    - cron: '0 2 * * 6'
   workflow_dispatch:
     inputs:
       report_date:
@@ -23,11 +23,11 @@ on:
         type: choice
         options: ['true', 'false']
       data_source:
-        description: 'mock (deterministic fixtures) or ellis (live MCP)'
+        description: 'ellis (live MCP; needs ELLIS_MCP_ENDPOINT) or file (needs a committed export, normally run locally)'
         required: true
-        default: 'mock'
+        default: 'ellis'
         type: choice
-        options: [mock, ellis]
+        options: [ellis, file]
       ai_provider:
         description: 'mock (rule-based) or claude (needs AI_API_KEY secret)'
         required: true
@@ -104,7 +104,7 @@ jobs:
           else
             echo "DRY_RUN=${{ vars.DRY_RUN || 'true' }}" >> $GITHUB_ENV
             echo "TARGET_CHANNEL=${{ vars.TARGET_CHANNEL || 'test' }}" >> $GITHUB_ENV
-            echo "DATA_SOURCE=${{ vars.DATA_SOURCE || 'mock' }}" >> $GITHUB_ENV
+            echo "DATA_SOURCE=${{ vars.DATA_SOURCE || 'ellis' }}" >> $GITHUB_ENV
             echo "AI_PROVIDER=${{ vars.AI_PROVIDER || 'mock' }}" >> $GITHUB_ENV
             echo "REPORT_DATE=" >> $GITHUB_ENV
             echo "FORCE_RESEND=false" >> $GITHUB_ENV

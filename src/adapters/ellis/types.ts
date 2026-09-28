@@ -2,7 +2,7 @@ import type { ISODate, ReceivablesDataset } from '@core/types';
 
 /**
  * Boundary between the tracker and the data source.
- * Implementations: MockReceivablesSource (deterministic mock), EllisMcpReceivablesSource (live MCP).
+ * Implementations: FileReceivablesSource (manual run: exported JSON), EllisMcpReceivablesSource (live MCP); tests use a fixture source.
  * The calculation engine never talks to a source directly; the pipeline / UI asks a source for a
  * ReceivablesDataset for a reference date and hands it to buildTrackerModel().
  */

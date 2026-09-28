@@ -4,7 +4,7 @@ import { formatMoney, formatPct, convert } from '@core/money';
 import { loadEnv, describe as describeEnv } from '../../automation/lib/env';
 import { RedactingLogger } from '../../automation/lib/logger';
 import { validateDataset } from '@core/validate';
-import { generateMockDataset } from '@adapters/ellis/mock-data';
+import { generateFixtureDataset } from '../fixtures/fixture-data';
 
 describe('dates & schedule', () => {
   it('latest Saturday', () => {
@@ -42,10 +42,10 @@ describe('money formatting', () => {
 });
 
 describe('env loading', () => {
-  it('defaults to safe dry-run mock configuration', () => {
+  it('defaults to safe dry-run file configuration', () => {
     const cfg = loadEnv({});
     expect(cfg.DRY_RUN).toBe(true);
-    expect(cfg.DATA_SOURCE).toBe('mock');
+    expect(cfg.DATA_SOURCE).toBe('file');
     expect(cfg.TEAMS_SENDER).toBe('mock');
     expect(cfg.TARGET_CHANNEL).toBe('test');
     expect(cfg.REPORTING_CURRENCY).toBe('JPY');
@@ -83,7 +83,7 @@ describe('redacting logger', () => {
 
 describe('dataset validation', () => {
   it('rejects schema violations and orphan records', () => {
-    const ds = generateMockDataset('2026-09-05');
+    const ds = generateFixtureDataset('2026-09-05');
     const broken = { ...ds, invoices: [...ds.invoices, { ...ds.invoices[0], invoice_id: 'dup-x', customer_id: 'nope' }] };
     const v = validateDataset(broken);
     expect(v.ok).toBe(false);

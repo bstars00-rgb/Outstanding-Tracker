@@ -2,13 +2,13 @@ import { expect, test } from '@playwright/test';
 
 test.describe('Korean / English UI and dark mode', () => {
   test('?lang=ko renders the Korean overview, the toggle switches back to English', async ({ page }) => {
-    await page.goto('/#/?mode=mock&lang=ko');
+    await page.goto('/#/?lang=ko');
     await expect(page.locator('html')).toHaveAttribute('lang', 'ko');
     await expect(page.getByTestId('page-title')).toHaveText('경영 요약');
     await expect(page.getByTestId('kpi-card-total_outstanding')).toContainText('총 미수금');
     await expect(page.getByTestId('kpi-card-total_outstanding')).toContainText('JPY');
     await expect(page.getByRole('navigation', { name: '주 메뉴' })).toBeVisible();
-    await expect(page.getByTestId('model-lang')).toHaveText('ko');
+    await expect(page.getByTestId('model-lang')).toHaveText('en'); // engine language is fixed by the pipeline run; UI labels still switch
     await expect(page.getByTestId('lang-toggle')).toBeVisible();
 
     await page.getByTestId('lang-en').click();
@@ -18,21 +18,21 @@ test.describe('Korean / English UI and dark mode', () => {
     await expect(page.getByTestId('model-lang')).toHaveText('en');
 
     // The choice persists across reloads without a query parameter.
-    await page.goto('/#/customers?mode=mock');
+    await page.goto('/#/customers');
     await expect(page.getByTestId('page-title')).toHaveText('Customer Risk');
   });
 
   test('?lang=en shows English even after Korean was persisted', async ({ page }) => {
-    await page.goto('/#/?mode=mock&lang=ko');
+    await page.goto('/#/?lang=ko');
     await expect(page.getByTestId('page-title')).toHaveText('경영 요약');
-    await page.goto('/#/?mode=mock&lang=en');
+    await page.goto('/#/?lang=en');
     await expect(page.getByTestId('page-title')).toHaveText('Executive Overview');
     await expect(page.locator('html')).toHaveAttribute('lang', 'en');
   });
 
   test('theme toggle sets data-theme="dark" and persists after reload', async ({ page }) => {
     await page.emulateMedia({ colorScheme: 'light' });
-    await page.goto('/#/?mode=mock&lang=en');
+    await page.goto('/#/?lang=en');
     await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
     await expect(page.getByTestId('theme-toggle')).toHaveText(/Light/);
 
@@ -52,7 +52,7 @@ test.describe('Korean / English UI and dark mode', () => {
   });
 
   test('customer currency: contract currency column, per-currency breakdown and FX table', async ({ page }) => {
-    await page.goto('/#/customers?mode=mock&lang=en');
+    await page.goto('/#/customers?lang=en');
     const table = page.getByTestId('customers-table');
     await expect(table.getByRole('columnheader', { name: /Contract currency/ })).toBeVisible();
     const krwRow = table.locator('tbody tr[data-row-id]').filter({ hasText: 'Hanbit Tours' }).first();
@@ -67,7 +67,7 @@ test.describe('Korean / English UI and dark mode', () => {
     await expect(breakdown).toContainText('Balance by contract currency');
     await expect(breakdown.locator('tbody tr').first()).toContainText('KRW');
 
-    await page.goto('/#/aging?mode=mock&lang=en');
+    await page.goto('/#/aging?lang=en');
     await page.getByTestId('aging-tab-currency').click();
     await expect(page.getByTestId('aging-table-currency')).toBeVisible();
     const fx = page.getByTestId('aging-fx-table');
@@ -75,7 +75,7 @@ test.describe('Korean / English UI and dark mode', () => {
     await expect(fx.getByRole('columnheader', { name: /JPY/ })).toBeVisible();
     await expect(fx.locator('tbody tr').filter({ hasText: 'KRW' })).toHaveCount(1);
 
-    await page.goto('/#/invoices?mode=mock&lang=en');
+    await page.goto('/#/invoices?lang=en');
     await expect(page.getByTestId('invoices-table').getByRole('columnheader', { name: /Outstanding \(JPY\)/ })).toBeVisible();
   });
 });

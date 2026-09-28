@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { MockReceivablesSource } from '@adapters/ellis/mock-adapter';
+import { FixtureReceivablesSource } from '../fixtures/fixture-source';
 import { buildTrackerModel } from '@core/calc';
 import { buildInsightInput } from '@adapters/ai/insight-input';
 import { generateRuleBasedInsight, RuleBasedInsightProvider } from '@adapters/ai/mock-provider';
@@ -8,7 +8,7 @@ import { generateInsight } from '@adapters/ai/insight-service';
 import type { InsightOutput, InsightProvider } from '@adapters/ai/types';
 
 const REF = '2026-09-05';
-const src = new MockReceivablesSource();
+const src = new FixtureReceivablesSource();
 const model = buildTrackerModel(await src.fetchDataset(REF), { referenceDate: REF, previousSnapshot: await src.previousSnapshot(REF) });
 const input = buildInsightInput(model);
 

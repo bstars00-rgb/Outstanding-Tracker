@@ -85,7 +85,7 @@ flowchart LR
 | Build | `npm run build` = `tsc --noEmit` + `vite build` → `dist/`, `target es2020`, no sourcemaps; `base = VITE_BASE_PATH ?? '/'` (set to `/<repo>/` for project Pages) | Confirmed (`vite.config.ts`) |
 | Aliases | `@core` → `src/core`, `@adapters` → `src/adapters`, `@app` → `src/app` | Confirmed |
 | Routes | `#/`, `#/aging`, `#/customers`, `#/customers/:id`, `#/invoices`, `#/actions`, `#/insights`; unknown routes redirect to `#/` | Confirmed (`src/app/App.tsx`) |
-| Mode toggle | Resolution order (`src/app/data/mode.ts`): `?mode=mock` / `?mode=live` in the URL (persisted) → `localStorage` key `ot.mode` → build-time `VITE_DATA_MODE` (default `mock`). Mock: dataset generated in the browser by `MockReceivablesSource` (seed `20260905`), 12 Saturday snapshots via `buildSnapshotHistory`, insight from the rule-based provider (`data/mock-model.ts`). Live: fetches `tracker-model.json` + `insight.json` from `VITE_LIVE_DATA_URL` or `<BASE_URL>data/` with `cache: 'no-store'`; a missing file yields the error "Live data not published yet. Run the weekly pipeline with PUBLISH_DATA=true or switch to mock mode". QA helpers `?simulate=error`, `?simulate=empty`, `?simulate=slow` | Confirmed |
+| Data loading | `src/app/data/mode.ts` fetches the published `data/tracker-model.json` + `insight.json` (no mock mode since 2026-09-28; `?mode=` is ignored). Legacy note: `?mode=mock` / `?mode=live` in the URL (persisted) → `localStorage` key `ot.mode` → build-time `VITE_DATA_MODE` (default `mock`). Mock: dataset generated in the browser by `MockReceivablesSource` (seed `20260905`), 12 Saturday snapshots via `buildSnapshotHistory`, insight from the rule-based provider (`data/mock-model.ts`). Live: fetches `tracker-model.json` + `insight.json` from `VITE_LIVE_DATA_URL` or `<BASE_URL>data/` with `cache: 'no-store'`; a missing file yields the error "Live data not published yet. Run the weekly pipeline with PUBLISH_DATA=true or switch to mock mode". QA helpers `?simulate=error`, `?simulate=empty`, `?simulate=slow` | Confirmed |
 | Calculation | Same `buildTrackerModel()` engine as the pipeline (shared `src/core`) — the UI recomputes any of the 12 reference dates in mock mode; in live mode the reference-date selector is disabled and the published week is shown | Confirmed |
 | Persistence | Action Board status in `localStorage` (`ot.actions.<action id>`) and data mode (`ot.mode`) only — prototype | Confirmed |
 | Tests | `vitest.workspace.ts` projects `unit` (jsdom, `tests/unit/**`, about 65 tests incl. React component tests) and `integration` (node, `tests/integration/**`, adapters + pipeline, about 15 tests); Playwright `tests/e2e/*.spec.ts` (overview, customers, invoices, actions, states, mobile) on desktop + Pixel 5 against `vite preview` at `127.0.0.1:4173` | Confirmed |
@@ -194,7 +194,7 @@ sequenceDiagram
 | `automation/state/receipts/<key>.json` | `SendReceipt` `{ idempotency_key, report_date, channel, ok, status, attempts, sent_at, dry_run, error }`; key sanitised to `[A-Za-z0-9_.-]` (e.g. `weekly-outstanding_2026-09-05_leaders`) | same as above |
 | `automation/out/` | run artefacts: `tracker-model.json` (public model), `insight.json`, `teams-message.json` (card), `teams-message.md`, `snapshot.json`, `run-1.log` / `run-2.log` | git-ignored; uploaded as workflow artifact (30-day retention) |
 | `public/data/tracker-model.json`, `public/data/insight.json` | Frontend live data, written only when `PUBLISH_DATA=true`; the workflow then **commits them to the branch**, which triggers the Pages deployment | **not** git-ignored → becomes part of the deployed site (see §7) |
-| `samples/*.sample.json|md` | committed illustrative artefacts from mock data (`npm run report:sample`) | committed |
+| `tests/fixtures/*` | fictional test fixture (dataset generator, source, model builder); never bundled | committed |
 
 Idempotency key format: `weekly-outstanding:<report_date>:<channel>`; failure receipts use `…:failure`; admin alerts use `alert:<ISO timestamp>` (not deduplicated).
 
@@ -220,7 +220,7 @@ Idempotency key format: `weekly-outstanding:<report_date>:<channel>`; failure re
 | `FORCE_RESEND` | `true` to bypass the idempotency receipt | read directly from `process.env` in `buildDeps()` |
 | `PUBLISH_DATA` | `true` to copy model + insight into `public/data/` | read directly in the main block |
 | `VITE_BASE_PATH` | build-time base path for Pages | `vite.config.ts` |
-| `VITE_DATA_MODE` | build-time default data mode `mock` / `live` (frontend) | `src/app/data/mode.ts` |
+| `VITE_DATA_MODE` | removed 2026-09-28 (no mock mode) | — |
 | `VITE_LIVE_DATA_URL` | optional protected base URL serving `tracker-model.json` + `insight.json`; default `<BASE_URL>data/` | `src/app/data/mode.ts` |
 
 `.env.example` (Confirmed) documents every variable with placeholders, marks the six `[SECRET]` values, and notes that dotenv is not auto-loaded (export the variables or use `npx dotenv -e .env -- npm run report:weekly`).
@@ -256,6 +256,4 @@ Decision criteria: (a) can the Ellis MCP endpoint be reached from the runner? (R
 | `npm run test` | vitest projects `unit` + `integration` (`vitest.workspace.ts`; about 80 tests, no network) |
 | `npm run test:e2e` | Playwright (desktop + mobile Chromium) |
 | `npm run test:all` | typecheck → unit/integration → build → e2e |
-| `npm run mock:generate` | profile of the mock dataset and scenario coverage |
-| `npm run report:sample` | regenerate `samples/` from mock data |
 | `npm run report:weekly:dry` | full pipeline, all mock, no send |

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { MockReceivablesSource } from '@adapters/ellis/mock-adapter';
+import { FixtureReceivablesSource } from '../fixtures/fixture-source';
 import { buildTrackerModel } from '@core/calc';
 import { buildInsightInput } from '@adapters/ai/insight-input';
 import { generateRuleBasedInsight, RuleBasedInsightProvider } from '@adapters/ai/mock-provider';
@@ -8,7 +8,7 @@ import { generateInsight } from '@adapters/ai/insight-service';
 import { buildTeamsMessage } from '@adapters/teams/message-builder';
 
 const REF = '2026-09-05';
-const src = new MockReceivablesSource();
+const src = new FixtureReceivablesSource();
 const ds = await src.fetchDataset(REF);
 const prev = await src.previousSnapshot(REF);
 const en = buildTrackerModel(ds, { referenceDate: REF, previousSnapshot: prev, lang: 'en' });
@@ -43,7 +43,7 @@ describe('bilingual engine text', () => {
   it('Teams card and markdown use Korean headings and JPY when REPORT_LANGUAGE=ko', async () => {
     const insight = await generateInsight(ko, { provider: new RuleBasedInsightProvider('ko'), lang: 'ko' });
     const msg = buildTeamsMessage(ko, insight, { trackerBaseUrl: 'https://x.example/', timeZone: 'Asia/Ho_Chi_Minh', sentAt: `${REF}T02:00:00.000Z`, channelLabel: 'leaders', lang: 'ko' });
-    expect(msg.title).toBe('[주간 미수금 보고] 2026-09-05 (MOCK 데이터)');
+    expect(msg.title).toBe('[주간 미수금 보고] 2026-09-05');
     const body = JSON.stringify(msg.card.body);
     for (const s of ['1. 경영 요약', '2. AI 인사이트', '3. 필수 조치', '4. CEO 의사결정 필요', '보고 통화 JPY', '자동 생성 보고서']) expect(body).toContain(s);
     expect(msg.markdown).toContain('**5. 링크**');
@@ -51,7 +51,7 @@ describe('bilingual engine text', () => {
     expect(msg.markdown_length).toBeLessThanOrEqual(3500);
   });
   it('reporting currency can still be switched (USD) and the risk thresholds scale with it', () => {
-    const usdSrc = new MockReceivablesSource(20260905, 'USD');
+    const usdSrc = new FixtureReceivablesSource(20260905, 'USD');
     return usdSrc.fetchDataset(REF).then(async (dsUsd) => {
       const m = buildTrackerModel(dsUsd, { referenceDate: REF, previousSnapshot: await usdSrc.previousSnapshot(REF) });
       expect(m.reporting_currency).toBe('USD');

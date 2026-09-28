@@ -60,7 +60,7 @@ function payment(over: Partial<Payment> = {}): Payment {
 function dataset(parts: Partial<ReceivablesDataset> = {}): ReceivablesDataset {
   return {
     as_of: `${REF}T02:00:00.000Z`,
-    source: 'mock',
+    source: 'file',
     reporting_currency: 'USD',
     fx: { reporting_currency: 'USD', as_of: REF, rates: [{ currency: 'KRW', rate_to_reporting: 0.0007, rate_date: REF, source: 'test' }, { currency: 'JPY', rate_to_reporting: 0.007, rate_date: REF, source: 'test' }] },
     customers: [customer()],

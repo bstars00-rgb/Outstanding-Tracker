@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { KPI_STATUS_LABEL_I18N } from '@core/i18n';
+import { KPI_TEXT_I18N } from '@core/kpis';
 import type { KpiValue } from '@core/types';
 import { kpiChangeText, kpiValueText } from '@app/lib/format';
 import { useI18n } from '@app/i18n/useI18n';
@@ -13,23 +14,26 @@ import { IconDown, IconMinus, IconUp } from './Icons';
 export function KpiCard({ kpi, currency }: { kpi: KpiValue; currency: string }) {
   const { lang, t } = useI18n();
   const [showDef, setShowDef] = useState(false);
+  // Label and definition follow the UI language; the interpretation sentence stays in the published model's language.
+  const label = KPI_TEXT_I18N[lang]?.label[kpi.key] ?? kpi.label;
+  const definition = KPI_TEXT_I18N[lang]?.definition[kpi.key] ?? kpi.definition;
   const value = kpiValueText(kpi, currency);
   const change = kpiChangeText(kpi, currency);
   const ChangeIcon = kpi.change === null || kpi.change === 0 ? IconMinus : kpi.change > 0 ? IconUp : IconDown;
   const defId = `kpi-def-${kpi.key}`;
   return (
-    <article className={`card kpi status-${kpi.status}`} data-testid={`kpi-card-${kpi.key}`} title={kpi.definition} aria-labelledby={`kpi-label-${kpi.key}`}>
+    <article className={`card kpi status-${kpi.status}`} data-testid={`kpi-card-${kpi.key}`} title={definition} aria-labelledby={`kpi-label-${kpi.key}`}>
       <div className="kpi-head">
         <span className="kpi-label" id={`kpi-label-${kpi.key}`}>
-          {kpi.label}
+          {label}
         </span>
         <button
           type="button"
           className="icon-btn"
-          aria-label={t('kpi.definitionOf', { label: kpi.label })}
+          aria-label={t('kpi.definitionOf', { label })}
           aria-expanded={showDef}
           aria-controls={defId}
-          title={kpi.definition}
+          title={definition}
           onClick={() => setShowDef((s) => !s)}
         >
           <span aria-hidden="true">i</span>
@@ -52,7 +56,7 @@ export function KpiCard({ kpi, currency }: { kpi: KpiValue; currency: string }) 
       </div>
       <p className="kpi-interp">{kpi.interpretation}</p>
       <p className="kpi-def" id={defId} hidden={!showDef}>
-        <strong>{t('kpi.definition')}</strong> {kpi.definition}
+        <strong>{t('kpi.definition')}</strong> {definition}
       </p>
     </article>
   );

@@ -5,7 +5,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { runPipeline, type PipelineDeps } from '../../automation/weekly-report';
 import { loadEnv } from '../../automation/lib/env';
 import { RedactingLogger } from '../../automation/lib/logger';
-import { MockReceivablesSource } from '@adapters/ellis/mock-adapter';
+import { FixtureReceivablesSource } from '../fixtures/fixture-source';
 import { MockTeamsSender } from '@adapters/teams/mock-sender';
 import { RuleBasedInsightProvider } from '@adapters/ai/mock-provider';
 import { InMemorySnapshotStore } from '@adapters/storage/snapshot-store';
@@ -25,7 +25,7 @@ function deps(over: Partial<PipelineDeps> = {}, env: NodeJS.ProcessEnv = {}): Pi
   const sender = new MockTeamsSender();
   return {
     env: loadEnv({ REPORT_DATE: '2026-09-05', TRACKER_BASE_URL: 'https://example.github.io/t/', ...env }),
-    source: new MockReceivablesSource(),
+    source: new FixtureReceivablesSource(),
     store: new InMemorySnapshotStore(),
     insightProvider: new RuleBasedInsightProvider(),
     sender,
@@ -36,9 +36,16 @@ function deps(over: Partial<PipelineDeps> = {}, env: NodeJS.ProcessEnv = {}): Pi
   } as PipelineDeps & { sender: MockTeamsSender };
 }
 
-describe('weekly pipeline (mock end-to-end)', () => {
+/** The product never seeds history: previous weeks come from the store. Tests seed it from the fixture's 12-week history. */
+async function seedHistory(d: PipelineDeps, referenceDate = '2026-09-05') {
+  const hist = await new FixtureReceivablesSource().history(referenceDate, 12);
+  for (const h of hist.slice(0, -1)) await d.store.saveSnapshot(h.snapshot);
+}
+
+describe('weekly pipeline (fixture end-to-end)', () => {
   it('DRY_RUN writes preview files, saves snapshot and receipt, sends nothing', async () => {
     const d = deps();
+    await seedHistory(d);
     const r = await runPipeline(d);
     expect(r.status).toBe('dry-run');
     expect(r.files).toEqual(expect.arrayContaining(['tracker-model.json', 'insight.json', 'teams-message.json', 'teams-message.md', 'snapshot.json']));
@@ -46,7 +53,7 @@ describe('weekly pipeline (mock end-to-end)', () => {
     const card = JSON.parse(await readFile(join(d.outDir, 'teams-message.json'), 'utf8'));
     expect(card.type).toBe('AdaptiveCard');
     expect(await d.store.getSnapshot('2026-09-05')).not.toBeNull();
-    // previous snapshots were seeded from mock history so WoW exists
+    // previous snapshots were seeded from the fixture history so WoW exists
     expect(r.model!.previous_snapshot_date).toBe('2026-08-29');
     const receipt = await d.store.getReceipt('weekly-outstanding:2026-09-05:test');
     expect(receipt?.dry_run).toBe(true);
@@ -90,7 +97,7 @@ describe('weekly pipeline (mock end-to-end)', () => {
   });
 
   it('schema validation failure is treated as a failure, not reported as data', async () => {
-    const bad: ReceivablesSource = { name: 'bad', kind: 'ellis-mcp', fetchDataset: async () => { const ds = await new MockReceivablesSource().fetchDataset('2026-09-05'); return { ...ds, invoices: [...ds.invoices, { ...ds.invoices[0], invoice_id: 'zz', customer_id: 'ghost' }] }; }, healthCheck: async () => ({ ok: true, detail: '' }) };
+    const bad: ReceivablesSource = { name: 'bad', kind: 'ellis-mcp', fetchDataset: async () => { const ds = await new FixtureReceivablesSource().fetchDataset('2026-09-05'); return { ...ds, invoices: [...ds.invoices, { ...ds.invoices[0], invoice_id: 'zz', customer_id: 'ghost' }] }; }, healthCheck: async () => ({ ok: true, detail: '' }) };
     const d = deps({ source: bad }, { DRY_RUN: 'false' });
     const r = await runPipeline(d);
     expect(r.status).toBe('failed');
@@ -111,6 +118,7 @@ describe('weekly pipeline (mock end-to-end)', () => {
   it('works with the file-based snapshot store (round trip on disk)', async () => {
     const store = new FileSnapshotStore(join(dir, 'state'));
     const d = deps({ store });
+    await seedHistory(d);
     await runPipeline(d);
     const files = await readdir(join(dir, 'state', 'snapshots'));
     expect(files.length).toBe(12); // 11 seeded + current

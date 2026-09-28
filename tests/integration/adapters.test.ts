@@ -5,9 +5,9 @@ import { ToolNotConfirmedError, type McpToolClient } from '@adapters/ellis/types
 import { LiveTeamsSender } from '@adapters/teams/live-sender';
 import { validateDataset } from '@core/validate';
 import { buildTrackerModel } from '@core/calc';
-import { mockFxTable } from '@adapters/ellis/mock-data';
+import { fixtureFxTable } from '../fixtures/fixture-data';
 import { DatasetSchema } from '@core/validate';
-import { MockReceivablesSource } from '@adapters/ellis/mock-adapter';
+import { FixtureReceivablesSource } from '../fixtures/fixture-source';
 
 const record = (over: Partial<EllisBookingRecord> = {}): EllisBookingRecord => ({
   bookingItemCode: 'S26081810811H01',
@@ -63,7 +63,7 @@ class FakeMcp implements McpToolClient {
 }
 
 describe('Ellis live adapter (contract tests against the confirmed tool shape)', () => {
-  const cfg = { ...DEFAULT_LIVE_CONFIG, reportingCurrency: 'USD', fx: mockFxTable('2026-09-05', '2026-09-05', 'USD'), countries: ['Korea', 'Japan'], pageSize: 2 };
+  const cfg = { ...DEFAULT_LIVE_CONFIG, reportingCurrency: 'USD', fx: fixtureFxTable('2026-09-05', '2026-09-05', 'USD'), countries: ['Korea', 'Japan'], pageSize: 2 };
 
   it('paginates per country with limit/offset until totalCount, dedupes by bookingItemCode and drops guestName', async () => {
     const kr = [record({ bookingItemCode: 'A1' }), record({ bookingItemCode: 'A2' }), record({ bookingItemCode: 'A3' }), record({ bookingItemCode: 'A1', bookingStatus: 'Cancelled', billing: 0 })];
@@ -158,13 +158,13 @@ describe('Live Teams sender', () => {
 
 describe('dataset contract', () => {
   it('mock dataset satisfies the shared schema used for live data', async () => {
-    const ds = await new MockReceivablesSource().fetchDataset('2026-09-05');
+    const ds = await new FixtureReceivablesSource().fetchDataset('2026-09-05');
     expect(DatasetSchema.safeParse(ds).success).toBe(true);
   });
 });
 
 describe('Ellis live adapter — capability discovery (Playbook settlement tools)', () => {
-  const cfg = { ...DEFAULT_LIVE_CONFIG, reportingCurrency: 'JPY', fx: mockFxTable('2026-09-05', '2026-09-05', 'JPY'), countries: ['Korea'], pageSize: 500 };
+  const cfg = { ...DEFAULT_LIVE_CONFIG, reportingCurrency: 'JPY', fx: fixtureFxTable('2026-09-05', '2026-09-05', 'JPY'), countries: ['Korea'], pageSize: 500 };
   class SettlementMcp implements McpToolClient {
     calls: string[] = [];
     async listTools() {

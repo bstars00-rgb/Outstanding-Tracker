@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { MockReceivablesSource } from '@adapters/ellis/mock-adapter';
+import { FixtureReceivablesSource } from '../fixtures/fixture-source';
 import { buildTrackerModel } from '@core/calc';
 import { DEFAULT_REFLECTION_CHAIN } from '@core/types';
 
 const REF = '2026-09-05';
-const src = new MockReceivablesSource();
+const src = new FixtureReceivablesSource();
 const ds = await src.fetchDataset(REF);
 const model = buildTrackerModel(ds, { referenceDate: REF, previousSnapshot: await src.previousSnapshot(REF), lang: 'ko' });
 

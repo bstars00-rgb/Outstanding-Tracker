@@ -4,7 +4,7 @@ B2B hotel-distribution receivables tracker for OhMyHotel: a static React dashboa
 GitHub Actions pipeline that pulls data from the **Ellis MCP**, computes outstanding / aging / risk, generates a
 verified AI insight and posts a weekly executive report to **Microsoft Teams every Saturday 09:00 (Asia/Ho_Chi_Minh)**.
 
-> **Prototype status.** Everything runs end-to-end on deterministic **mock data**. The live Ellis MCP, the Teams
+> **Status.** The tracker runs on **real data**: the weekly OP outstanding workbook (or an ELLIS export) converted into the tracker dataset and run through the local pipeline. Fictional data exists only as a test fixture (`tests/fixtures/`). The live Ellis MCP, the Teams
 > webhook and the AI key are pluggable adapters that are wired but **blocked** until credentials / tools are provided
 > (see [docs/OPEN_QUESTIONS.md](docs/OPEN_QUESTIONS.md) and [docs/ELLIS_MCP_MAPPING.md](docs/ELLIS_MCP_MAPPING.md)).
 
@@ -14,11 +14,10 @@ verified AI insight and posts a weekly executive report to **Microsoft Teams eve
 |------|-------|
 | Frontend (React + TS + Vite, HashRouter) | `src/app/` |
 | Domain engine (types, aging, KPIs, risk score, snapshot compare, validation) | `src/core/` |
-| Adapters: Ellis (mock / live MCP), AI insight (rule-based / Claude), Teams (mock / Workflows webhook), storage | `src/adapters/` |
+| Adapters: Ellis (file export / live MCP), AI insight (rule-based / Claude), Teams (dry-run logger / Workflows webhook), storage | `src/adapters/` |
 | Weekly automation pipeline + env/log helpers | `automation/` |
 | GitHub Actions (Pages deploy, Saturday report) | `.github/workflows/` |
 | Documentation set | `docs/` |
-| Committed samples (Adaptive Card, Markdown, insight JSON, mock dataset) | `samples/` |
 | Tests: unit (`tests/unit`), integration (`tests/integration`), E2E Playwright (`tests/e2e`) | `tests/` |
 
 Documents: [PRODUCT_REQUIREMENTS](docs/PRODUCT_REQUIREMENTS.md) · [ELLIS_MCP_MAPPING](docs/ELLIS_MCP_MAPPING.md) ·
@@ -35,7 +34,7 @@ Requirements: Node.js 20+ (tested on 24), npm 10+.
 
 ```bash
 npm ci
-npm run dev            # http://localhost:5173  (mock mode by default)
+npm run dev            # http://localhost:5173  (reads public/data/*.json published by the pipeline)
 ```
 
 Other commands:
@@ -46,30 +45,21 @@ Other commands:
 | `npm run test` | Vitest unit + integration (99 tests, no network) |
 | `npm run test:e2e` | Playwright (desktop + mobile) against `npm run preview` |
 | `npm run build` | Production bundle to `dist/` |
-| `npm run mock:generate` | Prints the mock dataset profile and scenario coverage |
-| `npm run report:sample` | Regenerates `samples/*` from mock data |
-| `npm run report:weekly:dry` | Full pipeline in DRY_RUN with mock data → `automation/out/` |
+| `npm run report:weekly:dry` | Full pipeline in DRY_RUN from `DATA_FILE` → `automation/out/` |
 
-## 2. Mock mode
+## 2. Data
 
-The app opens in **mock mode** (`?mode=mock`, amber "MOCK DATA" badge). The dataset is generated in the browser by
-`src/adapters/ellis/mock-data.ts`: 34 fictional customers, 182 invoices, 65 payments, 12 activities and a 12-week
-snapshot history (reference-date selector in the header). Every PRD scenario is a named customer, e.g.
-`Mekong Holidays JSC` (90+ days, broken promise, limit exceeded), `Fuji Peak Travel Inc.` (sharp deterioration),
-`Hanbit Tours Co.` (large but current), `Saigon Sky Tours` (missing due date / owner / limit).
+There is no mock mode. The app renders whatever the pipeline published to `public/data/tracker-model.json` and
+`insight.json` (`PUBLISH_DATA=true`), and shows a "No data published yet" state otherwise. Sources:
 
-Screens: `#/` Executive Overview · `#/aging` · `#/customers` (+ `#/customers/:id` with risk-score explanation) ·
-`#/invoices` · `#/actions` · `#/insights`. Query helpers for QA: `?simulate=error`, `?simulate=empty`.
+| Source | How |
+|---|---|
+| Weekly OP workbook (current) | `python automation/tools/excel_to_dataset.py <xlsx> <date> automation/input/<date>.json` → `DATA_SOURCE=file` (§6a) |
+| ELLIS MCP export via the AI Agent | save the tool results as `automation/input/ellis-export.json` → `DATA_SOURCE=file` (`docs/RUNBOOK_MANUAL_RUN.md`) |
+| ELLIS MCP live | `DATA_SOURCE=ellis` once the MCP tools exist (§3) |
 
-**Language & theme.** The UI and all engine-generated wording (KPI interpretations, risk evidence, actions, AI insight) are
-available in **Korean and English** (`?lang=ko|en`, toggle in the top bar, remembered per browser; default follows the
-browser language). **Dark mode** follows the OS setting and can be toggled (remembered per browser).
-
-**Currencies.** The company default reporting currency is **JPY** (`REPORTING_CURRENCY`). Every customer keeps its own
-contract currency; the Customer Risk table, customer detail and Overview show the JPY equivalent together with the
-original-currency balances per currency (`CustomerRisk.totals_by_currency`). Risk-score amount thresholds are defined in USD
-and scaled to the reporting currency with the FX table, so grades do not depend on the reporting currency.
-
+Tests run on a deterministic fictional fixture (`tests/fixtures/fixture-data.ts`, 34 customers / 182 invoices / 15 scenarios);
+Playwright publishes it into `dist/data/` in its global setup, so E2E never touches real data.
 ## 3. Connecting the Ellis MCP (live mode)
 
 What is **confirmed** today: one tool, `get_hotel_bookings` (per-country pagination, `limit=500`). Invoice, payment and
@@ -81,7 +71,7 @@ Steps once the endpoint is available:
 1. Set secrets `ELLIS_MCP_ENDPOINT` (Streamable-HTTP JSON-RPC URL) and `ELLIS_MCP_AUTH` (full `Authorization` header value).
 2. Run a health check + dry run locally:
    ```bash
-   DATA_SOURCE=ellis DRY_RUN=true AI_PROVIDER=mock TEAMS_SENDER=mock npx tsx automation/weekly-report.ts
+   DATA_SOURCE=ellis DRY_RUN=true AI_PROVIDER=mock TEAMS_SENDER=mock npx tsx automation/weekly-report.ts   # AI_PROVIDER=mock = rule-based insight, TEAMS_SENDER=mock = log only
    ```
    The log shows `tools/list` result, record counts and `completeness` notes. If the endpoint is not JSON-RPC over HTTP,
    implement `McpToolClient` (`src/adapters/ellis/types.ts`) for the real transport and inject it in `buildDeps()`.
@@ -107,9 +97,9 @@ Settings → Secrets and variables → Actions.
 |----------|---------|---------|
 | `DRY_RUN` | `true` | Scheduled runs never post until set to `false` |
 | `TARGET_CHANNEL` | `test` | `test` or `leaders` |
-| `DATA_SOURCE` | `mock` | `mock` or `ellis` |
-| `AI_PROVIDER` | `mock` | `mock` or `claude` |
-| `TEAMS_SENDER` | `live` | `live` or `mock` |
+| `DATA_SOURCE` | `file` | `file` (exported JSON, default) or `ellis` |
+| `AI_PROVIDER` | `mock` | `mock` (rule-based, no API) or `claude` |
+| `TEAMS_SENDER` | `live` | `live` or `mock` (log only) |
 | `REPORTING_CURRENCY` | `JPY` | ISO 4217 (company default currency: JPY) |
 | `REPORT_LANGUAGE` | `ko` | `ko` or `en` wording of the Teams report |
 | `REPORT_TIMEZONE` | `Asia/Ho_Chi_Minh` | IANA zone for timestamps |
@@ -142,8 +132,7 @@ PBKDF2 hash (`VITE_GATE_HASH`); the password itself is never stored in git.
 - Local dev/tests: leave `VITE_GATE_HASH` empty → gate disabled. To test the gate locally:
   `VITE_GATE_HASH=$(npm run -s gate:hash -- "pw") npm run build && E2E_GATE_PASSWORD=pw npx playwright test gate`.
 - Limits: this is an access deterrent for a static site, not server authentication. Anyone with the bundle can attempt
-  offline guessing against the hash (150k PBKDF2 iterations, random 16-char default password) and the mock data is in the
-  bundle by design. Real customer data must stay behind a private repository or a protected `VITE_LIVE_DATA_URL`.
+  offline guessing against the hash (150k PBKDF2 iterations, current password) and any file under `public/data/` is downloadable by design. Real customer data must stay behind a private repository or a protected `VITE_LIVE_DATA_URL`.
 
 ## 6. Teams Workflows webhook
 
@@ -177,7 +166,7 @@ to branch `tracker-state` → fail job (and alert admin) if both attempts failed
 ## 8. Manual test send
 
 Actions → *Weekly Outstanding Report (Teams)* → **Run workflow**:
-`target_channel=test`, `dry_run=false`, `data_source=mock`, `ai_provider=mock`. Check the test channel and the
+`target_channel=test`, `dry_run=false`, `data_source=ellis`, `ai_provider=mock`. Check the test channel and the
 uploaded artefact (`teams-message.json` is the exact card posted).
 
 Local equivalent (needs the test webhook in your shell environment):

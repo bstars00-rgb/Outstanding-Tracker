@@ -1,20 +1,20 @@
 import { describe, expect, it } from 'vitest';
-import { generateMockDataset, SCENARIOS, weeklyDates } from '@adapters/ellis/mock-data';
-import { MockReceivablesSource } from '@adapters/ellis/mock-adapter';
+import { generateFixtureDataset, SCENARIOS, weeklyDates } from '../fixtures/fixture-data';
+import { FixtureReceivablesSource } from '../fixtures/fixture-source';
 import { validateDataset } from '@core/validate';
 import { buildTrackerModel } from '@core/calc';
 
 const REF = '2026-09-05';
 
 describe('mock dataset', () => {
-  const ds = generateMockDataset(REF);
+  const ds = generateFixtureDataset(REF);
   it('meets minimum volumes', () => {
     expect(ds.customers.length).toBeGreaterThanOrEqual(30);
     expect(ds.invoices.length).toBeGreaterThanOrEqual(150);
     expect(weeklyDates(REF, 12)).toHaveLength(12);
   });
   it('is deterministic', () => {
-    expect(JSON.stringify(generateMockDataset(REF))).toBe(JSON.stringify(generateMockDataset(REF)));
+    expect(JSON.stringify(generateFixtureDataset(REF))).toBe(JSON.stringify(generateFixtureDataset(REF)));
   });
   it('passes schema validation (only non-blocking DQ issues)', () => {
     const v = validateDataset(ds);
@@ -39,7 +39,7 @@ describe('mock dataset', () => {
     expect(ds.payments.some((p) => p.unapplied_amount > 0)).toBe(true);
   });
   it('scenario customers behave as designed in the calculated model', async () => {
-    const src = new MockReceivablesSource();
+    const src = new FixtureReceivablesSource();
     const prev = await src.previousSnapshot(REF);
     const m = buildTrackerModel(ds, { referenceDate: REF, previousSnapshot: prev });
     const byName = (n: string) => m.customers.find((c) => c.customer_name === n)!;
@@ -59,7 +59,7 @@ describe('mock dataset', () => {
     expect(m.previous_snapshot_date).toBe('2026-08-29');
   });
   it('produces 12 chained weekly snapshots with FX drift', async () => {
-    const src = new MockReceivablesSource();
+    const src = new FixtureReceivablesSource();
     const h = await src.history(REF, 12);
     expect(h).toHaveLength(12);
     expect(h[0].date).toBe('2026-06-20');

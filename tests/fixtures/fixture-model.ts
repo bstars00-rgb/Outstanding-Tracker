@@ -2,31 +2,31 @@ import { buildTrackerModel } from '@core/calc';
 import { validateDataset } from '@core/validate';
 import type { Lang } from '@core/i18n';
 import type { ISODate, ReceivablesDataset, TrackerModel } from '@core/types';
-import { MockReceivablesSource } from '@adapters/ellis/mock-adapter';
+import { FixtureReceivablesSource } from './fixture-source';
 import { generateInsight } from '@adapters/ai/insight-service';
 import { RuleBasedInsightProvider } from '@adapters/ai/mock-provider';
 import type { InsightResult } from '@adapters/ai/types';
 
-export interface MockBuild {
+export interface FixtureBuild {
   model: TrackerModel;
   insight: InsightResult;
-  /** Weekly snapshot dates (oldest first) known to the mock source for this reference date. */
+  /** Weekly snapshot dates (oldest first) known to the fixture source for this reference date. */
   dates: ISODate[];
 }
 
-let sharedSource: MockReceivablesSource | null = null;
-export function mockSource(): MockReceivablesSource {
-  if (!sharedSource) sharedSource = new MockReceivablesSource();
+let sharedSource: FixtureReceivablesSource | null = null;
+export function fixtureSource(): FixtureReceivablesSource {
+  if (!sharedSource) sharedSource = new FixtureReceivablesSource();
   return sharedSource;
 }
 
 /**
- * Build the full tracker model + insight for a reference date from the mock source, exactly the
+ * Build the full tracker model + insight for a reference date from the test fixture source, exactly the
  * way the UI hook does (shared with unit tests). `empty=true` produces a dataset without invoices;
  * `lang` selects the language of the engine-generated wording (labels, evidence, actions, insight).
  */
-export async function buildMockModel(referenceDate: ISODate, opts: { empty?: boolean; source?: MockReceivablesSource; lang?: Lang } = {}): Promise<MockBuild> {
-  const source = opts.source ?? mockSource();
+export async function buildFixtureModel(referenceDate: ISODate, opts: { empty?: boolean; source?: FixtureReceivablesSource; lang?: Lang } = {}): Promise<FixtureBuild> {
+  const source = opts.source ?? fixtureSource();
   const lang: Lang = opts.lang ?? 'en';
   const history = await source.history(referenceDate, 12);
   const dates = history.map((h) => h.date);

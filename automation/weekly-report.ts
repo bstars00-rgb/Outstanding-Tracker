@@ -16,12 +16,10 @@ import { buildTrackerModel } from '@core/calc';
 import { latestSaturday, tzOffsetMinutes } from '@core/dates';
 import { validateDataset } from '@core/validate';
 import type { ReceivablesDataset, Snapshot, TrackerModel } from '@core/types';
-import { MockReceivablesSource } from '@adapters/ellis/mock-adapter';
 import { FileReceivablesSource } from '@adapters/ellis/file-adapter';
 import { EllisMcpReceivablesSource } from '@adapters/ellis/live-adapter';
 import { HttpMcpClient } from '@adapters/ellis/mcp-client';
 import type { ReceivablesSource } from '@adapters/ellis/types';
-import { mockFxTable } from '@adapters/ellis/mock-data';
 import { generateInsight } from '@adapters/ai/insight-service';
 import { RuleBasedInsightProvider } from '@adapters/ai/mock-provider';
 import { ClaudeInsightProvider } from '@adapters/ai/live-provider';
@@ -107,13 +105,8 @@ export async function runPipeline(d: PipelineDeps): Promise<PipelineResult> {
   log.log(`[4/13] validation ok (${validation.issues.length} non-blocking data-quality issues)`);
 
   // 5-7. previous snapshot + calculation
-  let prev: Snapshot | null = await d.store.getPreviousSnapshot(reportDate);
-  if (!prev && d.source instanceof MockReceivablesSource) {
-    const hist = await d.source.history(reportDate, 12);
-    for (const h of hist.slice(0, -1)) await d.store.saveSnapshot(h.snapshot);
-    prev = hist.length >= 2 ? hist[hist.length - 2].snapshot : null;
-    log.log(`[5/13] seeded ${hist.length - 1} historical mock snapshots into store`);
-  }
+  const prev: Snapshot | null = await d.store.getPreviousSnapshot(reportDate);
+  log.log(`[5/13] previous snapshot: ${prev?.snapshot_date ?? 'none'}`);
   const model = buildTrackerModel(dataset, { referenceDate: reportDate, previousSnapshot: prev, validationIssues: validation.issues, lang: env.REPORT_LANGUAGE, reflectionChain: env.REFLECTION_CHAIN });
   log.log(`[6/13] calc ok: total=${model.snapshot.totals.total_outstanding} overdue=${model.snapshot.totals.overdue_outstanding} prev=${prev?.snapshot_date ?? 'none'} fx_effect=${model.fx_effect_reporting}`);
   log.log(`[7/13] risk: ${model.customers.filter((c) => c.risk.grade === 'Critical').length} critical, ${model.customers.filter((c) => c.risk.grade === 'High').length} high`);
@@ -186,16 +179,12 @@ export function todayInTz(now: Date, tz: string): string {
 export function buildDeps(env: PipelineEnv, log: RedactingLogger, now: () => Date = () => new Date()): PipelineDeps {
   log.protect(env.secrets.TEAMS_WEBHOOK_URL, env.secrets.TEAMS_TEST_WEBHOOK_URL, env.secrets.TEAMS_ADMIN_WEBHOOK_URL, env.secrets.AI_API_KEY, env.secrets.ELLIS_MCP_AUTH, env.secrets.ELLIS_MCP_ENDPOINT);
   const refDate = env.REPORT_DATE ?? latestSaturday(todayInTz(now(), env.REPORT_TIMEZONE));
+  // No invented FX: when neither the export nor ELLIS provides applied rates, foreign-currency invoices are flagged MISSING_FX_RATE.
+  const noFx = { reporting_currency: env.REPORTING_CURRENCY, as_of: refDate, rates: [] };
   const source: ReceivablesSource =
-    env.DATA_SOURCE === 'mock'
-      ? new MockReceivablesSource(20260905, env.REPORTING_CURRENCY)
-      : env.DATA_SOURCE === 'file'
-        ? new FileReceivablesSource(env.DATA_FILE, env.REPORTING_CURRENCY, mockFxTable(refDate, refDate, env.REPORTING_CURRENCY))
-      : new EllisMcpReceivablesSource(new HttpMcpClient(env.secrets.ELLIS_MCP_ENDPOINT!, env.secrets.ELLIS_MCP_AUTH), {
-          reportingCurrency: env.REPORTING_CURRENCY,
-          // FX for live mode: until a rates feed is wired (Required item), the illustrative table is used and flagged in completeness notes.
-          fx: { ...mockFxTable(refDate, refDate, env.REPORTING_CURRENCY), rates: mockFxTable(refDate, refDate, env.REPORTING_CURRENCY).rates.map((r) => ({ ...r, source: 'ILLUSTRATIVE - replace with treasury/ECB feed' })) },
-        });
+    env.DATA_SOURCE === 'file'
+      ? new FileReceivablesSource(env.DATA_FILE, env.REPORTING_CURRENCY, noFx)
+      : new EllisMcpReceivablesSource(new HttpMcpClient(env.secrets.ELLIS_MCP_ENDPOINT!, env.secrets.ELLIS_MCP_AUTH), { reportingCurrency: env.REPORTING_CURRENCY, fx: noFx });
   const insightProvider: InsightProvider = env.AI_PROVIDER === 'claude' ? new ClaudeInsightProvider({ apiKey: env.secrets.AI_API_KEY!, lang: env.REPORT_LANGUAGE }) : new RuleBasedInsightProvider(env.REPORT_LANGUAGE);
   const sender: TeamsSender =
     env.TEAMS_SENDER === 'live'

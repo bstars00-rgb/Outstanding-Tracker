@@ -57,7 +57,7 @@
 | **Guest names are never stored.** `guestName` is destructured out of every Ellis record inside `fetchBookings()` before the record is placed in the de-dup map | `src/adapters/ellis/live-adapter.ts` | Confirmed |
 | No guest-level field exists in `Customer`, `Invoice`, `Payment`, `CollectionActivity`, `BookingContext`, `Snapshot`, `TrackerModel` | `src/core/types.ts` | Confirmed |
 | `sellerBookingCode` (masked by Ellis) is not mapped; hotel/room/rate detail is not mapped | `bookingsToDataset()` | Confirmed |
-| Mock data contains only fictional companies, owners and hotels; no personal data generated | `mock-data.ts` header | Confirmed |
+| Test fixture data contains only fictional companies, owners and hotels; it is test-only and never bundled (mock mode removed 2026-09-28) | `tests/fixtures/fixture-data.ts` header | Confirmed |
 | Published model (`public/data/tracker-model.json`) = `publicModel(model)`: activity `note` → `"[redacted in published data]"` (empty stays empty), `payment_reference → null` | `automation/weekly-report.ts` | Confirmed |
 | AI input contains **no notes, no invoice detail, no references** — only computed figures, customer names and owner names | `buildInsightInput()` | Confirmed |
 | Teams card contains customer names, owner names and amounts (business data), never guest data or notes | `message-builder.ts` | Confirmed |
@@ -90,7 +90,7 @@
 | Admin alerts | `TEAMS_ADMIN_WEBHOOK_URL` (falls back to the test webhook) receives failure alerts — never the leaders channel | Confirmed |
 | Idempotency | one successful live send per `weekly-outstanding:<date>:<channel>`; `FORCE_RESEND=true` is the only override | Confirmed |
 | Fail closed | schema `error` or fetch failure ⇒ failure card ("Data refresh failed") + alert; **no figures** | Confirmed |
-| Mock labelling | title suffix `(MOCK DATA)`, card subtitle "Prototype run on fictional mock data", insight warning `MOCK DATA…` | Confirmed |
+| Mock labelling | removed with mock mode (2026-09-28); every report is real data. Former: title suffix `(MOCK DATA)`, card subtitle "Prototype run on fictional mock data", insight warning `MOCK DATA…` | Confirmed |
 | Manual runs | `workflow_dispatch` inputs default to `target_channel=test`, `dry_run=true`, `data_source=mock`, `ai_provider=mock`, `force_resend=false`; scheduled runs read repository variables with the same safe defaults (`TEAMS_SENDER` defaults to `live`, harmless while `DRY_RUN=true`) | Confirmed (`weekly-report.yml`) |
 | Webhook payload | Adaptive Card JSON only; no `Action.Submit`/`Action.Execute`, only `Action.OpenUrl` to `TRACKER_BASE_URL` | Confirmed |
 

@@ -1,12 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import { MockReceivablesSource } from '@adapters/ellis/mock-adapter';
+import { FixtureReceivablesSource } from '../fixtures/fixture-source';
 import { buildTrackerModel } from '@core/calc';
 import { generateInsight } from '@adapters/ai/insight-service';
 import { RuleBasedInsightProvider } from '@adapters/ai/mock-provider';
 import { buildFailureMessage, buildTeamsMessage } from '@adapters/teams/message-builder';
 
 const REF = '2026-09-05';
-const src = new MockReceivablesSource();
+const src = new FixtureReceivablesSource();
 const model = buildTrackerModel(await src.fetchDataset(REF), { referenceDate: REF, previousSnapshot: await src.previousSnapshot(REF) });
 const insight = await generateInsight(model, { provider: new RuleBasedInsightProvider() });
 const ctx = { trackerBaseUrl: 'https://example.github.io/tracker/', timeZone: 'Asia/Ho_Chi_Minh', sentAt: '2026-09-05T02:00:00.000Z', channelLabel: 'leaders' as const };
@@ -14,7 +14,7 @@ const ctx = { trackerBaseUrl: 'https://example.github.io/tracker/', timeZone: 'A
 describe('Teams message', () => {
   const msg = buildTeamsMessage(model, insight, ctx);
   it('has the required title and idempotency key', () => {
-    expect(msg.title).toBe('[Weekly Outstanding Report] 2026-09-05 (MOCK DATA)');
+    expect(msg.title).toBe('[Weekly Outstanding Report] 2026-09-05');
     expect(msg.idempotency_key).toBe('weekly-outstanding:2026-09-05:leaders');
   });
   it('is a valid Adaptive Card 1.4 with the six sections and three links', () => {

@@ -23,7 +23,7 @@ export function buildTeamsMessage(m: TrackerModel, insight: InsightResult, ctx: 
   const M = (n: number) => formatMoney(n, ccy, { compact: true });
   const kpi = (k: string) => m.kpis.find((x) => x.key === k)!;
   const delta = (k: ReturnType<typeof kpi>) => (k.change === null ? 'n/a' : `${formatMoney(k.change, ccy, { signed: true, compact: true })} (${formatPct(k.change_pct, { signed: true })})`);
-  const title = `${p('[Weekly Outstanding Report]', '[주간 미수금 보고]')} ${m.reference_date}${m.is_mock ? p(' (MOCK DATA)', ' (MOCK 데이터)') : ''}`;
+  const title = `${p('[Weekly Outstanding Report]', '[주간 미수금 보고]')} ${m.reference_date}`;
   const links = {
     tracker: `${ctx.trackerBaseUrl}#/?lang=${lang}`,
     risk: `${ctx.trackerBaseUrl}#/customers?lang=${lang}`,
@@ -76,7 +76,6 @@ export function buildTeamsMessage(m: TrackerModel, insight: InsightResult, ctx: 
     openTracker: p('Open Tracker', '트래커 열기'),
     customerRisk: p('Customer Risk', '고객사 Risk'),
     actionBoard: p('Action Board', '액션 보드'),
-    mockNote: p('⚠️ Prototype run on fictional mock data', '⚠️ 가상 Mock 데이터로 생성된 프로토타입 보고서'),
     channel: p('Channel', '채널'),
     risk: p('Risk', '위험'),
     opp: p('Opportunity', '기회'),
@@ -114,7 +113,7 @@ export function buildTeamsMessage(m: TrackerModel, insight: InsightResult, ctx: 
     msteams: { width: 'Full' },
     body: [
       text(title, { size: 'Large', weight: 'Bolder' }),
-      text(m.is_mock ? H.mockNote : `${H.channel}: ${ctx.channelLabel}`, { isSubtle: true, spacing: 'None' }),
+      text(`${H.channel}: ${ctx.channelLabel}`, { isSubtle: true, spacing: 'None' }),
       text(H.exec, { weight: 'Bolder', size: 'Medium', spacing: 'Medium' }),
       factSet([
         { title: H.total, value: `${M(total.value)} (${delta(total)})` },

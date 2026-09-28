@@ -120,6 +120,12 @@ const KO: Texts = {
  *  - ratios use absolute thresholds
  *  - amounts are judged by their share of total outstanding and by WoW movement
  */
+/** KPI labels / definitions per UI language, so the frontend can re-label a model published in another language. */
+export const KPI_TEXT_I18N: Record<Lang, { label: Record<string, string>; definition: Record<string, string> }> = {
+  en: { label: EN.label, definition: EN.definition },
+  ko: { label: KO.label, definition: KO.definition },
+};
+
 export function buildKpis(t: SnapshotTotals, prev: SnapshotTotals | null, ccy: string, lang: Lang = 'en'): KpiValue[] {
   const T = lang === 'ko' ? KO : EN;
   const total = t.total_outstanding || 1;

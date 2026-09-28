@@ -6,7 +6,7 @@
 import { DEFAULT_REFLECTION_CHAIN, type ReflectionChain } from '@core/types';
 
 export interface PipelineEnv {
-  DATA_SOURCE: 'mock' | 'ellis' | 'file';
+  DATA_SOURCE: 'ellis' | 'file';
   /** DATA_SOURCE=file: path to a ReceivablesDataset JSON or a raw ELLIS export (sellerInvoices/payments/traders[/appliedRates]). */
   DATA_FILE: string;
   AI_PROVIDER: 'mock' | 'claude';
@@ -36,10 +36,10 @@ const bool = (v: string | undefined, def: boolean) => (v === undefined || v === 
 const opt = (v: string | undefined) => (v && v.trim() !== '' ? v.trim() : null);
 
 export function loadEnv(env: NodeJS.ProcessEnv = process.env): PipelineEnv {
-  const dataSource = (env.DATA_SOURCE ?? 'mock').toLowerCase();
+  const dataSource = (env.DATA_SOURCE ?? 'file').toLowerCase();
   const ai = (env.AI_PROVIDER ?? 'mock').toLowerCase();
   const teams = (env.TEAMS_SENDER ?? 'mock').toLowerCase();
-  if (!['mock', 'ellis', 'file'].includes(dataSource)) throw new Error(`DATA_SOURCE must be mock|ellis|file (got ${dataSource})`);
+  if (!['ellis', 'file'].includes(dataSource)) throw new Error(`DATA_SOURCE must be ellis|file (got ${dataSource})`);
   if (!['mock', 'claude'].includes(ai)) throw new Error(`AI_PROVIDER must be mock|claude (got ${ai})`);
   if (!['mock', 'live'].includes(teams)) throw new Error(`TEAMS_SENDER must be mock|live (got ${teams})`);
   const dryRun = bool(env.DRY_RUN, true); // SAFE DEFAULT: dry run unless explicitly disabled
