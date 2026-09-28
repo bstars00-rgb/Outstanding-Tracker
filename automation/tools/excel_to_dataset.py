@@ -20,6 +20,10 @@ from datetime import datetime, date
 
 import openpyxl
 
+# Internal accounts (confirmed by Global Ops 2026-09-28): not customer receivables, so they are EXCLUDED from the
+# tracker dataset and listed with their balances in completeness.notes instead.
+#   "Business Trip in ..."  = employee business trips (출장)
+#   "Unsold room (JP)"      = hard-block unsold inventory (하드블럭 미판매분)
 INTERNAL_HINTS = ("business trip", "unsold room")
 NOTE_HDR = re.compile(r"^\[(\d{4}-\d{2}-\d{2})\]\s*(.+?)\s*\|\s*([\d,\.]+)\s*$")
 
@@ -62,6 +66,7 @@ def main(path, as_of, out):
 
     customers = {}
     invoices, payments, activities = [], [], []
+    internal_rows = []  # (name, invoice, ccy, balance, balance_jpy)
     terms = defaultdict(list)
     ccy_count = defaultdict(lambda: defaultdict(int))
     unmatched_tier = set()
@@ -86,12 +91,16 @@ def main(path, as_of, out):
 
         t = tier_by_name.get(name.lower())
         internal = any(h in name.lower() for h in INTERNAL_HINTS)
+        if internal:
+            rate = next((r["rate_to_reporting"] for r in rates if r["currency"] == ccy), 1.0 if ccy == "JPY" else None)
+            internal_rows.append((name, inv_no, ccy, bal, round(bal * rate) if rate else None))
+            continue
         if cid not in customers:
             if t is None and not internal:
                 unmatched_tier.add(name)
             customers[cid] = {
                 "customer_id": cid, "customer_name": name,
-                "customer_group": ("Internal / untiered" if internal else (t["tier"] if t else (str(tier_cell) if tier_cell not in (None, "#N/A") else "Untiered"))),
+                "customer_group": (t["tier"] if t else (str(tier_cell) if tier_cell not in (None, "#N/A") else "Untiered")),
                 "country": "Unknown", "region": (t["type"] if t else ""),
                 "account_owner_id": (str(t["pic"]).lower() if t and t["pic"] else ""), "account_owner_name": (str(t["pic"]) if t and t["pic"] else ""),
                 "finance_owner": None, "contract_currency": ccy, "payment_terms_days": None, "credit_limit": None,
@@ -155,6 +164,14 @@ def main(path, as_of, out):
         c["contract_currency"] = max(ccy_count[cid].items(), key=lambda kv: kv[1])[0]
         if terms[cid]:
             c["payment_terms_days"] = int(statistics.median(terms[cid]))
+    if internal_rows:
+        by_name = {}
+        for name, _, ccy, bal, jpy in internal_rows:
+            e = by_name.setdefault(name, {"n": 0, "jpy": 0})
+            e["n"] += 1
+            e["jpy"] += jpy or 0
+        total_jpy = sum(e["jpy"] for e in by_name.values())
+        notes.append("Internal accounts excluded (not customer receivables; 출장/하드블럭 미판매분): " + ", ".join(f"{n} {e['n']} inv. JPY {e['jpy']:,.0f}" for n, e in by_name.items()) + f" — total JPY {total_jpy:,.0f}.")
     if unmatched_tier:
         notes.append("Sellers not found in the Tier sheet (no PIC / tier): " + ", ".join(sorted(unmatched_tier)) + ".")
     notes.append("Managing entity (Seoul / Singapore) is not in the workbook; control_company left empty for all customers.")

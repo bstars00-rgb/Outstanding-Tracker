@@ -119,4 +119,6 @@ Each phase records: decisions taken, evidence, and the risks that remain open at
 
 | D37 | **Encrypted publish (2026-09-28)**: real weekly output is deployed to GitHub Pages only as `public/data/bundle.enc.json` (AES-256-GCM; key derived from the gate password with a domain-separated PBKDF2 salt). The browser derives the key at unlock and stores only the derived key. Plaintext JSON never leaves the machine. Trade-off: security equals the password's guess-resistance (hash and ciphertext are public); a long passphrase is recommended. | User chose option 2 ("2번") over local-only preview and a paid private-Pages plan. |
 
+| D38 | **Internal accounts excluded (2026-09-28)**: "Business Trip in Japan/KR/Vietnam" (employee travel, 출장) and "Unsold room (JP)" (hard-block unsold inventory) are internal ledgers, not customer receivables. The workbook converter drops them and records their balances in `completeness.notes` so the CEO report shows customer receivables only (this week: JPY 6.77M removed). "Meituan Japan" stays in (untiered, treatment unconfirmed). | Global Ops confirmation ("이건 내부용이야"). |
+
 Results and remaining risks: `docs/QA_REPORT.md`.
