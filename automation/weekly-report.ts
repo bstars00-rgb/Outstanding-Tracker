@@ -10,7 +10,7 @@
  *
  * Exit codes: 0 success/skipped, 1 failure (workflow retries once, then alerts admin).
  */
-import { mkdir, writeFile, copyFile } from 'node:fs/promises';
+import { mkdir, writeFile, copyFile, readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { buildTrackerModel } from '@core/calc';
 import { latestSaturday, tzOffsetMinutes } from '@core/dates';
@@ -205,7 +205,14 @@ if (isMain) {
       await mkdir('public/data', { recursive: true });
       await copyFile(join(deps.outDir, 'tracker-model.json'), 'public/data/tracker-model.json');
       await copyFile(join(deps.outDir, 'insight.json'), 'public/data/insight.json');
-      log.log('published public/data/tracker-model.json and insight.json (aggregated, no PII)');
+      log.log('published public/data/tracker-model.json and insight.json (plaintext: local preview only, git-ignored)');
+      if (process.env.DATA_PUBLISH_PASSWORD) {
+        const { encryptBundle } = await import('../src/app/gate/data-crypto');
+        const insight = JSON.parse(await readFile(join(deps.outDir, 'insight.json'), 'utf8'));
+        const bundle = await encryptBundle(process.env.DATA_PUBLISH_PASSWORD, { model: publicModel(result.model), insight });
+        await writeFile('public/data/bundle.enc.json', JSON.stringify(bundle));
+        log.log(`published public/data/bundle.enc.json (AES-256-GCM, ${bundle.bytes} bytes plaintext) - commit and push to deploy`);
+      }
     }
     process.exitCode = result.status === 'failed' ? 1 : 0;
   } catch (e) {

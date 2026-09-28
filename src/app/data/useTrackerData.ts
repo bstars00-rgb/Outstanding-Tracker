@@ -6,6 +6,8 @@ import type { InsightResult } from '@adapters/ai/types';
 import { translate } from '@app/i18n/strings';
 import { useI18n } from '@app/i18n/useI18n';
 import { fetchLiveData } from './mode';
+import { DataLockedError } from '@app/gate/data-crypto';
+import { gateEnabled, lockGate } from '@app/gate/PasswordGate';
 
 export type TrackerStatus = 'loading' | 'ready' | 'error' | 'partial';
 
@@ -80,6 +82,11 @@ export function useTrackerData(): TrackerData {
       setState({ status: isPartial(model) ? 'partial' : 'ready', model, insight: live.insight, error: null });
     })().catch((e: unknown) => {
       if (cancelled) return;
+      if (e instanceof DataLockedError && gateEnabled()) {
+        // New publish (fresh salt) or missing key: ask for the password again instead of showing an error.
+        lockGate();
+        return;
+      }
       setState({ status: 'error', model: null, insight: null, error: (e as Error).message ?? String(e) });
     });
     return () => {

@@ -11,6 +11,7 @@ Status: v1.0 · 2026-09-22 · 운영 방식 결정: **무인 배치 대신 Globa
 | 3 | 파이프라인 실행: `DATA_SOURCE=file REPORT_LANGUAGE=ko DRY_RUN=true npx tsx automation/weekly-report.ts` → `automation/out/teams-message.json`·`.md`·`tracker-model.json` 확인 | 터미널 |
 | 4 | 수치 점검: 총 미수·연체가 ELLIS Seller Invoice 화면 합계와 일치하는지, 법인별(서울/싱가포르) 줄과 "ELLIS 반영 대기" 줄 확인 | `automation/out/teams-message.md`, `tracker-model.json` |
 | 5 | 발송: `TEAMS_SENDER=live DRY_RUN=false TARGET_CHANNEL=test`(검증) → `leaders`(정식). Webhook URL은 셸 환경변수로만 전달 | 터미널 |
+| 5b | 사이트 게시: `DATA_PUBLISH_PASSWORD='<게이트 비밀번호>' npm run publish:data` → `public/data/bundle.enc.json`(암호화본) 커밋·푸시 → 배포 후 사이트에서 비밀번호 재입력 1회 | 터미널 |
 | 6 | 스냅샷 보관: `automation/state/`가 자동 저장되므로 다음 주 전주 대비가 계산됨. 커넥터 사용 후 STAGING 커넥터는 제거 | — |
 
 ## 대안: 주간 엑셀(Outstanding_Report_<날짜>.xlsx)로 실행

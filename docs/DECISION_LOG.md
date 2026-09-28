@@ -117,4 +117,6 @@ Each phase records: decisions taken, evidence, and the risks that remain open at
 
 | D36 | **Mock data removed from the product (2026-09-28)**: no mock mode in the app (single published-data path, `?mode=` ignored), no `DATA_SOURCE=mock` in the pipeline (default `file`), no invented FX fallback, `samples/` and the sample/mock scripts deleted, Saturday cron disabled (manual operation). The deterministic fictional dataset survives only as a test fixture under `tests/fixtures/` (unit/integration) and is published into `dist/data/` by Playwright's global setup for E2E. The deployed site shows a "No data published yet" state until real data is published (open question: encrypted publish vs. local-only). | User instruction ("목데이터는 삭제해줘. 이제 실제 데이터를 넣었으니까"). |
 
+| D37 | **Encrypted publish (2026-09-28)**: real weekly output is deployed to GitHub Pages only as `public/data/bundle.enc.json` (AES-256-GCM; key derived from the gate password with a domain-separated PBKDF2 salt). The browser derives the key at unlock and stores only the derived key. Plaintext JSON never leaves the machine. Trade-off: security equals the password's guess-resistance (hash and ciphertext are public); a long passphrase is recommended. | User chose option 2 ("2번") over local-only preview and a paid private-Pages plan. |
+
 Results and remaining risks: `docs/QA_REPORT.md`.

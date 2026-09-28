@@ -21,9 +21,13 @@ test.describe('Password gate', () => {
     await page.getByLabel('Password').fill(password!);
     await page.getByRole('button', { name: 'Enter' }).click();
     await expect(page.getByTestId('mode-badge')).toBeVisible();
+    // Only the encrypted bundle is served in this build: the KPI cards prove password -> key -> decryption.
+    await expect(page.getByTestId('kpi-card-total_outstanding')).toBeVisible();
+    await expect(page.getByTestId('kpi-card-total_outstanding')).toContainText('JPY');
 
     await page.reload();
     await expect(page.getByTestId('mode-badge')).toBeVisible(); // sessionStorage keeps the tab unlocked
+    await expect(page.getByTestId('kpi-card-total_outstanding')).toBeVisible(); // and the derived key
 
     await page.getByTestId('gate-lock').click();
     await expect(page.getByTestId('gate-locked')).toBeVisible();

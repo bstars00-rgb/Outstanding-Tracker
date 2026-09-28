@@ -49,14 +49,27 @@ Other commands:
 
 ## 2. Data
 
-There is no mock mode. The app renders whatever the pipeline published to `public/data/tracker-model.json` and
-`insight.json` (`PUBLISH_DATA=true`), and shows a "No data published yet" state otherwise. Sources:
+There is no mock mode. The app renders the pipeline output. On the deployed site that output is **encrypted**
+(`public/data/bundle.enc.json`, AES-256-GCM with a key derived from the gate password); locally the plaintext
+`public/data/tracker-model.json` + `insight.json` written by `PUBLISH_DATA=true` are used (git-ignored). Without either
+the app shows a "No data published yet" state. Sources:
 
 | Source | How |
 |---|---|
 | Weekly OP workbook (current) | `python automation/tools/excel_to_dataset.py <xlsx> <date> automation/input/<date>.json` → `DATA_SOURCE=file` (§6a) |
 | ELLIS MCP export via the AI Agent | save the tool results as `automation/input/ellis-export.json` → `DATA_SOURCE=file` (`docs/RUNBOOK_MANUAL_RUN.md`) |
 | ELLIS MCP live | `DATA_SOURCE=ellis` once the MCP tools exist (§3) |
+
+### Publishing a week to the site
+
+```bash
+DATA_PUBLISH_PASSWORD='<gate password>' npm run publish:data      # automation/out -> public/data/bundle.enc.json
+git add public/data/bundle.enc.json && git commit -m "data: publish 2026-09-28" && git push
+```
+
+The bundle is the only data file committed. Each publish uses a fresh salt, so viewers enter the password once more;
+the browser keeps the derived key (never the password) in session storage, or local storage with "remember".
+Rotating the gate password requires re-publishing the bundle with the new password.
 
 Tests run on a deterministic fictional fixture (`tests/fixtures/fixture-data.ts`, 34 customers / 182 invoices / 15 scenarios);
 Playwright publishes it into `dist/data/` in its global setup, so E2E never touches real data.

@@ -10,6 +10,7 @@ automation/state/**
 !automation/state/.gitkeep
 automation/out/
 public/data/*.json
+!public/data/bundle.enc.json
 *.log
 .DS_Store
 handoff/

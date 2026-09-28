@@ -3,14 +3,16 @@ import { useI18n } from '@app/i18n/useI18n';
 import { LangToggle } from '@app/components/LangToggle';
 import { ThemeToggle } from '@app/components/ThemeToggle';
 import { parseGateHash, sessionToken, verifyPassword } from './hash';
+import { b64decode, b64encode } from './hash';
+import { clearStoredDataKey, deriveDataKey, storeDataKey } from './data-crypto';
+import { fetchEncryptedBundle } from '@app/data/mode';
+import { GATE_HASH_STRING, gateEnabled } from './config';
 
 const SESSION_KEY = 'ot.gate';
 const REMEMBER_KEY = 'ot.gate.remember';
 const MAX_ATTEMPTS_BEFORE_DELAY = 5;
 
-/** Build-time configured gate hash. Empty => gate disabled (local dev / tests). */
-export const GATE_HASH_STRING: string = (import.meta.env.VITE_GATE_HASH as string | undefined) ?? '';
-export const gateEnabled = () => parseGateHash(GATE_HASH_STRING) !== null;
+export { GATE_HASH_STRING, gateEnabled };
 
 function readToken(): string | null {
   try {
@@ -27,6 +29,7 @@ export function lockGate() {
   } catch {
     /* storage unavailable */
   }
+  clearStoredDataKey();
   window.location.reload();
 }
 
@@ -71,6 +74,12 @@ export function PasswordGate({ children }: { children: ReactNode }) {
     if (attempts >= MAX_ATTEMPTS_BEFORE_DELAY) await new Promise((r) => setTimeout(r, 1500));
     const ok = await verifyPassword(password, gate);
     if (ok) {
+      // Derive the data-decryption key while the password is in memory (the password itself is never stored).
+      const bundle = await fetchEncryptedBundle();
+      if (bundle) {
+        const key = await deriveDataKey(password, b64decode(bundle.salt), bundle.iterations);
+        storeDataKey({ salt: bundle.salt, key: b64encode(key) }, remember);
+      }
       const token = await sessionToken(GATE_HASH_STRING);
       try {
         sessionStorage.setItem(SESSION_KEY, token);

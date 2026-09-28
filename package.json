@@ -16,7 +16,8 @@
     "test:all": "npm run typecheck && npm run test && npm run build && npm run test:e2e",
     "report:weekly": "tsx automation/weekly-report.ts",
     "report:weekly:dry": "cross-env DRY_RUN=true DATA_SOURCE=file AI_PROVIDER=mock TEAMS_SENDER=mock tsx automation/weekly-report.ts",
-    "gate:hash": "tsx automation/gate-hash.ts"
+    "gate:hash": "tsx automation/gate-hash.ts",
+    "publish:data": "tsx automation/publish-data.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.124.0",
