@@ -15,6 +15,7 @@
     "test:e2e": "playwright test",
     "test:all": "npm run typecheck && npm run test && npm run build && npm run test:e2e",
     "weekly": "tsx automation/weekly-run.ts",
+    "teams": "node automation/teams-graph/post-weekly.cjs",
     "report:weekly": "tsx automation/weekly-report.ts",
     "report:weekly:dry": "cross-env DRY_RUN=true DATA_SOURCE=file AI_PROVIDER=mock TEAMS_SENDER=mock tsx automation/weekly-report.ts",
     "gate:hash": "tsx automation/gate-hash.ts",

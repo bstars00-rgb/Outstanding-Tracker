@@ -20,6 +20,24 @@ npm run weekly -- "C:/Users/<나>/Downloads/Outstanding_Report.xlsx" 2026-10-02 
 
 Webhook URL과 비밀번호는 `.env`에만 두고 git·채팅·문서에 붙이지 않는다. 로그에는 마스킹되어 나온다.
 
+## Teams 게시 (Microsoft Graph, 그룹채팅)
+
+Webhook 대신 Microsoft Graph 위임 권한(Chat.ReadWrite, 관리자 동의 완료)으로 게시한다. 같은 PC의 REPORT/CRM 도구와 Azure 앱·MSAL 토큰 캐시를 공유한다.
+
+| 명령 | 동작 |
+|---|---|
+| `npm run teams -- chats` | 내 그룹채팅 이름 목록(읽기) |
+| `npm run teams -- resolve` | 설정된 타깃 확인(읽기, ID는 마스킹) |
+| `npm run teams -- post` | DRY-RUN: 카드 미리보기 `automation/out/teams-graph-card.json` |
+| `npm run teams -- post --send [--target=<이름>]` | 실제 게시 |
+| `npm run weekly -- "<워크북>" <날짜> --push --push-teams` | 주간 실행 끝에 자동 게시 (`--teams-target=leaders`로 타깃 지정) |
+
+- 타깃은 `automation/teams-graph/weekly-post-targets.json`(git 제외)에 채팅 이름으로 적는다. 예시는 `weekly-post-targets.example.json`.
+- 안전장치: 기본은 dry-run · 보고일+타깃당 1회(잠금 파일 `automation/state/teams-graph/`) · 정정 재게시는 `--resend` · 운영(prod) 타깃은 테스트 타깃 게시가 한 번 성공한 뒤에만 허용 · 3일 넘은 보고는 거부.
+- 토큰이 만료되어 조용한 갱신이 실패하면 `--login`을 붙여 device code 로그인을 1회 한다.
+- 팀 채널 게시는 `type: "channel"` 분기가 준비되어 있으나 ChannelMessage.Send + Channel.ReadBasic.All 관리자 동의가 추가로 필요하다.
+- 카드는 핵심 수치(실질 미수·WoW, 이번 주 회수, ELLIS 미반영, SOP L1, 법인별) + 결정·조치 요약 + 트래커 링크 버튼만 담는다. 인보이스 단위 내용은 싣지 않는다.
+
 ## 흐름 (약 10분)
 
 | 단계 | 하는 일 | 도구 |

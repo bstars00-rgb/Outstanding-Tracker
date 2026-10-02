@@ -1,7 +1,7 @@
 /**
  * One-command weekly run (manual operation by Global Ops):
  *
- *   npm run weekly -- "<OP workbook.xlsx>" [YYYY-MM-DD] [--push] [--dry-run] [--resend]
+ *   npm run weekly -- "<OP workbook.xlsx>" [YYYY-MM-DD] [--push] [--push-teams] [--teams-target=<name>] [--dry-run] [--resend]
  *
  *  1. copy the workbook to automation/input/Outstanding_Report_<date>.xlsx
  *  2. convert it to the tracker dataset (automation/tools/excel_to_dataset.py)
@@ -10,6 +10,9 @@
  *  4. build the review workbook (automation/out/Outstanding_Review_<date>.xlsx)
  *  5. write the encrypted site bundle when DATA_PUBLISH_PASSWORD is set (public/data/bundle.enc.json)
  *  6. --push: commit + push the bundle so GitHub Pages redeploys
+ *  7. --push-teams: post the concise card to Teams through Microsoft Graph (automation/teams-graph/post-weekly.cjs,
+ *     delegated token from the shared MSAL cache). Without the flag only a dry-run preview is produced. The Graph
+ *     script keeps its own safety gates: one post per report date and target, test target first, --resend to re-post.
  *
  * Settings come from .env (git-ignored) and the shell environment (the shell wins). Secrets are never printed.
  * A report already posted for the same date/channel is not posted twice; use --resend after a correction.
@@ -96,12 +99,31 @@ try {
     }
   }
 
+  // Teams via Microsoft Graph (group chat / channel). Dry-run preview unless --push-teams.
+  let graphLine = 'not configured (automation/teams-graph/weekly-post-targets.json missing)';
+  if (existsSync('automation/teams-graph/weekly-post-targets.json') && result !== 'skipped-duplicate') {
+    const target = [...flags].find((f) => f.startsWith('--teams-target='))?.split('=')[1];
+    const gArgs = ['automation/teams-graph/post-weekly.cjs', 'post', ...(target ? [`--target=${target}`] : [])];
+    if (flags.has('--push-teams')) {
+      const gOut = run('Teams (Graph) post', process.execPath, [...gArgs, '--send', ...(flags.has('--resend') ? ['--resend'] : [])]);
+      graphLine = /✓ 게시 완료/.test(gOut) ? `posted${target ? ` to '${target}'` : ''}` : 'NOT posted (see the message above)';
+    } else {
+      try {
+        run('Teams (Graph) dry-run', process.execPath, gArgs);
+        graphLine = 'dry-run only — card preview in automation/out/teams-graph-card.json (add --push-teams to post)';
+      } catch (e) {
+        graphLine = `dry-run failed: ${(e as Error).message}`;
+      }
+    }
+  }
+
   const teams =
     result === 'sent' ? `posted to the Teams "${pipelineEnv.TARGET_CHANNEL ?? 'test'}" channel` :
     result === 'skipped-duplicate' ? 'already posted for this date (use --resend to post again)' :
     'NOT posted (dry run) — preview in automation/out/teams-message.md';
   console.log(`\n── 5/5 done  report ${date}
-  Teams      : ${teams}
+  Teams Graph: ${graphLine}
+  Teams hook : ${teams}
   Review     : ${review}
   Message    : automation/out/teams-message.md
   Site bundle: ${published ? 'public/data/bundle.enc.json' + (flags.has('--push') ? ' (pushed)' : ' (commit + push to deploy, or re-run with --push)') : 'not written (DATA_PUBLISH_PASSWORD not set)'}`);

@@ -16,3 +16,4 @@ public/data/*.json
 handoff/
 automation/input/*
 !automation/input/README.md
+automation/teams-graph/weekly-post-targets.json

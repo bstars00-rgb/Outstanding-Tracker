@@ -1,0 +1,15 @@
+{
+  "_note": "Copy to weekly-post-targets.json (git-ignored). Auth files are shared with the REPORT / CRM tooling on this PC; nothing secret is stored here, but keep IDs and paths out of git and chat.",
+  "auth": {
+    "graphConfig": "C:/path/to/REPORT/scripts/auto/graph-config.json",
+    "msalCache": "C:/path/to/REPORT/auth/msal-cache.json",
+    "nodeModules": "C:/path/to/REPORT/node_modules/"
+  },
+  "siteUrl": "https://<owner>.github.io/<repo>/",
+  "defaultTarget": "test",
+  "targets": [
+    { "name": "test", "role": "test", "type": "chat", "topic": "<exact name of a test group chat>" },
+    { "name": "leaders", "role": "prod", "type": "chat", "topic": "<exact name of the leadership group chat>" },
+    { "_disabled_example": "team channel needs ChannelMessage.Send + Channel.ReadBasic.All admin consent", "name": "channel-example", "role": "prod", "type": "channel", "team": "<team name>", "channel": "<channel name>" }
+  ]
+}
