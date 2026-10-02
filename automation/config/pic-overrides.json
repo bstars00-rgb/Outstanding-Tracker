@@ -1,6 +1,6 @@
 {
- "confirmed": "2026-09-28",
- "note": "Account owners (PIC) confirmed by Global Ops; they win over the workbook Tier sheet until the OP template is updated. Remove an entry to follow the workbook again.",
+ "confirmed": "2026-10-02",
+ "note": "Account owners (PIC) confirmed by Global Ops (2026-09-28 assignments re-confirmed 2026-10-02; Meituan Japan = Grace). They win over the workbook Tier sheet, whose template still shows the earlier PICs.",
  "owners": {
   "Ctrip Korea": "Grace",
   "Agoda": "Aiden",
@@ -60,6 +60,7 @@
   "Bingtrip": "Grace",
   "Room Deal Pte Ltd. (MG Group)": "Aiden",
   "Webbeds DMC": "Aiden",
-  "RTX (Seller API)": "Aiden"
+  "RTX (Seller API)": "Aiden",
+  "Meituan Japan": "Grace"
  }
 }

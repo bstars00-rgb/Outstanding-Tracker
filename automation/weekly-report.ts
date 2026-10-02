@@ -11,6 +11,7 @@
  * Exit codes: 0 success/skipped, 1 failure (workflow retries once, then alerts admin).
  */
 import { mkdir, writeFile, copyFile, readFile } from 'node:fs/promises';
+import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { buildTrackerModel } from '@core/calc';
 import { latestSaturday, tzOffsetMinutes } from '@core/dates';
@@ -195,6 +196,12 @@ export function buildDeps(env: PipelineEnv, log: RedactingLogger, now: () => Dat
 
 const isMain = process.argv[1] && /weekly-report\.(ts|js)$/.test(process.argv[1].replace(/\\/g, '/'));
 if (isMain) {
+  // Local settings (webhook URLs, publish password) live in a git-ignored .env; the shell environment wins.
+  try {
+    if (existsSync('.env')) process.loadEnvFile('.env');
+  } catch {
+    /* unreadable .env: continue with the shell environment */
+  }
   const log = new RedactingLogger();
   try {
     const env = loadEnv();
