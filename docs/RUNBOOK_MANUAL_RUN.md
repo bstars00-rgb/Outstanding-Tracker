@@ -42,7 +42,7 @@ Webhook 대신 Microsoft Graph 위임 권한(Chat.ReadWrite, 관리자 동의 �
 
 - 타깃은 `automation/teams-graph/weekly-post-targets.json`(git 제외)에 채팅 이름으로 적는다. 예시는 `weekly-post-targets.example.json`.
 - 안전장치: 기본은 dry-run · 보고일+타깃당 1회(잠금 파일 `automation/state/teams-graph/`) · 정정 재게시는 `--resend` · 운영(prod) 타깃은 테스트 타깃 게시가 한 번 성공한 뒤에만 허용(설정 파일의 `requireTestFirst: false`로만 해제) · 3일 넘은 보고는 거부.
-- 현재 운영 설정(2026-10-02 결정): 타깃은 그룹채팅 **Outstanding** 하나뿐이며 테스트 채팅은 쓰지 않는다. 매주 `npm run weekly -- "<워크북>" <날짜> --push --push-teams`.
+- 현재 운영 설정(2026-10-02 결정): 타깃은 그룹채팅 **Outstanding** 하나뿐이며 테스트 채팅은 쓰지 않는다. 카드에 **트래커 접속 비밀번호를 함께 표시**한다(설정 파일 `sharePassword: true`, 값은 `.env`의 `DATA_PUBLISH_PASSWORD`; 콘솔과 미리보기 파일에는 마스킹). 채팅 멤버가 바뀌면 비밀번호를 교체한다. 매주 `npm run weekly -- "<워크북>" <날짜> --push --push-teams`.
 - 토큰이 만료되어 조용한 갱신이 실패하면 `--login`을 붙여 device code 로그인을 1회 한다.
 - 팀 채널 게시는 `type: "channel"` 분기가 준비되어 있으나 ChannelMessage.Send + Channel.ReadBasic.All 관리자 동의가 추가로 필요하다.
 - 카드는 핵심 수치(실질 미수·WoW, 이번 주 회수, ELLIS 미반영, SOP L1, 법인별) + 결정·조치 요약 + 트래커 링크 버튼만 담는다. 인보이스 단위 내용은 싣지 않는다.

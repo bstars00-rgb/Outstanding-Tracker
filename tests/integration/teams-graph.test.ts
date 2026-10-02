@@ -149,11 +149,33 @@ describe('Teams Graph posting: safety gates (stubbed Graph)', () => {
     await writeFile(cfgPath, JSON.stringify(cfg));
   });
 
+  it('sharePassword: the posted card carries the password from the environment, the preview file never does', async () => {
+    const cfgPath = join(dir, 'targets.json');
+    const cfg = JSON.parse(await readFile(cfgPath, 'utf8'));
+    await writeFile(cfgPath, JSON.stringify({ ...cfg, sharePassword: true }));
+    const env = { ...process.env, WEEKLY_POST_TARGETS: cfgPath, WEEKLY_POST_OUT_DIR: join(dir, 'out'), WEEKLY_POST_STATE_DIR: join(dir, 'state'), STUB_POSTS: posts, DATA_PUBLISH_PASSWORD: 'Stub-Secret-77' };
+    const dry = spawnSync(process.execPath, [SCRIPT, 'post', '--print'], { encoding: 'utf8', env });
+    expect(`${dry.stdout}${dry.stderr}`).not.toContain('Stub-Secret-77');
+    expect(await readFile(join(dir, 'out', 'teams-graph-card.json'), 'utf8')).not.toContain('Stub-Secret-77');
+    const before = (await sent()).length;
+    const live = spawnSync(process.execPath, [SCRIPT, 'post', '--send', '--resend'], { encoding: 'utf8', env });
+    expect(`${live.stdout}${live.stderr}`).toContain('접속 비밀번호 포함');
+    expect(`${live.stdout}${live.stderr}`).not.toContain('Stub-Secret-77');
+    const s = await sent();
+    expect(s).toHaveLength(before + 1);
+    expect(s[s.length - 1].payload.attachments[0].content).toContain('트래커 접속 비밀번호: Stub-Secret-77');
+    // opted in but no password available => refuse instead of posting a card without it
+    const none = spawnSync(process.execPath, [SCRIPT, 'post', '--send', '--resend'], { encoding: 'utf8', env: { ...env, DATA_PUBLISH_PASSWORD: '' } });
+    expect(`${none.stdout}${none.stderr}`).toContain('DATA_PUBLISH_PASSWORD');
+    expect(await sent()).toHaveLength(before + 1);
+    await writeFile(cfgPath, JSON.stringify(cfg));
+  });
+
   it('refuses to send a stale report', async () => {
     await writeReport('2026-01-05');
     const r = run('post', '--send');
     expect(r.out).toContain('묵은 내용');
-    expect(await sent()).toHaveLength(4);
+    expect(await sent()).toHaveLength(5);
     await writeReport(today);
   });
 });

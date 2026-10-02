@@ -30,5 +30,7 @@
     }
   ],
   "requireTestFirst": true,
-  "_requireTestFirst": "true (default): a prod target is refused until a test target has received a card once. Set false only by an explicit operator decision."
+  "_requireTestFirst": "true (default): a prod target is refused until a test target has received a card once. Set false only by an explicit operator decision.",
+  "sharePassword": false,
+  "_sharePassword": "true: the card shows the site access password (taken from DATA_PUBLISH_PASSWORD in .env) to the chat members. Off by default; rotate the password when chat membership changes."
 }

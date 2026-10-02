@@ -48,4 +48,5 @@ needs to be asked.
 - Reporting currency JPY, Korean wording, internal accounts excluded, managing entity from ELLIS `list_channels`
 - No customer-level ledgers in chat cards; plaintext data never leaves the machine (site data is the encrypted bundle only)
 - One Teams post per report date; corrections only on request
+- The card shows the tracker access password to the "Outstanding" chat (operator decision 2026-10-02, `sharePassword: true`); never print the password in the terminal, replies, docs or git
 - Record new decisions in `docs/DECISION_LOG.md` and update the memory notes when a convention changes

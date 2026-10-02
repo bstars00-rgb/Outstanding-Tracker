@@ -12,6 +12,8 @@
 //   * a "prod" target is refused until a "test" target has received a card successfully at least once
 //     (waivable only by an explicit "requireTestFirst": false in the targets file)
 //   * --send refuses a report older than MAX_AGE_DAYS (stale content) unless --resend
+// Site password in the card: only when the targets file has "sharePassword": true (operator decision). The value comes
+//   from DATA_PUBLISH_PASSWORD (.env), is never printed, and is masked in the dry-run preview file.
 // Security: clientId / tenantId / token cache / target names live in files only (weekly-post-targets.json is git-ignored).
 //   Chat and channel IDs are resolved at run time and are masked in the output unless --show-ids.
 const fs = require('fs');
@@ -19,6 +21,10 @@ const path = require('path');
 const crypto = require('crypto');
 
 const ROOT = path.resolve(__dirname, '..', '..');
+try {
+  const envFile = path.join(ROOT, '.env');
+  if (fs.existsSync(envFile) && typeof process.loadEnvFile === 'function') process.loadEnvFile(envFile);
+} catch (_) { /* unreadable .env: continue with the shell environment */ }
 // Paths can be redirected for tests (stub Graph modules, temp state) — never needed in normal operation.
 const TARGETS_FILE = process.env.WEEKLY_POST_TARGETS || path.join(__dirname, 'weekly-post-targets.json');
 const OUT_DIR = process.env.WEEKLY_POST_OUT_DIR || path.join(ROOT, 'automation', 'out');
@@ -176,7 +182,12 @@ function buildCard(model, insight, opts) {
     body.push({ type: 'TextBlock', text: '이번 주 조치', weight: 'Bolder', spacing: 'Medium', wrap: true });
     body.push({ type: 'TextBlock', spacing: 'None', size: 'Small', wrap: true, text: acts.map((a) => `• **${a.owner}** → ${a.customer} ${money(a.amount, ccy)} · ${short(a.action, 46)} · 기한 ${String(a.deadline).slice(0, 10)}`).join('\n\n') });
   }
-  body.push({ type: 'TextBlock', text: '상세 수치·인보이스 목록은 트래커에서 확인 (접속 비밀번호 필요)', isSubtle: true, size: 'Small', spacing: 'Medium', wrap: true });
+  if (opts.password) {
+    body.push({ type: 'TextBlock', text: `🔑 트래커 접속 비밀번호: ${opts.password}`, weight: 'Bolder', separator: true, spacing: 'Medium', wrap: true });
+    body.push({ type: 'TextBlock', text: '상세 수치·인보이스 목록은 아래 버튼으로 트래커에서 확인 (이 채팅 외부 공유 금지)', isSubtle: true, size: 'Small', spacing: 'None', wrap: true });
+  } else {
+    body.push({ type: 'TextBlock', text: '상세 수치·인보이스 목록은 트래커에서 확인 (접속 비밀번호 필요)', isSubtle: true, size: 'Small', spacing: 'Medium', wrap: true });
+  }
 
   return {
     $schema: 'http://adaptivecards.io/schemas/adaptive-card.json',
@@ -238,15 +249,19 @@ async function main() {
     const tg = targets.find((x) => x.name === wanted) || targets.find((x) => inc(x.name, wanted));
     if (!tg) { console.log(`✗ 타깃 '${wanted || ''}' 없음. 설정된 타깃: ${targets.map((x) => x.name).join(', ') || '(없음)'}`); process.exitCode = 2; return; }
     const role = tg.role || 'prod';
-    const card = buildCard(model, insight, { siteUrl: cfg.siteUrl, test: role === 'test' });
+    const sitePassword = cfg.sharePassword === true ? (process.env.DATA_PUBLISH_PASSWORD || '') : '';
+    if (cfg.sharePassword === true && !sitePassword) { console.log('✗ sharePassword=true 인데 DATA_PUBLISH_PASSWORD(.env)가 비어 있음'); process.exitCode = 2; return; }
+    const card = buildCard(model, insight, { siteUrl: cfg.siteUrl, test: role === 'test', password: sitePassword });
+    // what is written to disk / printed never contains the real password
+    const previewCard = sitePassword ? buildCard(model, insight, { siteUrl: cfg.siteUrl, test: role === 'test', password: '••••••••' }) : card;
     const cid = crypto.randomUUID();
     const payload = { body: { contentType: 'html', content: `<attachment id="${cid}"></attachment>` }, attachments: [{ id: cid, contentType: 'application/vnd.microsoft.card.adaptive', content: JSON.stringify(card) }] };
-    console.log(`보고 ${date} → 타깃 '${tg.name}' [${role} · ${tg.type}] · 카드 ${JSON.stringify(card).length} bytes`);
+    console.log(`보고 ${date} → 타깃 '${tg.name}' [${role} · ${tg.type}] · 카드 ${JSON.stringify(card).length} bytes${sitePassword ? ' · 접속 비밀번호 포함' : ''}`);
 
     if (!send) {
       fs.mkdirSync(OUT_DIR, { recursive: true });
-      fs.writeFileSync(path.join(OUT_DIR, 'teams-graph-card.json'), JSON.stringify(card, null, 2));
-      if (has('--print')) console.log(JSON.stringify(card, null, 2));
+      fs.writeFileSync(path.join(OUT_DIR, 'teams-graph-card.json'), JSON.stringify(previewCard, null, 2));
+      if (has('--print')) console.log(JSON.stringify(previewCard, null, 2));
       let r = { ok: false, why: 'resolve 생략' };
       try { r = await resolveTarget(cfg, await token(cfg, scopesFor(tg), false), tg); } catch (e) { r = { ok: false, why: e.message }; }
       console.log(`[DRY-RUN] ${r.ok ? `게시 예정 → ${r.label}` : `타깃 미해결: ${r.why}`}\n카드 미리보기: automation/out/teams-graph-card.json  (--send 로 실제 게시)`);

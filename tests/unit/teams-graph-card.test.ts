@@ -22,6 +22,16 @@ describe('Teams (Graph) weekly card', () => {
     expect((json.match(/기한 \d{4}-\d{2}-\d{2}/g) ?? []).length).toBeLessThanOrEqual(3);
   });
 
+  it('shows the access password only when the operator opted in', async () => {
+    const { model, insight } = await buildFixtureModel('2026-09-05', { lang: 'ko' });
+    const without = JSON.stringify(buildCard(model, insight, { siteUrl: 'https://x/' }));
+    expect(without).toContain('접속 비밀번호 필요');
+    expect(without).not.toContain('트래커 접속 비밀번호:');
+    const withPw = JSON.stringify(buildCard(model, insight, { siteUrl: 'https://x/', password: 'Sample-Pass-123' } as any));
+    expect(withPw).toContain('트래커 접속 비밀번호: Sample-Pass-123');
+    expect(withPw).toContain('외부 공유 금지');
+  });
+
   it('marks test posts and formats money compactly', async () => {
     const { model, insight } = await buildFixtureModel('2026-09-05', { lang: 'ko' });
     expect(JSON.stringify(buildCard(model, insight, { siteUrl: 'https://x/', test: true }))).toContain('[테스트 발송]');
