@@ -135,4 +135,6 @@ Each phase records: decisions taken, evidence, and the risks that remain open at
 
 | D46 | **Record-stage owner label corrected to "Lina (Josh)" (2026-10-02)**: the CEO's "리나(조시)" had been romanized as "Rina (Josh)" (D31); the person is Lina (member of the "Outstanding" chat). `DEFAULT_REFLECTION_CHAIN.record.owner` and the converter now use "Lina (Josh)". Already-published data and the 10-02 Teams card keep the old spelling; the corrected label appears from the next weekly run. Override with `REFLECTION_CHAIN` if the owner should be shown differently (e.g. Josh / AC team). | User asked what "Rina" was and chose to fix it from next week's post. |
 
+| D47 | **ELLIS reflection backlog is not a CEO decision (2026-10-02)**: the rule that raised "ELLIS 반영 지연" under "CEO decision required" (D39) is removed — the CEO does not act on it. The backlog stays in the summary sentence, the "ELLIS 반영 대기" line and the owner actions (record owner / Accounting). The Teams chat card shows the "대표님 결정 필요" block only when a real decision exists (e.g. SOP L1). Applies from the next weekly run. | Operator feedback on the 10-02 card ("대표님이 뭘 할건 아니니까 삭제"). |
+
 Results and remaining risks: `docs/QA_REPORT.md`.

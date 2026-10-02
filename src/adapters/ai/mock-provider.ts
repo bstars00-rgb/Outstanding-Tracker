@@ -141,8 +141,8 @@ export function generateRuleBasedInsight(i: InsightInput, lang: Lang = 'en'): In
     .slice(0, 8);
 
   const ceo_decisions: InsightOutput['ceo_decisions'] = [];
-  if (rp && rp.over_sla_count > 0)
-    ceo_decisions.push({ topic: p('ELLIS reflection backlog', 'ELLIS 반영 지연'), customer: null, amount: rp.amount, recommendation: p(`Set a firm date for ${rp.owner} / Accounting to record the received payments in ELLIS and name the owner of the weekly bank-vs-ELLIS sign-off`, `${rp.owner}·회계팀의 ELLIS 입금 반영 완료일을 확정하고 주간 은행·ELLIS 대사 책임자를 지정`), rationale: p(`${rp.count} received payment(s) not in ELLIS, ${rp.over_sla_count} past the record SLA, oldest ${rp.oldest_days} days`, `입금 확인 후 ELLIS 미기록 ${rp.count}건, 그중 ${rp.over_sla_count}건이 기록 SLA 초과, 최장 ${rp.oldest_days}일`) });
+  // The ELLIS reflection backlog is an operational task for the record owner / Accounting, not a CEO decision
+  // (operator feedback 2026-10-02): it stays in the summary, the reflection line and the owner actions only.
   for (const c of i.sop_l1 ?? [])
     ceo_decisions.push({ topic: p('SOP L1 — Tier 1 ≥ ¥1M overdue', 'SOP L1 — Tier 1 ¥1M 이상 연체'), customer: c.customer, amount: c.amount, recommendation: p(`Acknowledge the 24h escalation for ${c.customer} and confirm the collection plan (remittance date or credit action)`, `${c.customer} 24시간 에스컬레이션 확인 및 회수 계획(송금일 또는 신용 조치) 결정`), rationale: p(`${c.invoice_count} invoice(s), ${M(c.amount)} overdue, oldest ${c.max_aging_days} days`, `${c.invoice_count}건, 연체 ${M(c.amount)}, 최장 ${c.max_aging_days}일`) });
   for (const d of (i.sop_past_deadline ?? []).filter((x) => x.route === 'CEO'))

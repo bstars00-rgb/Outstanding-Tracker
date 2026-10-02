@@ -174,12 +174,15 @@ function buildCard(model, insight, opts) {
   body.push({ type: 'FactSet', spacing: 'Medium', facts });
 
   const decisions = (out.ceo_decisions || []).slice(0, 2);
-  body.push({ type: 'TextBlock', text: '대표님 결정 필요', weight: 'Bolder', separator: true, spacing: 'Medium', wrap: true });
-  body.push({ type: 'TextBlock', spacing: 'None', wrap: true, isSubtle: !decisions.length, text: decisions.length ? decisions.map((d) => `• **${d.topic}**${d.customer ? ` — ${d.customer}` : ''}${d.amount !== null && d.amount !== undefined ? ` (${money(d.amount, ccy)})` : ''}`).join('\n\n') : '이번 주 해당 없음' });
+  // Shown only when there is something the CEO actually has to decide (e.g. SOP L1 escalations).
+  if (decisions.length) {
+    body.push({ type: 'TextBlock', text: '대표님 결정 필요', weight: 'Bolder', separator: true, spacing: 'Medium', wrap: true });
+    body.push({ type: 'TextBlock', spacing: 'None', wrap: true, text: decisions.map((d) => `• **${d.topic}**${d.customer ? ` — ${d.customer}` : ''}${d.amount !== null && d.amount !== undefined ? ` (${money(d.amount, ccy)})` : ''}`).join('\n\n') });
+  }
 
   const acts = (out.owner_actions || []).slice(0, 3);
   if (acts.length) {
-    body.push({ type: 'TextBlock', text: '이번 주 조치', weight: 'Bolder', spacing: 'Medium', wrap: true });
+    body.push({ type: 'TextBlock', text: '이번 주 조치', weight: 'Bolder', separator: !decisions.length, spacing: 'Medium', wrap: true });
     body.push({ type: 'TextBlock', spacing: 'None', size: 'Small', wrap: true, text: acts.map((a) => `• **${a.owner}** → ${a.customer} ${money(a.amount, ccy)} · ${short(a.action, 46)} · 기한 ${String(a.deadline).slice(0, 10)}`).join('\n\n') });
   }
   if (opts.password) {
