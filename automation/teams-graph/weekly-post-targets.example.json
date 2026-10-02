@@ -8,8 +8,27 @@
   "siteUrl": "https://<owner>.github.io/<repo>/",
   "defaultTarget": "test",
   "targets": [
-    { "name": "test", "role": "test", "type": "chat", "topic": "<exact name of a test group chat>" },
-    { "name": "leaders", "role": "prod", "type": "chat", "topic": "<exact name of the leadership group chat>" },
-    { "_disabled_example": "team channel needs ChannelMessage.Send + Channel.ReadBasic.All admin consent", "name": "channel-example", "role": "prod", "type": "channel", "team": "<team name>", "channel": "<channel name>" }
-  ]
+    {
+      "name": "test",
+      "role": "test",
+      "type": "chat",
+      "topic": "<exact name of a test group chat>"
+    },
+    {
+      "name": "leaders",
+      "role": "prod",
+      "type": "chat",
+      "topic": "<exact name of the leadership group chat>"
+    },
+    {
+      "_disabled_example": "team channel needs ChannelMessage.Send + Channel.ReadBasic.All admin consent",
+      "name": "channel-example",
+      "role": "prod",
+      "type": "channel",
+      "team": "<team name>",
+      "channel": "<channel name>"
+    }
+  ],
+  "requireTestFirst": true,
+  "_requireTestFirst": "true (default): a prod target is refused until a test target has received a card once. Set false only by an explicit operator decision."
 }

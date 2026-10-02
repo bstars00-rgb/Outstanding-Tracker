@@ -10,6 +10,7 @@
 //   * dry-run unless --send
 //   * one post per report date and target (lock file); --resend (alias --force) only for a corrected re-post
 //   * a "prod" target is refused until a "test" target has received a card successfully at least once
+//     (waivable only by an explicit "requireTestFirst": false in the targets file)
 //   * --send refuses a report older than MAX_AGE_DAYS (stale content) unless --resend
 // Security: clientId / tenantId / token cache / target names live in files only (weekly-post-targets.json is git-ignored).
 //   Chat and channel IDs are resolved at run time and are masked in the output unless --show-ids.
@@ -126,6 +127,7 @@ function wow(k, ccy) {
   const pct = k.change_pct === null || k.change_pct === undefined ? '' : ` (${k.change > 0 ? '+' : '−'}${Math.abs(k.change_pct * 100).toFixed(1)}%)`;
   return { text: `${k.change > 0 ? '▲' : '▼'} ${money(Math.abs(k.change), ccy)}${pct} WoW`, color: k.change > 0 ? 'Attention' : 'Good' };
 }
+const short = (t, n) => { const x = String(t || '').split(/[;(]/)[0].trim(); return x.length > n ? x.slice(0, n - 1) + '…' : x; };
 function tile(label, value, sub, color) {
   return { type: 'Column', width: 'stretch', items: [
     { type: 'TextBlock', text: label, size: 'Small', isSubtle: true, wrap: true },
@@ -172,7 +174,7 @@ function buildCard(model, insight, opts) {
   const acts = (out.owner_actions || []).slice(0, 3);
   if (acts.length) {
     body.push({ type: 'TextBlock', text: '이번 주 조치', weight: 'Bolder', spacing: 'Medium', wrap: true });
-    body.push({ type: 'TextBlock', spacing: 'None', size: 'Small', wrap: true, text: acts.map((a) => `• **${a.owner}** → ${a.customer} ${money(a.amount, ccy)} · 기한 ${String(a.deadline).slice(0, 10)}`).join('\n\n') });
+    body.push({ type: 'TextBlock', spacing: 'None', size: 'Small', wrap: true, text: acts.map((a) => `• **${a.owner}** → ${a.customer} ${money(a.amount, ccy)} · ${short(a.action, 46)} · 기한 ${String(a.deadline).slice(0, 10)}`).join('\n\n') });
   }
   body.push({ type: 'TextBlock', text: '상세 수치·인보이스 목록은 트래커에서 확인 (접속 비밀번호 필요)', isSubtle: true, size: 'Small', spacing: 'Medium', wrap: true });
 
@@ -258,16 +260,18 @@ async function main() {
     const lock = path.join(LOCK_DIR, `posted_${date}_${slug(tg.name)}.lock`);
     if (fs.existsSync(lock) && !resend) { console.log(`✗ ${date} 보고는 '${tg.name}'에 이미 게시됨. 정정 재게시는 --resend.`); process.exitCode = 3; return; }
     const testOk = path.join(LOCK_DIR, 'test_ok.lock');
-    if (role !== 'test' && !fs.existsSync(testOk)) { console.log(`✗ 운영 타깃 게시 전, 테스트 타깃으로 먼저 1회 게시해 카드 모양을 확인해야 함 (post --send --target=<test 타깃>).`); process.exitCode = 3; return; }
+    // The test-first gate is on by default; an operator can waive it explicitly with "requireTestFirst": false in the targets file.
+    if (role !== 'test' && cfg.requireTestFirst !== false && !fs.existsSync(testOk)) { console.log(`✗ 운영 타깃 게시 전, 테스트 타깃으로 먼저 1회 게시해 카드 모양을 확인해야 함 (post --send --target=<test 타깃>).`); process.exitCode = 3; return; }
 
     const t = await token(cfg, scopesFor(tg), login);
     const r = await resolveTarget(cfg, t, tg);
     if (!r.ok) { console.log(`✗ ${tg.name}: ${r.why}`); process.exitCode = 2; return; }
     try {
-      await graph(cfg).axios.post(r.url, payload, H(t));
+      const res = await graph(cfg).axios.post(r.url, payload, H(t));
+      const created = res && res.data && res.data.createdDateTime;
       fs.writeFileSync(lock, new Date().toISOString());
       if (role === 'test') fs.writeFileSync(testOk, new Date().toISOString());
-      console.log(`✓ 게시 완료 → ${r.label}  (중복방지 잠금 기록)`);
+      console.log(`✓ 게시 완료 → ${r.label}${created ? `  · Teams 수신 ${created}` : ''}  (중복방지 잠금 기록)`);
     } catch (e) {
       console.log(`✗ 게시 실패 → ${tg.name}: ${e.response && e.response.status} ${(e.response && e.response.data && e.response.data.error && e.response.data.error.message) || e.message}`);
       process.exitCode = 1;

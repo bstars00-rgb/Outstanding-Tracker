@@ -138,11 +138,22 @@ describe('Teams Graph posting: safety gates (stubbed Graph)', () => {
     expect(await sent()).toHaveLength(3);
   });
 
+  it('waives the test-first gate only when the targets file says requireTestFirst: false', async () => {
+    const cfgPath = join(dir, 'targets.json');
+    const cfg = JSON.parse(await readFile(cfgPath, 'utf8'));
+    await rm(join(dir, 'state'), { recursive: true, force: true }); // forget the earlier test post and locks
+    expect(run('post', '--send', '--target=leaders').code).toBe(3);
+    await writeFile(cfgPath, JSON.stringify({ ...cfg, requireTestFirst: false }));
+    expect(run('post', '--send', '--target=leaders').out).toContain('✓ 게시 완료 → Outstanding');
+    expect(await sent()).toHaveLength(4);
+    await writeFile(cfgPath, JSON.stringify(cfg));
+  });
+
   it('refuses to send a stale report', async () => {
     await writeReport('2026-01-05');
     const r = run('post', '--send');
     expect(r.out).toContain('묵은 내용');
-    expect(await sent()).toHaveLength(3);
+    expect(await sent()).toHaveLength(4);
     await writeReport(today);
   });
 });
