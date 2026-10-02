@@ -129,4 +129,6 @@ Each phase records: decisions taken, evidence, and the risks that remain open at
 
 | D43 | **Teams target = group chat "Outstanding" only (2026-10-02)**: by operator decision the weekly card goes only to that chat (no test chat), so the test-first gate is waived through an explicit `requireTestFirst: false` in the local targets file (default stays `true`). First post: report 2026-10-02, verified by reading the message back through Graph; the duplicate guard then refused a second send. | User instruction ("Outstanding 채널에만 게시"). |
 
+| D44 | **Standing weekly order (2026-10-02)**: "미수금 주간보고" / "주간보고" triggers the whole flow without confirmation — newest workbook in Downloads (`npm run weekly -- --latest <date> --push --push-teams`), site bundle push, one card to the "Outstanding" chat, verification, recap. Scope is limited to that; failures, layout changes, implausible totals, duplicates and interactive logins still stop for the operator. Procedure: `.claude/skills/weekly-outstanding/SKILL.md`. The publish password lives in the git-ignored `.env`. | User instruction ("다음주부터는 … 자동으로 업데이트 하고 게시"). |
+
 Results and remaining risks: `docs/QA_REPORT.md`.

@@ -2,6 +2,7 @@
  * One-command weekly run (manual operation by Global Ops):
  *
  *   npm run weekly -- "<OP workbook.xlsx>" [YYYY-MM-DD] [--push] [--push-teams] [--teams-target=<name>] [--dry-run] [--resend]
+ *   npm run weekly -- --latest [YYYY-MM-DD] --push --push-teams     (newest Outstanding_Report*.xlsx in WORKBOOK_DIR / Downloads)
  *
  *  1. copy the workbook to automation/input/Outstanding_Report_<date>.xlsx
  *  2. convert it to the tracker dataset (automation/tools/excel_to_dataset.py)
@@ -19,8 +20,9 @@
  */
 import { spawnSync } from 'node:child_process';
 import { copyFile, mkdir } from 'node:fs/promises';
-import { existsSync } from 'node:fs';
-import { resolve } from 'node:path';
+import { existsSync, readdirSync, statSync } from 'node:fs';
+import { homedir } from 'node:os';
+import { join, resolve } from 'node:path';
 
 try {
   if (existsSync('.env')) process.loadEnvFile('.env');
@@ -31,13 +33,37 @@ try {
 const args = process.argv.slice(2);
 const flags = new Set(args.filter((a) => a.startsWith('--')));
 const positional = args.filter((a) => !a.startsWith('--'));
-const workbook = positional[0];
+
+/** Newest "Outstanding_Report*.xlsx" in WORKBOOK_DIR (default: the user's Downloads folder). */
+function latestWorkbook(): string | undefined {
+  const dir = process.env.WORKBOOK_DIR ?? join(homedir(), 'Downloads');
+  if (!existsSync(dir)) return undefined;
+  const files = readdirSync(dir)
+    .filter((f) => /^Outstanding_Report.*\.xlsx$/i.test(f) && !f.startsWith('~$'))
+    .map((f) => ({ path: join(dir, f), mtime: statSync(join(dir, f)).mtimeMs }))
+    .sort((a, b) => b.mtime - a.mtime);
+  if (!files.length) return undefined;
+  const ageDays = (Date.now() - files[0].mtime) / 86_400_000;
+  console.log(`latest workbook: ${files[0].path} (modified ${ageDays.toFixed(1)} day(s) ago)`);
+  if (ageDays > 6 && !flags.has('--allow-old')) {
+    console.error("The newest workbook is more than 6 days old — this looks like last week's file. Download the new one or pass --allow-old.");
+    process.exit(2);
+  }
+  return files[0].path;
+}
+
+const useLatest = flags.has('--latest');
+const workbook = useLatest ? latestWorkbook() : positional[0];
+if (useLatest && positional[0] && !/^\d{4}-\d{2}-\d{2}$/.test(positional[0])) {
+  console.error('--latest takes only an optional date, not a workbook path');
+  process.exit(2);
+}
 const tz = process.env.REPORT_TIMEZONE ?? 'Asia/Ho_Chi_Minh';
 const today = new Intl.DateTimeFormat('en-CA', { timeZone: tz, year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date());
-const date = positional[1] ?? today;
+const date = (useLatest ? positional[0] : positional[1]) ?? today;
 
 if (!workbook || !/^\d{4}-\d{2}-\d{2}$/.test(date)) {
-  console.error('Usage: npm run weekly -- "<OP workbook.xlsx>" [YYYY-MM-DD] [--push] [--dry-run] [--resend]');
+  console.error('Usage: npm run weekly -- "<OP workbook.xlsx>" | --latest  [YYYY-MM-DD] [--push] [--push-teams] [--dry-run] [--resend]');
   process.exit(2);
 }
 if (!existsSync(workbook)) {

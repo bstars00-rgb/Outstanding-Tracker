@@ -2,6 +2,14 @@
 
 Status: v1.0 · 2026-09-22 · 운영 방식 결정: **무인 배치 대신 Global Ops가 매주 토요일 AI Agent(Entra ID SSO)로 직접 실행**한다. GitHub Actions 스케줄 워크플로는 남겨 두되 사용하지 않는다(`DATA_SOURCE=mock` 상태로 두거나 비활성화).
 
+## 가장 간단한 방법: Claude에게 "미수금 주간보고"
+
+Claude Code 세션에서 **"미수금 주간보고"** 또는 **"주간보고"** 라고 하면 Downloads의 최신 워크북으로 변환 → 사이트 게시 → Teams "Outstanding" 채팅 게시 → 검증 → 핵심결론 작성까지 확인 질문 없이 진행한다(2026-10-02 상시 지시). 절차와 중단 조건은 `.claude/skills/weekly-outstanding/SKILL.md`. 직접 돌릴 때는 아래 한 줄.
+
+```
+npm run weekly -- --latest --push --push-teams
+```
+
 ## 한 번에 실행 (권장)
 
 ```
