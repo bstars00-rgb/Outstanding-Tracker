@@ -2,6 +2,24 @@
 
 Status: v1.0 · 2026-09-22 · 운영 방식 결정: **무인 배치 대신 Global Ops가 매주 토요일 AI Agent(Entra ID SSO)로 직접 실행**한다. GitHub Actions 스케줄 워크플로는 남겨 두되 사용하지 않는다(`DATA_SOURCE=mock` 상태로 두거나 비활성화).
 
+## 한 번에 실행 (권장)
+
+```
+npm run weekly -- "C:/Users/<나>/Downloads/Outstanding_Report.xlsx" 2026-10-02 --push
+```
+워크북 복사 → 변환 → 파이프라인(KPI·SOP·인사이트·Teams 카드) → 리뷰 워크북 → 암호화 번들 → (`--push`) 커밋·푸시까지 한 번에 돈다. 날짜를 생략하면 오늘(Asia/Ho_Chi_Minh). 옵션: `--dry-run`(Teams 미발송), `--resend`(같은 날짜 재발송).
+
+설정은 프로젝트 루트의 `.env`(git 제외)에 둔다.
+
+| 항목 | 값 |
+|---|---|
+| `TEAMS_WEBHOOK_URL` | Teams 채널 > ⋯ > Workflows > "Post to a channel when a webhook request is received"에서 만든 URL |
+| `TEAMS_SENDER` / `DRY_RUN` | `live` / `false`로 바꾸면 실행할 때마다 **Teams 채널에 자동 게시** (같은 날짜·채널은 중복 게시하지 않음) |
+| `TARGET_CHANNEL` | `leaders`(정식) 또는 `test`(`TEAMS_TEST_WEBHOOK_URL` 사용) |
+| `DATA_PUBLISH_PASSWORD` | 사이트 비밀번호. 넣으면 암호화 번들까지 생성 |
+
+Webhook URL과 비밀번호는 `.env`에만 두고 git·채팅·문서에 붙이지 않는다. 로그에는 마스킹되어 나온다.
+
 ## 흐름 (약 10분)
 
 | 단계 | 하는 일 | 도구 |

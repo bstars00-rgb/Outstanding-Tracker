@@ -169,6 +169,17 @@ DATA_SOURCE=file DATA_FILE=automation/input/outstanding-2026-09-28.json REPORT_D
 
 The converter maps the Outstanding / Tier / information sheets (invoices, PIC + Tier, FX) and parses the ELLIS remark notes into payments. The engine then applies the OMH SOP (L1–L4 urgency, ¥500K approval route, Tier collection deadlines; `src/core/sop.ts`).
 
+### One command per week
+
+```bash
+npm run weekly -- "<OP workbook.xlsx>" [YYYY-MM-DD] [--push] [--dry-run] [--resend]
+```
+
+Copies the workbook, converts it, runs the pipeline, builds the review workbook, writes the encrypted bundle and (with
+`--push`) commits and pushes it. The Teams card is posted automatically when `.env` (git-ignored) has
+`TEAMS_SENDER=live`, `DRY_RUN=false` and the Workflows webhook URL of the target channel; a report already posted for
+the same date/channel is not posted twice.
+
 ## 7. Saturday schedule
 
 `.github/workflows/weekly-report.yml` — cron `0 2 * * 6` (UTC) = **Saturday 09:00 Asia/Ho_Chi_Minh** (UTC+7, no DST).

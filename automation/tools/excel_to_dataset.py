@@ -172,10 +172,10 @@ def main(path, as_of, out):
             terms[cid].append((datetime.fromisoformat(due) - datetime.fromisoformat(issue)).days)
         t = tier_by_name.get(name.lower())
         if cid not in customers:
-            if t is None:
-                unmatched_tier.add(name)
             sheet_pic = str(t["pic"]) if t and t["pic"] else ""
             pic = pic_override.get(name.lower(), sheet_pic)
+            if t is None and not pic:
+                unmatched_tier.add(name)
             if pic != sheet_pic and sheet_pic:
                 pic_changed.add(f"{name}: {sheet_pic} -> {pic}")
             tier_txt = (t["tier"] if t else None) or (str(tier_cell) if tier_cell not in (None, "#N/A") else None)
@@ -296,7 +296,7 @@ def main(path, as_of, out):
             e["jpy"] += jpy or 0
         notes.append("Internal accounts excluded (not customer receivables; 출장/하드블럭 미판매분): " + ", ".join(f"{n} {e['n']} inv. JPY {e['jpy']:,.0f}" for n, e in by_name.items()) + f" — total JPY {sum(e['jpy'] for e in by_name.values()):,.0f}.")
     if unmatched_tier:
-        notes.append("Sellers not found in the Tier sheet (no PIC): " + ", ".join(sorted(unmatched_tier)) + ".")
+        notes.append("Sellers without an account owner (not in the Tier sheet, no override): " + ", ".join(sorted(unmatched_tier)) + ".")
     if pic_changed:
         notes.append(f"Account owners follow the assignments confirmed on {overrides.get('confirmed', '?')} (automation/config/pic-overrides.json); the workbook Tier sheet still shows the earlier PIC for: " + "; ".join(sorted(pic_changed)) + ".")
     if entity_from_ellis:
