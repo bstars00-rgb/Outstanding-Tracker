@@ -53,7 +53,7 @@ test.describe('Managing entity and ELLIS reflection chain', () => {
 
     const section = page.getByTestId('reflection-section');
     await expect(section).toContainText('ELLIS reflection chain');
-    await expect(section).toContainText('Rina (Josh)');
+    await expect(section).toContainText('Lina (Josh)');
     await expect(section).toContainText('Sangho');
     await expect(section).toContainText('Management Support (TBD)');
     const table = page.getByTestId('reflection-table');

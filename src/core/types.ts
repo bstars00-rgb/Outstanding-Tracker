@@ -379,11 +379,11 @@ export interface ReflectionChain {
 }
 
 /**
- * Default owners (to be confirmed): record = Rina (Josh), verify (PM CNFM) = Sangho, reconcile (weekly bank vs ELLIS)
+ * Default owners (to be confirmed): record = Lina (Josh), verify (PM CNFM) = Sangho, reconcile (weekly bank vs ELLIS)
  * = Management Support (경영지원). The CEO (Jackie) is the recipient of the Saturday report, not a stage owner.
  */
 export const DEFAULT_REFLECTION_CHAIN: ReflectionChain = {
-  record: { owner: 'Rina (Josh)', sla_days: 1 },
+  record: { owner: 'Lina (Josh)', sla_days: 1 },
   verify: { owner: 'Sangho', sla_days: 1 },
   reconcile: { owner: 'Management Support (TBD)', sla_days: 7 },
 };

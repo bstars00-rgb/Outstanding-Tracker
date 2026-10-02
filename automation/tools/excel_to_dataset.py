@@ -222,7 +222,7 @@ def main(path, as_of, out):
                     m2 = re.search(r"[￥$]\s*([\d,]+(?:\.\d+)?)", line)
                     disputed += num(m2.group(1)) if m2 else 0.0
             activities.append({
-                "activity_id": f"note:{inv_no}", "customer_id": cid, "invoice_id": inv_no, "owner": "Rina (Josh)",
+                "activity_id": f"note:{inv_no}", "customer_id": cid, "invoice_id": inv_no, "owner": "Lina (Josh)",
                 "activity_type": "NOTE", "activity_date": last_pay_date or as_of, "contact_channel": None,
                 "note": remark.strip()[:2000], "promised_payment_date": None, "promised_payment_amount": None, "promised_currency": None,
                 "next_action": None, "next_action_date": None, "escalation_level": 0, "completed": True,
