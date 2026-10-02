@@ -19,6 +19,8 @@ export function verifyInsight(input: InsightInput, out: InsightOutput): Verifica
   addFacts(input.collection_opportunities);
   addFacts(input.due_next_week);
   addFacts(input.sop_l1 ?? []);
+  addFacts(input.reflection_pending?.top ?? []);
+  if (input.reflection_pending?.owner) allowedOwners.add(norm(input.reflection_pending.owner));
   addFacts(input.sop_past_deadline ?? []);
   input.by_owner.forEach((o) => allowedOwners.add(norm(o.owner)));
   allowedOwners.add(norm('Unassigned'));

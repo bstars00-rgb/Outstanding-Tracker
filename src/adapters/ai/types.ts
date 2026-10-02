@@ -25,6 +25,8 @@ export interface InsightInput {
   recent_activity_count: number;
   data_quality: { code: string; count: number; sample: string }[];
   completeness: TrackerModel['completeness'];
+  /** Payments confirmed at the bank but not yet recorded in ELLIS (reflection chain stage RECEIVED). */
+  reflection_pending: { count: number; amount: number; oldest_days: number; over_sla_count: number; owner: string; top: { customer: string; owner: string; amount: number; count: number }[] };
   /** OMH SOP: overdue balance per urgency level (L1 Urgent … L4 Monitor). */
   sop_summary: TrackerModel['sop_summary'];
   /** Customers with L1 items (Tier 1, ≥ ¥1M overdue) — CEO within 24h. */

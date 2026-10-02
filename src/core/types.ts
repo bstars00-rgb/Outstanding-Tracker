@@ -94,6 +94,11 @@ export interface Payment {
   payment_method: PaymentMethod;
   payment_reference: string | null;
   reconciliation_status: ReconciliationStatus;
+  /**
+   * ELLIS reflection chain, stage 0: date the payment was recorded in ELLIS. `null` => the money is confirmed at the bank
+   * (e.g. OP note "Payment received") but ELLIS has not been updated yet. `undefined` => recorded (legacy / ELLIS-sourced rows).
+   */
+  recorded_at?: ISODate | null;
   /** ELLIS reflection chain: date the payment was verified in ELLIS (PM CNFM). null => recorded but not yet verified. */
   confirmed_at: ISODate | null;
   /** Weekly bank-vs-ELLIS reconciliation sign-off date (tracker-owned). null => not yet reconciled. */
@@ -356,7 +361,9 @@ export interface ReflectionItem {
   amount: number;
   currency: CurrencyCode;
   amount_reporting: number;
-  stage: 'RECORDED' | 'VERIFIED' | 'RECONCILED';
+  /** RECEIVED = at the bank, not yet in ELLIS · RECORDED = in ELLIS, not verified · VERIFIED = PM CNFM done · RECONCILED = bank sign-off. */
+  stage: 'RECEIVED' | 'RECORDED' | 'VERIFIED' | 'RECONCILED';
+  invoice_id: string | null;
   /** Next stage owner (from ReflectionChain config). */
   next_owner: string;
   days_in_stage: number;
@@ -414,6 +421,9 @@ export interface SnapshotTotals {
   due_within_7_days: number;
   broken_promise_amount: number;
   broken_promise_count: number;
+  /** Payments confirmed at the bank but not yet recorded in ELLIS (recorded_at null), any date. */
+  unrecorded_payment_amount?: number;
+  unrecorded_payment_count?: number;
   /** Payments recorded in ELLIS but not yet verified (confirmed_at null), any date. */
   unverified_payment_amount: number;
   unverified_payment_count: number;

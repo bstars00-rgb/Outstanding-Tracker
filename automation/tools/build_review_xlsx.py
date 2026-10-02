@@ -197,8 +197,61 @@ def main(out_dir, report_date, out_path):
     wp.cell(row=1, column=6).comment = Comment("Converted with the workbook 'information' sheet rates (USD 150, KRW 0.11, VND 0.006 → JPY).", "Outstanding Tracker")
     autosize(wp, [13, 24, 10, 9, 16, 16, 36, 18, 18])
 
+    # ---------------- ELLIS reflection pending (received at the bank, not yet in ELLIS) ----------------
+    wr_ = wb.create_sheet("ELLIS pending")
+    rh = ["Invoice No", "Customer", "PIC (OMH)", "Entity", "Currency", "Amount received", f"Amount ({ccy})", "Payment date (basis)", "Days waiting", "Record SLA (days)", "Over SLA", "Type", "Next owner", "AC update done (date)"]
+    wr_.append(rh)
+    style_header(wr_, 1, len(rh))
+    inv_by_id = {i["invoice_id"]: i for i in m["invoices"]}
+    cust_by_id = {c["customer_id"]: c for c in m["customers"]}
+    q = 1
+    for it in m["reflection_queue"]:
+        if it["stage"] != "RECEIVED":
+            continue
+        q += 1
+        inv = inv_by_id.get(it.get("invoice_id") or "", {})
+        pay = next((p for p in inv.get("payments", []) if p["payment_id"] == it["payment_id"]), {})
+        kind = "Reopened for rate change" if "reopened" in (pay.get("data_source") or "") else "Awaiting AC update"
+        wr_.append([inv.get("invoice_number", ""), it["customer_name"], inv.get("account_owner_name", ""), it.get("control_company") or "", it["currency"], it["amount"], None, it["payment_date"], it["days_in_stage"], it["sla_days"], "YES" if it["overdue_sla"] else "", kind, it["next_owner"], ""])
+        wr_.cell(row=q, column=7, value=f"=F{q}*{fx.get(it['currency'], 0)}").number_format = fmt_money
+        wr_.cell(row=q, column=6).number_format = fmt_money
+        for c in range(1, len(rh) + 1):
+            wr_.cell(row=q, column=c).font = Font(name=FONT)
+            wr_.cell(row=q, column=c).border = BORDER
+        if it["overdue_sla"]:
+            wr_.cell(row=q, column=11).fill = PatternFill("solid", fgColor=LEVEL_FILL["L1"])
+    wr_.cell(row=q + 1, column=1, value="Total").font = Font(name=FONT, bold=True)
+    tot = wr_.cell(row=q + 1, column=7, value=f"=SUM(G2:G{q})" if q > 1 else 0)
+    tot.number_format, tot.font = fmt_money, Font(name=FONT, bold=True)
+    wr_.cell(row=1, column=14).fill = PatternFill("solid", fgColor="FFFF00")
+    wr_.cell(row=1, column=14).font = Font(name=FONT, bold=True)
+    wr_.cell(row=1, column=8).comment = Comment("From the OP 'Noted' column. The note carries no date: received-this-week items use the report date, reopened invoices the date of the earlier ELLIS record, others the due date (assumed).", "Outstanding Tracker")
+    wr_.freeze_panes = "C2"
+    autosize(wr_, [11, 24, 11, 15, 9, 17, 17, 18, 12, 12, 9, 26, 16, 22])
+
+    # ledger reconciliation on the Summary sheet
+    r += 2
+    ws.cell(row=r, column=1, value="ELLIS ledger vs. real receivables").font = Font(name=FONT, bold=True)
+    r += 1
+    for col_, h in enumerate(["Line", f"Amount ({ccy})", "Invoices", "Meaning"], start=1):
+        ws.cell(row=r, column=col_, value=h)
+    style_header(ws, r, 4)
+    open_row, pend_row = r + 1, r + 2
+    lines = [
+        ("Open customer receivables (tracker)", f"=SUM('Invoices (SOP)'!G2:G{n + 1})", n, "Still unpaid by the customer"),
+        ("Received at the bank, not yet in ELLIS", (f"=SUM('ELLIS pending'!G2:G{q})" if q > 1 else 0), q - 1, "AC team must record / re-confirm in ELLIS"),
+        ("ELLIS ledger outstanding (open + pending)", f"=B{open_row}+B{pend_row}", f"=C{open_row}+C{pend_row}", "What ELLIS shows today"),
+    ]
+    for label, amount, count, meaning in lines:
+        r += 1
+        ws.cell(row=r, column=1, value=label).font = Font(name=FONT, bold=label.startswith("ELLIS ledger"))
+        c = ws.cell(row=r, column=2, value=amount)
+        c.number_format, c.font = fmt_money, Font(name=FONT, bold=label.startswith("ELLIS ledger"))
+        ws.cell(row=r, column=3, value=count).font = Font(name=FONT)
+        ws.cell(row=r, column=4, value=meaning).font = Font(name=FONT, color="555555")
+
     wb.save(out_path)
-    print("saved", out_path, "invoices", n, "payments", k - 1)
+    print("saved", out_path, "invoices", n, "payments", k - 1, "ellis_pending", q - 1)
 
 
 if __name__ == "__main__":

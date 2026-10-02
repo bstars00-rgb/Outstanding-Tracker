@@ -78,9 +78,10 @@ export function buildActions(invoices: CalculatedInvoice[], customers: CustomerR
   }
 
   // ELLIS reflection chain: payments waiting for verification / reconciliation beyond their SLA.
-  for (const r of reflection.filter((x) => x.stage !== 'RECONCILED' && x.overdue_sla)) {
-    const stageLabel = r.stage === 'RECORDED' ? p('verify in ELLIS (PM CNFM + invoice mapping)', 'ELLIS 검증(PM CNFM·인보이스 매핑)') : p('reconcile against bank statement', '은행 입금 대사·승인');
-    items.push({ id: `ELLIS_REFLECTION:${r.payment_id}`, group: 'ELLIS_REFLECTION', customer_id: r.customer_id, customer_name: r.customer_name, invoice_id: null, owner: r.next_owner, due_date: addDays(r.payment_date, r.sla_days), amount_reporting: r.amount_reporting, severity: r.days_in_stage > r.sla_days * 3 ? 'high' : 'medium', status: 'open', recommended_action: p(`Payment ${r.payment_date} (${r.currency} ${r.amount.toLocaleString('en-US')}) waiting ${r.days_in_stage} day(s): ${stageLabel}`, `${r.payment_date} 입금(${r.currency} ${r.amount.toLocaleString('en-US')}) ${r.days_in_stage}일째 대기: ${stageLabel}`) });
+  // Every payment that is at the bank but not yet in ELLIS needs an update (even inside its SLA); later stages only when over SLA.
+  for (const r of reflection.filter((x) => x.stage !== 'RECONCILED' && (x.overdue_sla || x.stage === 'RECEIVED'))) {
+    const stageLabel = r.stage === 'RECEIVED' ? p('record the received payment in ELLIS (Payment In + invoice mapping)', 'ELLIS에 입금 기록(Payment In·인보이스 매핑)') : r.stage === 'RECORDED' ? p('verify in ELLIS (PM CNFM + invoice mapping)', 'ELLIS 검증(PM CNFM·인보이스 매핑)') : p('reconcile against bank statement', '은행 입금 대사·승인');
+    items.push({ id: `ELLIS_REFLECTION:${r.payment_id}`, group: 'ELLIS_REFLECTION', customer_id: r.customer_id, customer_name: r.customer_name, invoice_id: r.invoice_id, owner: r.next_owner, due_date: addDays(r.payment_date, r.sla_days), amount_reporting: r.amount_reporting, severity: r.days_in_stage > r.sla_days * 3 ? 'high' : 'medium', status: 'open', recommended_action: p(`Payment ${r.payment_date} (${r.currency} ${r.amount.toLocaleString('en-US')}) waiting ${r.days_in_stage} day(s): ${stageLabel}`, `${r.payment_date} 입금(${r.currency} ${r.amount.toLocaleString('en-US')}) ${r.days_in_stage}일째 대기: ${stageLabel}`) });
   }
 
   const sevRank = { critical: 0, high: 1, medium: 2, low: 3 };

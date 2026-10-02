@@ -68,6 +68,23 @@ export function buildInsightInput(m: TrackerModel): InsightInput {
     .sort((a, b) => b.amount - a.amount)
     .slice(0, 10);
 
+  const received = m.reflection_queue.filter((r) => r.stage === 'RECEIVED');
+  const pendingByCustomer = new Map<string, { customer: string; owner: string; amount: number; count: number }>();
+  for (const r of received) {
+    const e = pendingByCustomer.get(r.customer_id) ?? { customer: r.customer_name, owner: r.next_owner, amount: 0, count: 0 };
+    e.amount = round2(e.amount + r.amount_reporting);
+    e.count++;
+    pendingByCustomer.set(r.customer_id, e);
+  }
+  const reflectionPending = {
+    count: received.length,
+    amount: round2(received.reduce((s, r) => s + r.amount_reporting, 0)),
+    oldest_days: received.reduce((d, r) => Math.max(d, r.days_in_stage), 0),
+    over_sla_count: received.filter((r) => r.overdue_sla).length,
+    owner: received[0]?.next_owner ?? '',
+    top: [...pendingByCustomer.values()].sort((a, b) => b.amount - a.amount).slice(0, 5),
+  };
+
   const activityCutoff = m.week.start;
   const recentActivities = m.invoices.flatMap((i) => i.activities).filter((a) => a.activity_date >= activityCutoff).length;
 
@@ -96,6 +113,7 @@ export function buildInsightInput(m: TrackerModel): InsightInput {
     recent_activity_count: recentActivities,
     data_quality: [...dq.entries()].map(([code, e]) => ({ code, count: e.count, sample: e.sample })),
     completeness: m.completeness,
+    reflection_pending: reflectionPending,
     sop_summary: m.sop_summary,
     sop_l1: [...l1ByCustomer.values()].sort((a, b) => b.amount - a.amount).slice(0, 8),
     sop_past_deadline: sopPastDeadline,

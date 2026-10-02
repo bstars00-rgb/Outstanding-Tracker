@@ -303,6 +303,8 @@ export function buildTrackerModel(ds: ReceivablesDataset, opts: BuildOptions): T
     due_within_7_days: round2(dueWithin7),
     broken_promise_amount: round2(brokenAmount),
     broken_promise_count: brokenCustomers.length,
+    unrecorded_payment_amount: round2(sum(reflection.filter((r) => r.stage === 'RECEIVED').map((r) => r.amount_reporting))),
+    unrecorded_payment_count: reflection.filter((r) => r.stage === 'RECEIVED').length,
     unverified_payment_amount: round2(sum(reflection.filter((r) => r.stage === 'RECORDED').map((r) => r.amount_reporting))),
     unverified_payment_count: reflection.filter((r) => r.stage === 'RECORDED').length,
     unreconciled_payment_amount: round2(sum(reflection.filter((r) => r.stage === 'VERIFIED').map((r) => r.amount_reporting))),
@@ -490,9 +492,9 @@ function buildReflectionQueue(ds: ReceivablesDataset, customers: CustomerRisk[],
   const out: ReflectionItem[] = [];
   for (const p of ds.payments) {
     if (p.reconciliation_status === 'REFUNDED' || p.payment_amount <= 0) continue;
-    const stage: ReflectionItem['stage'] = p.reconciled_at ? 'RECONCILED' : p.confirmed_at ? 'VERIFIED' : 'RECORDED';
-    const since = stage === 'RECORDED' ? p.payment_date : stage === 'VERIFIED' ? p.confirmed_at! : p.reconciled_at!;
-    const next = stage === 'RECORDED' ? chain.verify : stage === 'VERIFIED' ? chain.reconcile : null;
+    const stage: ReflectionItem['stage'] = p.recorded_at === null ? 'RECEIVED' : p.reconciled_at ? 'RECONCILED' : p.confirmed_at ? 'VERIFIED' : 'RECORDED';
+    const since = stage === 'RECEIVED' || stage === 'RECORDED' ? p.payment_date : stage === 'VERIFIED' ? p.confirmed_at! : p.reconciled_at!;
+    const next = stage === 'RECEIVED' ? chain.record : stage === 'RECORDED' ? chain.verify : stage === 'VERIFIED' ? chain.reconcile : null;
     const days = Math.max(0, daysBetween(since, ref));
     const c = custMap.get(p.customer_id);
     out.push({
@@ -505,13 +507,15 @@ function buildReflectionQueue(ds: ReceivablesDataset, customers: CustomerRisk[],
       currency: p.payment_currency,
       amount_reporting: convert(p.payment_amount, p.payment_currency, ds.fx)?.value ?? 0,
       stage,
+      invoice_id: p.invoice_id,
       next_owner: next?.owner ?? '',
       days_in_stage: days,
       sla_days: next?.sla_days ?? 0,
       overdue_sla: next ? days > next.sla_days : false,
     });
   }
-  return out.sort((a, b) => (a.stage === b.stage ? b.days_in_stage - a.days_in_stage : a.stage === 'RECORDED' ? -1 : b.stage === 'RECORDED' ? 1 : a.stage === 'VERIFIED' ? -1 : 1));
+  const rank = { RECEIVED: 0, RECORDED: 1, VERIFIED: 2, RECONCILED: 3 } as const;
+  return out.sort((a, b) => (a.stage === b.stage ? b.days_in_stage - a.days_in_stage || b.amount_reporting - a.amount_reporting : rank[a.stage] - rank[b.stage]));
 }
 
 function totalsByCurrency(inv: CalculatedInvoice[]): CustomerRisk['totals_by_currency'] {

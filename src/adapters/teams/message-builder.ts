@@ -85,10 +85,12 @@ export function buildTeamsMessage(m: TrackerModel, insight: InsightResult, ctx: 
   // Managing-entity split (Seoul / Singapore ...) and ELLIS reflection-chain status for the CEO.
   const entityFacts = m.aging_by_control_company.map((d) => ({ title: `${H.entity}: ${d.label}`, value: `${M(d.total)} · ${p('overdue', '연체')} ${M(d.overdue)}` }));
   const t = m.snapshot.totals;
-  const reflectionValue = p(
+  const unrecorded = t.unrecorded_payment_count ?? 0;
+  const reflectionBase = p(
     `${t.unverified_payment_count} unverified (${M(t.unverified_payment_amount)}) · ${t.unreconciled_payment_count} unreconciled (${M(t.unreconciled_payment_amount)})`,
     `미검증 ${t.unverified_payment_count}건(${M(t.unverified_payment_amount)}) · 미대사 ${t.unreconciled_payment_count}건(${M(t.unreconciled_payment_amount)})`,
   );
+  const reflectionValue = (unrecorded ? p(`${unrecorded} received but not in ELLIS (${M(t.unrecorded_payment_amount ?? 0)}) · `, `입금 확인·ELLIS 미기록 ${unrecorded}건(${M(t.unrecorded_payment_amount ?? 0)}) · `) : '') + reflectionBase;
 
   const unit = p('', '건');
   const sopValue = m.sop_summary.map((r) => `${r.level} ${r.count}${unit} (${M(r.amount)})`).join(' · ') + (m.sop_past_deadline.count ? ` · ${p('past Tier deadline', 'Tier 기한 경과')} ${m.sop_past_deadline.count}${unit} (${M(m.sop_past_deadline.amount)})` : '');

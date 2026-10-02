@@ -62,6 +62,7 @@ export const PaymentSchema = z.object({
   payment_method: z.enum(['BANK_TRANSFER', 'CARD', 'VCC', 'OFFSET', 'OTHER']),
   payment_reference: z.string().nullable(),
   reconciliation_status: z.enum(['APPLIED', 'PARTIALLY_APPLIED', 'UNAPPLIED', 'REFUNDED']),
+  recorded_at: isoDate.nullable().optional(),
   confirmed_at: isoDate.nullable().optional().default(null),
   reconciled_at: isoDate.nullable().optional().default(null),
   data_source: z.string(),

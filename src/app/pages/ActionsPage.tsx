@@ -21,8 +21,8 @@ const GROUPS = Object.keys(ACTION_GROUP_LABEL) as ActionGroup[];
 const STORAGE_PREFIX = 'ot.actions.';
 
 type Stage = ReflectionItem['stage'];
-const STAGES: Stage[] = ['RECORDED', 'VERIFIED', 'RECONCILED'];
-const STAGE_TONE: Record<Stage, PillTone> = { RECORDED: 'warning', VERIFIED: 'neutral', RECONCILED: 'good' };
+const STAGES: Stage[] = ['RECEIVED', 'RECORDED', 'VERIFIED', 'RECONCILED'];
+const STAGE_TONE: Record<Stage, PillTone> = { RECEIVED: 'critical', RECORDED: 'warning', VERIFIED: 'neutral', RECONCILED: 'good' };
 
 function readStatus(id: string, fallback: Status): Status {
   try {
@@ -218,7 +218,7 @@ export function ActionsPage() {
         <FilterBar
           summary={
             <>
-              {t('reflection.summary', { total: queue.length, recorded: stageCount('RECORDED'), verified: stageCount('VERIFIED'), reconciled: stageCount('RECONCILED') })} ·{' '}
+              {t('reflection.summary', { total: queue.length, received: stageCount('RECEIVED'), recorded: stageCount('RECORDED'), verified: stageCount('VERIFIED'), reconciled: stageCount('RECONCILED') })} ·{' '}
               <span style={overSlaCount > 0 ? { color: 'var(--critical-text)', fontWeight: 600 } : undefined} data-testid="reflection-over-sla-count">
                 {t('reflection.overSlaCount', { n: overSlaCount })}
               </span>

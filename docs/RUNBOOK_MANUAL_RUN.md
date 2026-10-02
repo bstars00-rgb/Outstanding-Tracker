@@ -20,6 +20,11 @@ MCP 도구가 아직 없을 때는 OP 워크북을 그대로 변환해 실행한
 python automation/tools/excel_to_dataset.py automation/input/Outstanding_Report_2026-09-28.xlsx 2026-09-28 automation/input/outstanding-2026-09-28.json
 DATA_SOURCE=file DATA_FILE=automation/input/outstanding-2026-09-28.json REPORT_DATE=2026-09-28 REPORT_LANGUAGE=ko DRY_RUN=true npx tsx automation/weekly-report.ts
 ```
+워크북 형식(2026-10-02~): 미수 목록은 날짜 탭(예: `02-Oct`)이며 직전 주 탭(`28-Sep`)이 함께 들어 있다. 변환기는 기준일과 같은 날짜 탭을 쓰고, 직전 탭을 입금일 추정에 참고한다.
+- `Noted` 열의 "Payment received …"는 **은행 입금은 확인됐지만 ELLIS 미반영**을 뜻한다. 해당 인보이스는 트래커에서 회수로 처리되고 ELLIS 반영 체인의 "입금확인·ELLIS 미기록" 단계에 올라간다. ELLIS 원장 합계는 데이터 노트와 리뷰 워크북(Summary의 원장 대사 표, `ELLIS pending` 시트)에 남는다.
+- 매주 실행 전 AI Agent에서 ELLIS MCP `list_channels`를 호출해 `automation/input/ellis-channels.json`을 갱신하면 관리 법인·국가가 ELLIS 값으로 들어간다(없으면 수동 매핑 사용).
+- 담당자(PIC)는 `automation/config/pic-overrides.json`(2026-09-28 확정본)이 Tier 시트보다 우선한다.
+
 워크북에 없는 것: 관리 법인(서울/싱가포르), PM CNFM·은행 대사 일자, 신용한도, 국가. 내부 계정("Business Trip in …" = 출장, "Unsold room (JP)" = 하드블럭 미판매분)은 고객 미수가 아니므로 변환 시 제외되고 잔액만 데이터 노트에 남는다(2026-09-28 확인). 엔진은 SOP(L1~L4, ¥500K 결재 경로, Tier 회수기한)를 자동 적용한다.
 
 ## AI Agent 프롬프트 예시
